@@ -1,0 +1,1001 @@
+id,model,description,label,split,selected_ai_model,selection_seed,selection_strategy,dataset_revision
+06001,MTG-Jamendo,"ambient, blues, piano",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05501,Suno v3.5,"ambient, blues, piano",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06002,MTG-Jamendo,"ambient, breakbeat, trance",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02213,AudioLDM 2 Music,"ambient, breakbeat, trance",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06003,MTG-Jamendo,"ambient, calm, happy",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00811,MusicGen Medium,"ambient, calm, happy",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06004,MTG-Jamendo,"ambient, calm, soft",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03004,Mustango,"ambient, calm, soft",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06005,MTG-Jamendo,"ambient, calm, space",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05505,Suno v3.5,"ambient, calm, space",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06006,MTG-Jamendo,"ambient, chillout, downtempo",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05506,Suno v3.5,"ambient, chillout, downtempo",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06007,MTG-Jamendo,"ambient, chillout, drums",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02678,Riffusion,"ambient, chillout, drums",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06008,MTG-Jamendo,"ambient, chillout, hiphop",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02941,Riffusion,"ambient, chillout, hiphop",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06009,MTG-Jamendo,"ambient, chillout, piano",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04509,Udio,"ambient, chillout, piano",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06011,MTG-Jamendo,"ambient, choir, synthesizer",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03011,Mustango,"ambient, choir, synthesizer",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06012,MTG-Jamendo,"ambient, dance, synthpop",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03512,Stable Audio v1,"ambient, dance, synthpop",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06015,MTG-Jamendo,"ambient, experimental, orchestral",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04015,Stable Audio v2,"ambient, experimental, orchestral",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06016,MTG-Jamendo,"ambient, experimental, trumpet",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01092,MusicGen Large,"ambient, experimental, trumpet",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06018,MTG-Jamendo,"ambient, holiday, christmas",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03018,Mustango,"ambient, holiday, christmas",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06020,MTG-Jamendo,"ambient, jazz, progressive",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01765,AudioLDM 2 Large,"ambient, jazz, progressive",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06021,MTG-Jamendo,"ambient, medieval, guitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00939,MusicGen Medium,"ambient, medieval, guitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06022,MTG-Jamendo,"ambient, newage, choir",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00382,MusicGen Small,"ambient, newage, choir",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06023,MTG-Jamendo,"ambient, newage, soundtrack",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04523,Udio,"ambient, newage, soundtrack",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06024,MTG-Jamendo,"ambient, orchestral, drums",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02395,AudioLDM 2 Music,"ambient, orchestral, drums",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06025,MTG-Jamendo,"ambient, piano, strings",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03525,Stable Audio v1,"ambient, piano, strings",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06026,MTG-Jamendo,"ambient, postrock, synthesizer",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02224,AudioLDM 2 Music,"ambient, postrock, synthesizer",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06027,MTG-Jamendo,"ambient, rap, dubstep",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01792,AudioLDM 2 Large,"ambient, rap, dubstep",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06028,MTG-Jamendo,"ambient, soundtrack, acousticguitar",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01200,MusicGen Large,"ambient, soundtrack, acousticguitar",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06030,MTG-Jamendo,"ambient, soundtrack, dark",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02202,AudioLDM 2 Music,"ambient, soundtrack, dark",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06031,MTG-Jamendo,"ambient, soundtrack, keyboard",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05531,Suno v3.5,"ambient, soundtrack, keyboard",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06033,MTG-Jamendo,"ambient, synthesizer, strings",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05033,Suno v3,"ambient, synthesizer, strings",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06035,MTG-Jamendo,"ambient, triphop, soundtrack",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01899,AudioLDM 2 Large,"ambient, triphop, soundtrack",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06037,MTG-Jamendo,"blues, christmas, piano",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03537,Stable Audio v1,"blues, christmas, piano",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06038,MTG-Jamendo,"blues, country, classicalguitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00636,MusicGen Medium,"blues, country, classicalguitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06039,MTG-Jamendo,"blues, piano, guitar",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02514,Riffusion,"blues, piano, guitar",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06040,MTG-Jamendo,"blues, singersongwriter, guitar",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01709,AudioLDM 2 Large,"blues, singersongwriter, guitar",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06041,MTG-Jamendo,"blues, voice, electricguitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00981,MusicGen Medium,"blues, voice, electricguitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06042,MTG-Jamendo,"breakbeat, dubstep, bass",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05042,Suno v3,"breakbeat, dubstep, bass",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06043,MTG-Jamendo,"breakbeat, house, deep",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01687,AudioLDM 2 Large,"breakbeat, house, deep",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06044,MTG-Jamendo,"breakbeat, idm, piano",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01151,MusicGen Large,"breakbeat, idm, piano",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06046,MTG-Jamendo,"breakbeat, techno, electronica",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01081,MusicGen Large,"breakbeat, techno, electronica",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06048,MTG-Jamendo,"chillout, dance, country",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00171,MusicGen Small,"chillout, dance, country",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06049,MTG-Jamendo,"chillout, downtempo, piano",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01537,AudioLDM 2 Large,"chillout, downtempo, piano",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06050,MTG-Jamendo,"chillout, downtempo, triphop",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05050,Suno v3,"chillout, downtempo, triphop",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06051,MTG-Jamendo,"chillout, jazz, piano",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02901,Riffusion,"chillout, jazz, piano",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06054,MTG-Jamendo,"chillout, reggae, bass",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04054,Stable Audio v2,"chillout, reggae, bass",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06055,MTG-Jamendo,"chillout, soundtrack, electronica",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02641,Riffusion,"chillout, soundtrack, electronica",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06056,MTG-Jamendo,"chillout, soundtrack, violin",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01457,MusicGen Large,"chillout, soundtrack, violin",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06058,MTG-Jamendo,"chillout, triphop, hiphop",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05058,Suno v3,"chillout, triphop, hiphop",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06060,MTG-Jamendo,"chillout, world, oriental",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04560,Udio,"chillout, world, oriental",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06062,MTG-Jamendo,"classical, acousticguitar, classicalguitar",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04062,Stable Audio v2,"classical, acousticguitar, classicalguitar",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06064,MTG-Jamendo,"classical, ambient, jazz",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05064,Suno v3,"classical, ambient, jazz",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06066,MTG-Jamendo,"classical, cello, violin",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01147,MusicGen Large,"classical, cello, violin",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06067,MTG-Jamendo,"classical, chillout, blues",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01838,AudioLDM 2 Large,"classical, chillout, blues",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06070,MTG-Jamendo,"classical, clarinet, trumpet",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02606,Riffusion,"classical, clarinet, trumpet",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06074,MTG-Jamendo,"classical, electronic, fast",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00611,MusicGen Medium,"classical, electronic, fast",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06075,MTG-Jamendo,"classical, electronic, organ",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02198,AudioLDM 2 Music,"classical, electronic, organ",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06076,MTG-Jamendo,"classical, electronic, synthesizer",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00117,MusicGen Small,"classical, electronic, synthesizer",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06077,MTG-Jamendo,"classical, fast, guitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00803,MusicGen Medium,"classical, fast, guitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06078,MTG-Jamendo,"classical, folk, country",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00308,MusicGen Small,"classical, folk, country",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06079,MTG-Jamendo,"classical, folk, guitar",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03579,Stable Audio v1,"classical, folk, guitar",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06081,MTG-Jamendo,"classical, jazz, piano",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00167,MusicGen Small,"classical, jazz, piano",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06084,MTG-Jamendo,"classical, orchestral, christmas",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03584,Stable Audio v1,"classical, orchestral, christmas",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06086,MTG-Jamendo,"classical, orchestral, orchestra",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03086,Mustango,"classical, orchestral, orchestra",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06087,MTG-Jamendo,"classical, piano, horn",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05587,Suno v3.5,"classical, piano, horn",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06088,MTG-Jamendo,"classical, piano, violin",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03588,Stable Audio v1,"classical, piano, violin",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06090,MTG-Jamendo,"classical, soundtrack, country",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00388,MusicGen Small,"classical, soundtrack, country",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06091,MTG-Jamendo,"classical, soundtrack, guitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00618,MusicGen Medium,"classical, soundtrack, guitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06092,MTG-Jamendo,"classical, soundtrack, orchestral",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01247,MusicGen Large,"classical, soundtrack, orchestral",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06094,MTG-Jamendo,"classical, soundtrack, piano",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03594,Stable Audio v1,"classical, soundtrack, piano",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06096,MTG-Jamendo,"classical, soundtrack, strings",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04596,Udio,"classical, soundtrack, strings",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06097,MTG-Jamendo,"classical, techno, experimental",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04097,Stable Audio v2,"classical, techno, experimental",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06098,MTG-Jamendo,"classical, trumpet, percussion",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00287,MusicGen Small,"classical, trumpet, percussion",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06099,MTG-Jamendo,"classical, violin, flute",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05099,Suno v3,"classical, violin, flute",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06102,MTG-Jamendo,"dance, holiday, christmas",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02663,Riffusion,"dance, holiday, christmas",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06103,MTG-Jamendo,"dance, reggae, upbeat",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02333,AudioLDM 2 Music,"dance, reggae, upbeat",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06108,MTG-Jamendo,"disco, latin, christmas",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02036,AudioLDM 2 Music,"disco, latin, christmas",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06109,MTG-Jamendo,"downtempo, hiphop, rap",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03109,Mustango,"downtempo, hiphop, rap",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06111,MTG-Jamendo,"downtempo, triphop, breakbeat",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04611,Udio,"downtempo, triphop, breakbeat",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06112,MTG-Jamendo,"downtempo, triphop, guitar",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03612,Stable Audio v1,"downtempo, triphop, guitar",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06114,MTG-Jamendo,"easylistening, ambient, jazz",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00080,MusicGen Small,"easylistening, ambient, jazz",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06115,MTG-Jamendo,"easylistening, ambient, soundtrack",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02413,AudioLDM 2 Music,"easylistening, ambient, soundtrack",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06116,MTG-Jamendo,"easylistening, ambient, synthesizer",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00018,MusicGen Small,"easylistening, ambient, synthesizer",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06117,MTG-Jamendo,"easylistening, calm, flute",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03617,Stable Audio v1,"easylistening, calm, flute",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06119,MTG-Jamendo,"easylistening, chillout, house",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01898,AudioLDM 2 Large,"easylistening, chillout, house",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06120,MTG-Jamendo,"easylistening, downtempo, violin",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05120,Suno v3,"easylistening, downtempo, violin",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06121,MTG-Jamendo,"easylistening, folk, cello",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02067,AudioLDM 2 Music,"easylistening, folk, cello",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06122,MTG-Jamendo,"easylistening, guitar, flute",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03122,Mustango,"easylistening, guitar, flute",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06123,MTG-Jamendo,"easylistening, hard, bass",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05123,Suno v3,"easylistening, hard, bass",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06126,MTG-Jamendo,"easylistening, jazz, progressive",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05626,Suno v3.5,"easylistening, jazz, progressive",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06127,MTG-Jamendo,"easylistening, lounge, chillout",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00256,MusicGen Small,"easylistening, lounge, chillout",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06129,MTG-Jamendo,"easylistening, newage, sad",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00622,MusicGen Medium,"easylistening, newage, sad",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06130,MTG-Jamendo,"easylistening, reggae, acousticguitar",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04630,Udio,"easylistening, reggae, acousticguitar",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06131,MTG-Jamendo,"easylistening, soft, happy",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04631,Udio,"easylistening, soft, happy",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06132,MTG-Jamendo,"easylistening, soundtrack, electricguitar",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00146,MusicGen Small,"easylistening, soundtrack, electricguitar",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06133,MTG-Jamendo,"easylistening, soundtrack, strings",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03633,Stable Audio v1,"easylistening, soundtrack, strings",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06134,MTG-Jamendo,"easylistening, world, orchestral",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04134,Stable Audio v2,"easylistening, world, orchestral",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06135,MTG-Jamendo,"electronic, ambient, chillout",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00281,MusicGen Small,"electronic, ambient, chillout",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06138,MTG-Jamendo,"electronic, ambient, experimental",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03638,Stable Audio v1,"electronic, ambient, experimental",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06139,MTG-Jamendo,"electronic, ambient, flute",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05139,Suno v3,"electronic, ambient, flute",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06140,MTG-Jamendo,"electronic, ambient, folk",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02549,Riffusion,"electronic, ambient, folk",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06141,MTG-Jamendo,"electronic, ambient, hiphop",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01240,MusicGen Large,"electronic, ambient, hiphop",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06142,MTG-Jamendo,"electronic, ambient, house",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00677,MusicGen Medium,"electronic, ambient, house",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06143,MTG-Jamendo,"electronic, ambient, postrock",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05643,Suno v3.5,"electronic, ambient, postrock",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06144,MTG-Jamendo,"electronic, ambient, singersongwriter",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05144,Suno v3,"electronic, ambient, singersongwriter",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06145,MTG-Jamendo,"electronic, ambient, soundtrack",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02451,AudioLDM 2 Music,"electronic, ambient, soundtrack",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06147,MTG-Jamendo,"electronic, ambient, synthesizer",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01345,MusicGen Large,"electronic, ambient, synthesizer",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06149,MTG-Jamendo,"electronic, ambient, triphop",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03149,Mustango,"electronic, ambient, triphop",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06150,MTG-Jamendo,"electronic, bass, drums",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03650,Stable Audio v1,"electronic, bass, drums",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06151,MTG-Jamendo,"electronic, breakbeat, idm",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00484,MusicGen Small,"electronic, breakbeat, idm",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06152,MTG-Jamendo,"electronic, chillout, drums",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04652,Udio,"electronic, chillout, drums",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06155,MTG-Jamendo,"electronic, chillout, idm",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03655,Stable Audio v1,"electronic, chillout, idm",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06157,MTG-Jamendo,"electronic, chillout, synthpop",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04157,Stable Audio v2,"electronic, chillout, synthpop",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06158,MTG-Jamendo,"electronic, chillout, trance",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05658,Suno v3.5,"electronic, chillout, trance",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06160,MTG-Jamendo,"electronic, dance, beat",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02000,AudioLDM 2 Large,"electronic, dance, beat",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06161,MTG-Jamendo,"electronic, dance, christmas",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04661,Udio,"electronic, dance, christmas",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06162,MTG-Jamendo,"electronic, disco, experimental",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02637,Riffusion,"electronic, disco, experimental",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06163,MTG-Jamendo,"electronic, downtempo, choir",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00402,MusicGen Small,"electronic, downtempo, choir",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06164,MTG-Jamendo,"electronic, downtempo, christmas",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05664,Suno v3.5,"electronic, downtempo, christmas",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06166,MTG-Jamendo,"electronic, downtempo, dubstep",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00876,MusicGen Medium,"electronic, downtempo, dubstep",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06167,MTG-Jamendo,"electronic, downtempo, guitar",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01182,MusicGen Large,"electronic, downtempo, guitar",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06169,MTG-Jamendo,"electronic, downtempo, piano",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04169,Stable Audio v2,"electronic, downtempo, piano",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06170,MTG-Jamendo,"electronic, downtempo, triphop",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03170,Mustango,"electronic, downtempo, triphop",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06172,MTG-Jamendo,"electronic, dubstep, happy",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01378,MusicGen Large,"electronic, dubstep, happy",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06174,MTG-Jamendo,"electronic, dubstep, voice",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04674,Udio,"electronic, dubstep, voice",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06175,MTG-Jamendo,"electronic, easylistening, ambient",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04175,Stable Audio v2,"electronic, easylistening, ambient",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06176,MTG-Jamendo,"electronic, easylistening, chillout",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02429,AudioLDM 2 Music,"electronic, easylistening, chillout",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06178,MTG-Jamendo,"electronic, easylistening, downtempo",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00614,MusicGen Medium,"electronic, easylistening, downtempo",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06179,MTG-Jamendo,"electronic, easylistening, hiphop",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00621,MusicGen Medium,"electronic, easylistening, hiphop",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06182,MTG-Jamendo,"electronic, easylistening, upbeat",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02721,Riffusion,"electronic, easylistening, upbeat",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06183,MTG-Jamendo,"electronic, experimental, drums",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04183,Stable Audio v2,"electronic, experimental, drums",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06185,MTG-Jamendo,"electronic, experimental, percussion",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02956,Riffusion,"electronic, experimental, percussion",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06188,MTG-Jamendo,"electronic, funk, african",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04188,Stable Audio v2,"electronic, funk, african",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06189,MTG-Jamendo,"electronic, funk, ambient",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04689,Udio,"electronic, funk, ambient",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06191,MTG-Jamendo,"electronic, funk, jazz",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05191,Suno v3,"electronic, funk, jazz",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06192,MTG-Jamendo,"electronic, funk, synthpop",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05692,Suno v3.5,"electronic, funk, synthpop",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06193,MTG-Jamendo,"electronic, hiphop, reggae",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05693,Suno v3.5,"electronic, hiphop, reggae",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06194,MTG-Jamendo,"electronic, house, deep",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01557,AudioLDM 2 Large,"electronic, house, deep",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06195,MTG-Jamendo,"electronic, house, dubstep",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00987,MusicGen Medium,"electronic, house, dubstep",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06196,MTG-Jamendo,"electronic, house, hard",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05196,Suno v3,"electronic, house, hard",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06197,MTG-Jamendo,"electronic, house, singersongwriter",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01126,MusicGen Large,"electronic, house, singersongwriter",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06198,MTG-Jamendo,"electronic, industrial, dark",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02980,Riffusion,"electronic, industrial, dark",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06199,MTG-Jamendo,"electronic, industrial, soundtrack",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00353,MusicGen Small,"electronic, industrial, soundtrack",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06200,MTG-Jamendo,"electronic, jazz, experimental",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04200,Stable Audio v2,"electronic, jazz, experimental",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06201,MTG-Jamendo,"electronic, jazz, hiphop",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04701,Udio,"electronic, jazz, hiphop",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06202,MTG-Jamendo,"electronic, lounge, chillout",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04202,Stable Audio v2,"electronic, lounge, chillout",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06203,MTG-Jamendo,"electronic, lounge, dance",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03203,Mustango,"electronic, lounge, dance",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06204,MTG-Jamendo,"electronic, lounge, jazz",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00605,MusicGen Medium,"electronic, lounge, jazz",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06205,MTG-Jamendo,"electronic, lounge, percussion",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01133,MusicGen Large,"electronic, lounge, percussion",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06206,MTG-Jamendo,"electronic, lounge, piano",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03206,Mustango,"electronic, lounge, piano",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06208,MTG-Jamendo,"electronic, orchestral, piano",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01993,AudioLDM 2 Large,"electronic, orchestral, piano",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06209,MTG-Jamendo,"electronic, oriental, synthesizer",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03209,Mustango,"electronic, oriental, synthesizer",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06210,MTG-Jamendo,"electronic, slow, bass",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04710,Udio,"electronic, slow, bass",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06211,MTG-Jamendo,"electronic, soundtrack, beat",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00816,MusicGen Medium,"electronic, soundtrack, beat",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06212,MTG-Jamendo,"electronic, soundtrack, celtic",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01529,AudioLDM 2 Large,"electronic, soundtrack, celtic",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06213,MTG-Jamendo,"electronic, soundtrack, guitar",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05713,Suno v3.5,"electronic, soundtrack, guitar",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06217,MTG-Jamendo,"electronic, synthesizer, guitar",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04217,Stable Audio v2,"electronic, synthesizer, guitar",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06219,MTG-Jamendo,"electronic, techno, deep",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03219,Mustango,"electronic, techno, deep",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06220,MTG-Jamendo,"electronic, techno, experimental",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03220,Mustango,"electronic, techno, experimental",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06222,MTG-Jamendo,"electronic, techno, hard",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02432,AudioLDM 2 Music,"electronic, techno, hard",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06226,MTG-Jamendo,"electronic, techno, progressive",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01446,MusicGen Large,"electronic, techno, progressive",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06227,MTG-Jamendo,"electronic, techno, synthesizer",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02635,Riffusion,"electronic, techno, synthesizer",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06229,MTG-Jamendo,"electronic, trance, dance",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05729,Suno v3.5,"electronic, trance, dance",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06230,MTG-Jamendo,"electronic, trance, keyboard",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00071,MusicGen Small,"electronic, trance, keyboard",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06231,MTG-Jamendo,"electronic, trance, space",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03731,Stable Audio v1,"electronic, trance, space",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06233,MTG-Jamendo,"electronic, triphop, guitar",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05233,Suno v3,"electronic, triphop, guitar",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06234,MTG-Jamendo,"electronic, triphop, hiphop",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05734,Suno v3.5,"electronic, triphop, hiphop",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06235,MTG-Jamendo,"electronic, triphop, idm",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03735,Stable Audio v1,"electronic, triphop, idm",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06237,MTG-Jamendo,"electronic, triphop, reggae",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02233,AudioLDM 2 Music,"electronic, triphop, reggae",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06239,MTG-Jamendo,"electronic, world, oriental",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04239,Stable Audio v2,"electronic, world, oriental",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06241,MTG-Jamendo,"experimental, choir, orchestra",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04241,Stable Audio v2,"experimental, choir, orchestra",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06244,MTG-Jamendo,"experimental, electronica, orchestra",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02860,Riffusion,"experimental, electronica, orchestra",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06245,MTG-Jamendo,"experimental, hardrock, electricguitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00503,MusicGen Medium,"experimental, hardrock, electricguitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06246,MTG-Jamendo,"experimental, orchestral, harp",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04746,Udio,"experimental, orchestral, harp",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06248,MTG-Jamendo,"experimental, reggae, rap",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05748,Suno v3.5,"experimental, reggae, rap",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06251,MTG-Jamendo,"experimental, slow, synthesizer",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04751,Udio,"experimental, slow, synthesizer",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06252,MTG-Jamendo,"experimental, soundtrack, percussion",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05752,Suno v3.5,"experimental, soundtrack, percussion",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06253,MTG-Jamendo,"experimental, trance, piano",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02436,AudioLDM 2 Music,"experimental, trance, piano",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06254,MTG-Jamendo,"folk, celtic, harp",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00574,MusicGen Medium,"folk, celtic, harp",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06255,MTG-Jamendo,"folk, celtic, medieval",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03755,Stable Audio v1,"folk, celtic, medieval",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06256,MTG-Jamendo,"folk, celtic, violin",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00653,MusicGen Medium,"folk, celtic, violin",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06257,MTG-Jamendo,"folk, country, acousticguitar",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04257,Stable Audio v2,"folk, country, acousticguitar",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06259,MTG-Jamendo,"folk, country, latin",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02192,AudioLDM 2 Music,"folk, country, latin",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06260,MTG-Jamendo,"folk, country, singersongwriter",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05760,Suno v3.5,"folk, country, singersongwriter",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06265,MTG-Jamendo,"funk, jazz, synthesizer",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04265,Stable Audio v2,"funk, jazz, synthesizer",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06266,MTG-Jamendo,"funk, soundtrack, dance",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01856,AudioLDM 2 Large,"funk, soundtrack, dance",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06267,MTG-Jamendo,"funk, triphop, idm",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03767,Stable Audio v1,"funk, triphop, idm",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06268,MTG-Jamendo,"funk, triphop, piano",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03768,Stable Audio v1,"funk, triphop, piano",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06269,MTG-Jamendo,"funk, world, african",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00447,MusicGen Small,"funk, world, african",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06270,MTG-Jamendo,"guitar, violin, bass",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01652,AudioLDM 2 Large,"guitar, violin, bass",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06271,MTG-Jamendo,"heavymetal, synthesizer, guitar",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05271,Suno v3,"heavymetal, synthesizer, guitar",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06274,MTG-Jamendo,"hiphop, rap, beat",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00813,MusicGen Medium,"hiphop, rap, beat",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06275,MTG-Jamendo,"hiphop, rap, guitar",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05275,Suno v3,"hiphop, rap, guitar",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06276,MTG-Jamendo,"hiphop, rap, happy",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05776,Suno v3.5,"hiphop, rap, happy",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06277,MTG-Jamendo,"hiphop, rap, orchestra",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01236,MusicGen Large,"hiphop, rap, orchestra",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06281,MTG-Jamendo,"hiphop, rap, synthesizer",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04281,Stable Audio v2,"hiphop, rap, synthesizer",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06282,MTG-Jamendo,"hiphop, synthesizer, piano",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02291,AudioLDM 2 Music,"hiphop, synthesizer, piano",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06284,MTG-Jamendo,"house, electronica, guitar",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04784,Udio,"house, electronica, guitar",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06287,MTG-Jamendo,"industrial, dance, latin",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05287,Suno v3,"industrial, dance, latin",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06289,MTG-Jamendo,"jazz, bass, drums",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00066,MusicGen Small,"jazz, bass, drums",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06292,MTG-Jamendo,"jazz, guitar, flute",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03792,Stable Audio v1,"jazz, guitar, flute",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06293,MTG-Jamendo,"jazz, guitar, organ",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02010,AudioLDM 2 Music,"jazz, guitar, organ",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06294,MTG-Jamendo,"jazz, horn, flute",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04294,Stable Audio v2,"jazz, horn, flute",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06296,MTG-Jamendo,"jazz, piano, harp",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02411,AudioLDM 2 Music,"jazz, piano, harp",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06297,MTG-Jamendo,"jazz, soundtrack, blues",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02662,Riffusion,"jazz, soundtrack, blues",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06298,MTG-Jamendo,"jazz, soundtrack, orchestral",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02139,AudioLDM 2 Music,"jazz, soundtrack, orchestral",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06299,MTG-Jamendo,"jazz, soundtrack, piano",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03299,Mustango,"jazz, soundtrack, piano",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06300,MTG-Jamendo,"jazz, synthesizer, piano",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03300,Mustango,"jazz, synthesizer, piano",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06301,MTG-Jamendo,"jazz, world, latin",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03801,Stable Audio v1,"jazz, world, latin",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06302,MTG-Jamendo,"latin, african, percussion",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05802,Suno v3.5,"latin, african, percussion",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06303,MTG-Jamendo,"latin, drums, flute",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03803,Stable Audio v1,"latin, drums, flute",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06307,MTG-Jamendo,"lounge, downtempo, house",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00361,MusicGen Small,"lounge, downtempo, house",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06308,MTG-Jamendo,"lounge, downtempo, sad",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05308,Suno v3,"lounge, downtempo, sad",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06309,MTG-Jamendo,"lounge, experimental, world",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01772,AudioLDM 2 Large,"lounge, experimental, world",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06310,MTG-Jamendo,"lounge, folk, acousticguitar",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01527,AudioLDM 2 Large,"lounge, folk, acousticguitar",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06312,MTG-Jamendo,"lounge, house, tribal",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04312,Stable Audio v2,"lounge, house, tribal",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06313,MTG-Jamendo,"metal, ambient, oriental",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00962,MusicGen Medium,"metal, ambient, oriental",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06314,MTG-Jamendo,"metal, ambient, synthesizer",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04314,Stable Audio v2,"metal, ambient, synthesizer",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06315,MTG-Jamendo,"metal, electronic, soundtrack",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05815,Suno v3.5,"metal, electronic, soundtrack",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06317,MTG-Jamendo,"metal, industrial, dubstep",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02773,Riffusion,"metal, industrial, dubstep",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06318,MTG-Jamendo,"metal, progressive, synthesizer",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01079,MusicGen Large,"metal, progressive, synthesizer",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06320,MTG-Jamendo,"metal, rock, funk",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04820,Udio,"metal, rock, funk",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06321,MTG-Jamendo,"metal, rock, heavymetal",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01475,MusicGen Large,"metal, rock, heavymetal",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06326,MTG-Jamendo,"metal, synthesizer, piano",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05326,Suno v3,"metal, synthesizer, piano",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06328,MTG-Jamendo,"newage, jazz, classicalguitar",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02640,Riffusion,"newage, jazz, classicalguitar",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06329,MTG-Jamendo,"newage, soundtrack, piano",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01039,MusicGen Large,"newage, soundtrack, piano",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06331,MTG-Jamendo,"newage, world, celtic",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05331,Suno v3,"newage, world, celtic",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06332,MTG-Jamendo,"newage, world, orchestral",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03332,Mustango,"newage, world, orchestral",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06333,MTG-Jamendo,"newage, world, oriental",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05833,Suno v3.5,"newage, world, oriental",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06334,MTG-Jamendo,"orchestral, blues, violin",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01656,AudioLDM 2 Large,"orchestral, blues, violin",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06336,MTG-Jamendo,"orchestral, folk, celtic",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03336,Mustango,"orchestral, folk, celtic",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06338,MTG-Jamendo,"pop, ambient, chillout",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00891,MusicGen Medium,"pop, ambient, chillout",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06340,MTG-Jamendo,"pop, chillout, hiphop",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01026,MusicGen Large,"pop, chillout, hiphop",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06341,MTG-Jamendo,"pop, chillout, newage",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03841,Stable Audio v1,"pop, chillout, newage",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06342,MTG-Jamendo,"pop, classical, newage",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01259,MusicGen Large,"pop, classical, newage",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06343,MTG-Jamendo,"pop, classical, orchestral",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02491,AudioLDM 2 Music,"pop, classical, orchestral",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06345,MTG-Jamendo,"pop, classical, piano",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04845,Udio,"pop, classical, piano",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06346,MTG-Jamendo,"pop, classical, soundtrack",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02350,AudioLDM 2 Music,"pop, classical, soundtrack",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06349,MTG-Jamendo,"pop, easylistening, ambient",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02847,Riffusion,"pop, easylistening, ambient",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06350,MTG-Jamendo,"pop, easylistening, jazz",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01280,MusicGen Large,"pop, easylistening, jazz",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06351,MTG-Jamendo,"pop, easylistening, lounge",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05351,Suno v3,"pop, easylistening, lounge",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06352,MTG-Jamendo,"pop, easylistening, organ",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05852,Suno v3.5,"pop, easylistening, organ",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06353,MTG-Jamendo,"pop, easylistening, trumpet",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03353,Mustango,"pop, easylistening, trumpet",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06355,MTG-Jamendo,"pop, electronic, ambient",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03355,Mustango,"pop, electronic, ambient",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06356,MTG-Jamendo,"pop, electronic, blues",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05356,Suno v3,"pop, electronic, blues",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06357,MTG-Jamendo,"pop, electronic, chillout",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05357,Suno v3,"pop, electronic, chillout",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06358,MTG-Jamendo,"pop, electronic, country",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03358,Mustango,"pop, electronic, country",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06359,MTG-Jamendo,"pop, electronic, dance",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01435,MusicGen Large,"pop, electronic, dance",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06360,MTG-Jamendo,"pop, electronic, dubstep",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00794,MusicGen Medium,"pop, electronic, dubstep",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06361,MTG-Jamendo,"pop, electronic, easylistening",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05861,Suno v3.5,"pop, electronic, easylistening",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06364,MTG-Jamendo,"pop, electronic, lounge",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05364,Suno v3,"pop, electronic, lounge",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06365,MTG-Jamendo,"pop, electronic, newage",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02327,AudioLDM 2 Music,"pop, electronic, newage",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06366,MTG-Jamendo,"pop, electronic, piano",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04365,Stable Audio v2,"pop, electronic, piano",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06368,MTG-Jamendo,"pop, electronic, slow",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00830,MusicGen Medium,"pop, electronic, slow",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06371,MTG-Jamendo,"pop, electronic, triphop",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00243,MusicGen Small,"pop, electronic, triphop",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06354,MTG-Jamendo,"pop, electronica, dark",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02904,Riffusion,"pop, electronica, dark",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06372,MTG-Jamendo,"pop, folk, country",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05872,Suno v3.5,"pop, folk, country",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06373,MTG-Jamendo,"pop, folk, viola",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01884,AudioLDM 2 Large,"pop, folk, viola",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06374,MTG-Jamendo,"pop, hiphop, electronica",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03874,Stable Audio v1,"pop, hiphop, electronica",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06377,MTG-Jamendo,"pop, industrial, latin",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00357,MusicGen Small,"pop, industrial, latin",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06378,MTG-Jamendo,"pop, jazz, piano",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02783,Riffusion,"pop, jazz, piano",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06379,MTG-Jamendo,"pop, jazz, world",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00336,MusicGen Small,"pop, jazz, world",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06380,MTG-Jamendo,"pop, keyboard, violin",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04880,Udio,"pop, keyboard, violin",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06381,MTG-Jamendo,"pop, lounge, funk",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05381,Suno v3,"pop, lounge, funk",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06382,MTG-Jamendo,"pop, mellow, guitar",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05882,Suno v3.5,"pop, mellow, guitar",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06383,MTG-Jamendo,"pop, orchestral, hiphop",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03383,Mustango,"pop, orchestral, hiphop",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06384,MTG-Jamendo,"pop, orchestral, oriental",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00104,MusicGen Small,"pop, orchestral, oriental",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06385,MTG-Jamendo,"pop, orchestral, singersongwriter",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04885,Udio,"pop, orchestral, singersongwriter",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06386,MTG-Jamendo,"pop, singersongwriter, classicalguitar",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01533,AudioLDM 2 Large,"pop, singersongwriter, classicalguitar",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06387,MTG-Jamendo,"pop, singersongwriter, sad",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04387,Stable Audio v2,"pop, singersongwriter, sad",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06388,MTG-Jamendo,"pop, soundtrack, acousticguitar",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00494,MusicGen Small,"pop, soundtrack, acousticguitar",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06389,MTG-Jamendo,"pop, soundtrack, orchestral",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02664,Riffusion,"pop, soundtrack, orchestral",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06390,MTG-Jamendo,"pop, soundtrack, space",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04890,Udio,"pop, soundtrack, space",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06391,MTG-Jamendo,"pop, synthesizer, electricguitar",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00748,MusicGen Medium,"pop, synthesizer, electricguitar",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06392,MTG-Jamendo,"pop, synthesizer, piano",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00675,MusicGen Medium,"pop, synthesizer, piano",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06394,MTG-Jamendo,"pop, trance, house",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03394,Mustango,"pop, trance, house",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06395,MTG-Jamendo,"pop, triphop, synthesizer",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03395,Mustango,"pop, triphop, synthesizer",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06396,MTG-Jamendo,"pop, trumpet, flute",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05396,Suno v3,"pop, trumpet, flute",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06397,MTG-Jamendo,"pop, world, african",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04397,Stable Audio v2,"pop, world, african",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06399,MTG-Jamendo,"pop, world, reggae",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02238,AudioLDM 2 Music,"pop, world, reggae",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06401,MTG-Jamendo,"progressive, strings, drums",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03401,Mustango,"progressive, strings, drums",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06402,MTG-Jamendo,"reggae, guitar, drums",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05402,Suno v3,"reggae, guitar, drums",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06403,MTG-Jamendo,"reggae, rap, upbeat",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01807,AudioLDM 2 Large,"reggae, rap, upbeat",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06404,MTG-Jamendo,"rock, ambient, country",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04904,Udio,"rock, ambient, country",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06406,MTG-Jamendo,"rock, cello, electricguitar",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01879,AudioLDM 2 Large,"rock, cello, electricguitar",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06407,MTG-Jamendo,"rock, classical, bass",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04407,Stable Audio v2,"rock, classical, bass",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06408,MTG-Jamendo,"rock, classical, folk",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00078,MusicGen Small,"rock, classical, folk",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06409,MTG-Jamendo,"rock, classical, soundtrack",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03409,Mustango,"rock, classical, soundtrack",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06410,MTG-Jamendo,"rock, downtempo, triphop",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00776,MusicGen Medium,"rock, downtempo, triphop",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06411,MTG-Jamendo,"rock, easylistening, electricguitar",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01293,MusicGen Large,"rock, easylistening, electricguitar",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06412,MTG-Jamendo,"rock, easylistening, soundtrack",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04912,Udio,"rock, easylistening, soundtrack",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06413,MTG-Jamendo,"rock, electronic, funk",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04413,Stable Audio v2,"rock, electronic, funk",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06414,MTG-Jamendo,"rock, electronic, jazz",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01215,MusicGen Large,"rock, electronic, jazz",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06415,MTG-Jamendo,"rock, electronic, newwave",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05915,Suno v3.5,"rock, electronic, newwave",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06416,MTG-Jamendo,"rock, electronic, rap",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03916,Stable Audio v1,"rock, electronic, rap",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06417,MTG-Jamendo,"rock, electronic, reggae",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01966,AudioLDM 2 Large,"rock, electronic, reggae",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06418,MTG-Jamendo,"rock, electronic, space",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01165,MusicGen Large,"rock, electronic, space",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06419,MTG-Jamendo,"rock, experimental, heavymetal",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02397,AudioLDM 2 Music,"rock, experimental, heavymetal",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06420,MTG-Jamendo,"rock, folk, guitar",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05920,Suno v3.5,"rock, folk, guitar",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06422,MTG-Jamendo,"rock, guitar, drums",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00586,MusicGen Medium,"rock, guitar, drums",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06424,MTG-Jamendo,"rock, hiphop, bass",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00763,MusicGen Medium,"rock, hiphop, bass",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06425,MTG-Jamendo,"rock, jazz, guitar",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02016,AudioLDM 2 Music,"rock, jazz, guitar",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06427,MTG-Jamendo,"rock, orchestral, happy",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03927,Stable Audio v1,"rock, orchestral, happy",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06428,MTG-Jamendo,"rock, pop, country",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02038,AudioLDM 2 Music,"rock, pop, country",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06429,MTG-Jamendo,"rock, pop, dance",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00244,MusicGen Small,"rock, pop, dance",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06430,MTG-Jamendo,"rock, pop, easylistening",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01304,MusicGen Large,"rock, pop, easylistening",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06431,MTG-Jamendo,"rock, pop, experimental",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00433,MusicGen Small,"rock, pop, experimental",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06432,MTG-Jamendo,"rock, pop, funk",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01282,MusicGen Large,"rock, pop, funk",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06436,MTG-Jamendo,"rock, pop, synthpop",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04936,Udio,"rock, pop, synthpop",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06438,MTG-Jamendo,"rock, progressive, drums",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02764,Riffusion,"rock, progressive, drums",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06439,MTG-Jamendo,"rock, progressive, guitar",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02739,Riffusion,"rock, progressive, guitar",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06440,MTG-Jamendo,"rock, reggae, latin",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05440,Suno v3,"rock, reggae, latin",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06441,MTG-Jamendo,"rock, soundtrack, dubstep",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04941,Udio,"rock, soundtrack, dubstep",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06442,MTG-Jamendo,"rock, soundtrack, keyboard",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03942,Stable Audio v1,"rock, soundtrack, keyboard",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06444,MTG-Jamendo,"rock, strings, organ",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03444,Mustango,"rock, strings, organ",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06445,MTG-Jamendo,"rock, triphop, breakbeat",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01603,AudioLDM 2 Large,"rock, triphop, breakbeat",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06447,MTG-Jamendo,"rock, world, folk",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02550,Riffusion,"rock, world, folk",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06448,MTG-Jamendo,"rock, world, voice",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02470,AudioLDM 2 Music,"rock, world, voice",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06449,MTG-Jamendo,"sad, guitar, flute",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02969,Riffusion,"sad, guitar, flute",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06450,MTG-Jamendo,"soundtrack, blues, synthesizer",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03450,Mustango,"soundtrack, blues, synthesizer",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06451,MTG-Jamendo,"soundtrack, celtic, harp",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00363,MusicGen Small,"soundtrack, celtic, harp",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06452,MTG-Jamendo,"soundtrack, folk, country",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01887,AudioLDM 2 Large,"soundtrack, folk, country",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06454,MTG-Jamendo,"soundtrack, folk, medieval",0,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00207,MusicGen Small,"soundtrack, folk, medieval",1,train,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06455,MTG-Jamendo,"soundtrack, happy, orchestra",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04455,Stable Audio v2,"soundtrack, happy, orchestra",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06457,MTG-Jamendo,"soundtrack, house, latin",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01173,MusicGen Large,"soundtrack, house, latin",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06458,MTG-Jamendo,"soundtrack, orchestral, christmas",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03458,Mustango,"soundtrack, orchestral, christmas",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06459,MTG-Jamendo,"soundtrack, orchestral, dark",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02110,AudioLDM 2 Music,"soundtrack, orchestral, dark",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06460,MTG-Jamendo,"soundtrack, orchestral, heavymetal",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02561,Riffusion,"soundtrack, orchestral, heavymetal",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06461,MTG-Jamendo,"soundtrack, strings, bass",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01894,AudioLDM 2 Large,"soundtrack, strings, bass",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06463,MTG-Jamendo,"soundtrack, violin, drums",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02203,AudioLDM 2 Music,"soundtrack, violin, drums",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06467,MTG-Jamendo,"synthesizer, drums, organ",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01992,AudioLDM 2 Large,"synthesizer, drums, organ",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06469,MTG-Jamendo,"synthpop, synthesizer, drums",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02912,Riffusion,"synthpop, synthesizer, drums",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06470,MTG-Jamendo,"techno, dance, tribal",0,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00952,MusicGen Medium,"techno, dance, tribal",1,train,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06471,MTG-Jamendo,"techno, experimental, trance",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03971,Stable Audio v1,"techno, experimental, trance",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06472,MTG-Jamendo,"techno, hiphop, rap",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03972,Stable Audio v1,"techno, hiphop, rap",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06473,MTG-Jamendo,"techno, house, tribal",0,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01101,MusicGen Large,"techno, house, tribal",1,train,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06474,MTG-Jamendo,"techno, industrial, house",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04474,Stable Audio v2,"techno, industrial, house",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06475,MTG-Jamendo,"techno, industrial, synthpop",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02896,Riffusion,"techno, industrial, synthpop",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06476,MTG-Jamendo,"techno, keyboard, bass",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03476,Mustango,"techno, keyboard, bass",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06477,MTG-Jamendo,"techno, synthpop, happy",0,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03977,Stable Audio v1,"techno, synthpop, happy",1,train,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06478,MTG-Jamendo,"techno, voice, bass",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04978,Udio,"techno, voice, bass",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06479,MTG-Jamendo,"trance, dance, electricguitar",0,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03479,Mustango,"trance, dance, electricguitar",1,train,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06480,MTG-Jamendo,"trance, house, celtic",0,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02170,AudioLDM 2 Music,"trance, house, celtic",1,train,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06482,MTG-Jamendo,"trance, orchestral, house",0,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02612,Riffusion,"trance, orchestral, house",1,train,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06485,MTG-Jamendo,"triphop, hiphop, drums",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04985,Udio,"triphop, hiphop, drums",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06486,MTG-Jamendo,"triphop, house, electronica",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04986,Udio,"triphop, house, electronica",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06487,MTG-Jamendo,"triphop, soundtrack, world",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05987,Suno v3.5,"triphop, soundtrack, world",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06489,MTG-Jamendo,"world, african, calm",0,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04489,Stable Audio v2,"world, african, calm",1,train,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06491,MTG-Jamendo,"world, folk, blues",0,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05991,Suno v3.5,"world, folk, blues",1,train,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06492,MTG-Jamendo,"world, folk, country",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01930,AudioLDM 2 Large,"world, folk, country",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06493,MTG-Jamendo,"world, folk, flute",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01731,AudioLDM 2 Large,"world, folk, flute",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06495,MTG-Jamendo,"world, latin, guitar",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05495,Suno v3,"world, latin, guitar",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06496,MTG-Jamendo,"world, orchestral, percussion",0,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04996,Udio,"world, orchestral, percussion",1,train,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06498,MTG-Jamendo,"world, synthesizer, percussion",0,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05498,Suno v3,"world, synthesizer, percussion",1,train,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06500,MTG-Jamendo,"world, voice, flute",0,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01741,AudioLDM 2 Large,"world, voice, flute",1,train,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06017,MTG-Jamendo,"ambient, experimental, voice",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03517,Stable Audio v1,"ambient, experimental, voice",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06019,MTG-Jamendo,"ambient, idm, electronica",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02996,Riffusion,"ambient, idm, electronica",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06029,MTG-Jamendo,"ambient, soundtrack, beat",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03529,Stable Audio v1,"ambient, soundtrack, beat",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06032,MTG-Jamendo,"ambient, synthesizer, harp",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01420,MusicGen Large,"ambient, synthesizer, harp",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06034,MTG-Jamendo,"ambient, triphop, orchestral",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03534,Stable Audio v1,"ambient, triphop, orchestral",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06045,MTG-Jamendo,"breakbeat, soundtrack, orchestral",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05045,Suno v3,"breakbeat, soundtrack, orchestral",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06047,MTG-Jamendo,"celtic, flute, harp",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04547,Udio,"celtic, flute, harp",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06061,MTG-Jamendo,"chillout, world, progressive",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00600,MusicGen Medium,"chillout, world, progressive",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06063,MTG-Jamendo,"classical, ambient, chillout",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01910,AudioLDM 2 Large,"classical, ambient, chillout",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06069,MTG-Jamendo,"classical, choir, christmas",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04569,Udio,"classical, choir, christmas",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06071,MTG-Jamendo,"classical, easylistening, piano",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02059,AudioLDM 2 Music,"classical, easylistening, piano",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06072,MTG-Jamendo,"classical, easylistening, soundtrack",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00001,MusicGen Small,"classical, easylistening, soundtrack",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06093,MTG-Jamendo,"classical, soundtrack, percussion",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01403,MusicGen Large,"classical, soundtrack, percussion",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06100,MTG-Jamendo,"classical, world, folk",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05600,Suno v3.5,"classical, world, folk",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06105,MTG-Jamendo,"disco, dance, synthesizer",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04605,Udio,"disco, dance, synthesizer",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06107,MTG-Jamendo,"disco, house, dance",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05107,Suno v3,"disco, house, dance",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06110,MTG-Jamendo,"downtempo, house, idm",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04610,Udio,"downtempo, house, idm",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06113,MTG-Jamendo,"downtempo, world, trance",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03113,Mustango,"downtempo, world, trance",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06125,MTG-Jamendo,"easylistening, jazz, piano",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00650,MusicGen Medium,"easylistening, jazz, piano",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06136,MTG-Jamendo,"electronic, ambient, downtempo",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02116,AudioLDM 2 Music,"electronic, ambient, downtempo",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06165,MTG-Jamendo,"electronic, downtempo, country",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05165,Suno v3,"electronic, downtempo, country",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06168,MTG-Jamendo,"electronic, downtempo, jazz",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02624,Riffusion,"electronic, downtempo, jazz",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06173,MTG-Jamendo,"electronic, dubstep, synthesizer",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05673,Suno v3.5,"electronic, dubstep, synthesizer",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06180,MTG-Jamendo,"electronic, easylistening, house",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04180,Stable Audio v2,"electronic, easylistening, house",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06181,MTG-Jamendo,"electronic, easylistening, lounge",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01530,AudioLDM 2 Large,"electronic, easylistening, lounge",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06207,MTG-Jamendo,"electronic, newage, soundtrack",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01883,AudioLDM 2 Large,"electronic, newage, soundtrack",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06214,MTG-Jamendo,"electronic, soundtrack, newwave",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01553,AudioLDM 2 Large,"electronic, soundtrack, newwave",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06215,MTG-Jamendo,"electronic, soundtrack, orchestral",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02680,Riffusion,"electronic, soundtrack, orchestral",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06218,MTG-Jamendo,"electronic, synthpop, heavy",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00268,MusicGen Small,"electronic, synthpop, heavy",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06221,MTG-Jamendo,"electronic, techno, fast",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03721,Stable Audio v1,"electronic, techno, fast",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06228,MTG-Jamendo,"electronic, techno, synthpop",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02937,Riffusion,"electronic, techno, synthpop",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06240,MTG-Jamendo,"electronic, world, rap",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05240,Suno v3,"electronic, world, rap",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06258,MTG-Jamendo,"folk, country, happy",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01453,MusicGen Large,"folk, country, happy",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06261,MTG-Jamendo,"folk, keyboard, drums",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05761,Suno v3.5,"folk, keyboard, drums",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06262,MTG-Jamendo,"folk, singersongwriter, classicalguitar",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01668,AudioLDM 2 Large,"folk, singersongwriter, classicalguitar",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06263,MTG-Jamendo,"funk, bass, electricguitar",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02341,AudioLDM 2 Music,"funk, bass, electricguitar",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06279,MTG-Jamendo,"hiphop, rap, singersongwriter",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03279,Mustango,"hiphop, rap, singersongwriter",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06280,MTG-Jamendo,"hiphop, rap, strings",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03280,Mustango,"hiphop, rap, strings",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06283,MTG-Jamendo,"house, dance, progressive",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00091,MusicGen Small,"house, dance, progressive",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06285,MTG-Jamendo,"house, hiphop, dance",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00159,MusicGen Small,"house, hiphop, dance",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06286,MTG-Jamendo,"house, synthesizer, bass",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04286,Stable Audio v2,"house, synthesizer, bass",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06291,MTG-Jamendo,"jazz, drums, acousticguitar",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00352,MusicGen Small,"jazz, drums, acousticguitar",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06295,MTG-Jamendo,"jazz, piano, drums",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00809,MusicGen Medium,"jazz, piano, drums",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06305,MTG-Jamendo,"lounge, chillout, jazz",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04305,Stable Audio v2,"lounge, chillout, jazz",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06306,MTG-Jamendo,"lounge, chillout, sad",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04306,Stable Audio v2,"lounge, chillout, sad",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06311,MTG-Jamendo,"lounge, funk, hiphop",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01035,MusicGen Large,"lounge, funk, hiphop",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06322,MTG-Jamendo,"metal, rock, soundtrack",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02389,AudioLDM 2 Music,"metal, rock, soundtrack",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06323,MTG-Jamendo,"metal, soundtrack, orchestral",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04823,Udio,"metal, soundtrack, orchestral",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06327,MTG-Jamendo,"metal, techno, industrial",0,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04827,Udio,"metal, techno, industrial",1,val,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06330,MTG-Jamendo,"newage, world, african",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01370,MusicGen Large,"newage, world, african",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06335,MTG-Jamendo,"orchestral, dubstep, orchestra",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05835,Suno v3.5,"orchestral, dubstep, orchestra",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06344,MTG-Jamendo,"pop, classical, percussion",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05844,Suno v3.5,"pop, classical, percussion",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06362,MTG-Jamendo,"pop, electronic, experimental",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00865,MusicGen Medium,"pop, electronic, experimental",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06363,MTG-Jamendo,"pop, electronic, guitar",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04362,Stable Audio v2,"pop, electronic, guitar",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06369,MTG-Jamendo,"pop, electronic, soundtrack",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02718,Riffusion,"pop, electronic, soundtrack",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06375,MTG-Jamendo,"pop, holiday, christmas",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04375,Stable Audio v2,"pop, holiday, christmas",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06376,MTG-Jamendo,"pop, house, happy",0,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01869,AudioLDM 2 Large,"pop, house, happy",1,val,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06398,MTG-Jamendo,"pop, world, latin",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02201,AudioLDM 2 Music,"pop, world, latin",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06405,MTG-Jamendo,"rock, calm, sad",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05405,Suno v3,"rock, calm, sad",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06421,MTG-Jamendo,"rock, funk, oriental",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03421,Mustango,"rock, funk, oriental",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06426,MTG-Jamendo,"rock, lounge, soundtrack",0,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00145,MusicGen Small,"rock, lounge, soundtrack",1,val,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06433,MTG-Jamendo,"rock, pop, happy",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01098,MusicGen Large,"rock, pop, happy",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06435,MTG-Jamendo,"rock, pop, slow",0,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01009,MusicGen Large,"rock, pop, slow",1,val,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06443,MTG-Jamendo,"rock, soundtrack, piano",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03943,Stable Audio v1,"rock, soundtrack, piano",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06446,MTG-Jamendo,"rock, world, drums",0,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02017,AudioLDM 2 Music,"rock, world, drums",1,val,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06453,MTG-Jamendo,"soundtrack, folk, electricguitar",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05453,Suno v3,"soundtrack, folk, electricguitar",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06456,MTG-Jamendo,"soundtrack, horn, violin",0,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02822,Riffusion,"soundtrack, horn, violin",1,val,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06462,MTG-Jamendo,"soundtrack, synthpop, synthesizer",0,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05962,Suno v3.5,"soundtrack, synthpop, synthesizer",1,val,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06464,MTG-Jamendo,"soundtrack, voice, keyboard",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03464,Mustango,"soundtrack, voice, keyboard",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06466,MTG-Jamendo,"synthesizer, bass, electricguitar",0,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03966,Stable Audio v1,"synthesizer, bass, electricguitar",1,val,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06468,MTG-Jamendo,"synthesizer, strings, bass",0,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03468,Mustango,"synthesizer, strings, bass",1,val,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06481,MTG-Jamendo,"trance, keyboard, drums",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00705,MusicGen Medium,"trance, keyboard, drums",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06483,MTG-Jamendo,"triphop, experimental, guitar",0,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00825,MusicGen Medium,"triphop, experimental, guitar",1,val,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06488,MTG-Jamendo,"voice, guitar, drums",0,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05488,Suno v3,"voice, guitar, drums",1,val,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06494,MTG-Jamendo,"world, folk, piano",0,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04494,Stable Audio v2,"world, folk, piano",1,val,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06010,MTG-Jamendo,"ambient, chillout, soundtrack",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01279,MusicGen Large,"ambient, chillout, soundtrack",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06013,MTG-Jamendo,"ambient, electronica, deep",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02525,Riffusion,"ambient, electronica, deep",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06014,MTG-Jamendo,"ambient, experimental, guitar",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05014,Suno v3,"ambient, experimental, guitar",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06036,MTG-Jamendo,"blues, choir, acousticguitar",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03036,Mustango,"blues, choir, acousticguitar",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06052,MTG-Jamendo,"chillout, newage, synthesizer",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04052,Stable Audio v2,"chillout, newage, synthesizer",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06053,MTG-Jamendo,"chillout, newage, world",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00495,MusicGen Small,"chillout, newage, world",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06057,MTG-Jamendo,"chillout, techno, house",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00474,MusicGen Small,"chillout, techno, house",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06059,MTG-Jamendo,"chillout, world, guitar",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02094,AudioLDM 2 Music,"chillout, world, guitar",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06065,MTG-Jamendo,"classical, ambient, soundtrack",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03065,Mustango,"classical, ambient, soundtrack",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06068,MTG-Jamendo,"classical, chillout, jazz",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05068,Suno v3,"classical, chillout, jazz",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06073,MTG-Jamendo,"classical, electronic, choir",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02134,AudioLDM 2 Music,"classical, electronic, choir",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06080,MTG-Jamendo,"classical, hiphop, orchestra",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01620,AudioLDM 2 Large,"classical, hiphop, orchestra",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06082,MTG-Jamendo,"classical, lounge, soundtrack",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02866,Riffusion,"classical, lounge, soundtrack",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06083,MTG-Jamendo,"classical, medieval, voice",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04083,Stable Audio v2,"classical, medieval, voice",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06085,MTG-Jamendo,"classical, orchestral, oboe",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00367,MusicGen Small,"classical, orchestral, oboe",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06089,MTG-Jamendo,"classical, soundtrack, celtic",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03589,Stable Audio v1,"classical, soundtrack, celtic",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06095,MTG-Jamendo,"classical, soundtrack, sad",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05595,Suno v3.5,"classical, soundtrack, sad",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06101,MTG-Jamendo,"dance, blues, guitar",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04601,Udio,"dance, blues, guitar",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06104,MTG-Jamendo,"disco, chillout, world",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01988,AudioLDM 2 Large,"disco, chillout, world",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06106,MTG-Jamendo,"disco, funk, country",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05606,Suno v3.5,"disco, funk, country",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06118,MTG-Jamendo,"easylistening, chillout, downtempo",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04618,Udio,"easylistening, chillout, downtempo",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06124,MTG-Jamendo,"easylistening, jazz, horn",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04624,Udio,"easylistening, jazz, horn",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06128,MTG-Jamendo,"easylistening, medieval, harp",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01835,AudioLDM 2 Large,"easylistening, medieval, harp",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06137,MTG-Jamendo,"electronic, ambient, drums",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03637,Stable Audio v1,"electronic, ambient, drums",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06146,MTG-Jamendo,"electronic, ambient, space",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02613,Riffusion,"electronic, ambient, space",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06148,MTG-Jamendo,"electronic, ambient, trance",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00669,MusicGen Medium,"electronic, ambient, trance",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06153,MTG-Jamendo,"electronic, chillout, dubstep",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03653,Stable Audio v1,"electronic, chillout, dubstep",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06154,MTG-Jamendo,"electronic, chillout, hiphop",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03154,Mustango,"electronic, chillout, hiphop",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06156,MTG-Jamendo,"electronic, chillout, keyboard",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04656,Udio,"electronic, chillout, keyboard",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06159,MTG-Jamendo,"electronic, choir, electronica",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01040,MusicGen Large,"electronic, choir, electronica",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06171,MTG-Jamendo,"electronic, dubstep, deep",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00266,MusicGen Small,"electronic, dubstep, deep",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06177,MTG-Jamendo,"electronic, easylistening, christmas",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05677,Suno v3.5,"electronic, easylistening, christmas",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06184,MTG-Jamendo,"electronic, experimental, happy",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02575,Riffusion,"electronic, experimental, happy",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06186,MTG-Jamendo,"electronic, experimental, piano",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01006,MusicGen Large,"electronic, experimental, piano",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06187,MTG-Jamendo,"electronic, experimental, sad",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03687,Stable Audio v1,"electronic, experimental, sad",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06190,MTG-Jamendo,"electronic, funk, experimental",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02848,Riffusion,"electronic, funk, experimental",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06216,MTG-Jamendo,"electronic, strings, cello",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03216,Mustango,"electronic, strings, cello",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06223,MTG-Jamendo,"electronic, techno, house",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04223,Stable Audio v2,"electronic, techno, house",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06224,MTG-Jamendo,"electronic, techno, industrial",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03724,Stable Audio v1,"electronic, techno, industrial",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06225,MTG-Jamendo,"electronic, techno, piano",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03725,Stable Audio v1,"electronic, techno, piano",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06232,MTG-Jamendo,"electronic, triphop, experimental",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00288,MusicGen Small,"electronic, triphop, experimental",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06236,MTG-Jamendo,"electronic, triphop, jazz",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01324,MusicGen Large,"electronic, triphop, jazz",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06238,MTG-Jamendo,"electronic, triphop, voice",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00681,MusicGen Medium,"electronic, triphop, voice",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06242,MTG-Jamendo,"experimental, dark, organ",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04742,Udio,"experimental, dark, organ",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06243,MTG-Jamendo,"experimental, dark, viola",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04243,Stable Audio v2,"experimental, dark, viola",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06247,MTG-Jamendo,"experimental, percussion, organ",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03247,Mustango,"experimental, percussion, organ",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06249,MTG-Jamendo,"experimental, reggae, singersongwriter",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05249,Suno v3,"experimental, reggae, singersongwriter",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06250,MTG-Jamendo,"experimental, sad, piano",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04250,Stable Audio v2,"experimental, sad, piano",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06264,MTG-Jamendo,"funk, jazz, percussion",0,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03764,Stable Audio v1,"funk, jazz, percussion",1,test,Stable Audio v1,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06272,MTG-Jamendo,"hiphop, african, rap",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00649,MusicGen Medium,"hiphop, african, rap",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06273,MTG-Jamendo,"hiphop, hardrock, hard",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00242,MusicGen Small,"hiphop, hardrock, hard",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06278,MTG-Jamendo,"hiphop, rap, piano",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02302,AudioLDM 2 Music,"hiphop, rap, piano",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06288,MTG-Jamendo,"industrial, experimental, idm",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01890,AudioLDM 2 Large,"industrial, experimental, idm",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06290,MTG-Jamendo,"jazz, cello, drums",0,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04290,Stable Audio v2,"jazz, cello, drums",1,test,Stable Audio v2,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06304,MTG-Jamendo,"lounge, ambient, chillout",0,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+03304,Mustango,"lounge, ambient, chillout",1,test,Mustango,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06316,MTG-Jamendo,"metal, experimental, progressive",0,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02696,Riffusion,"metal, experimental, progressive",1,test,Riffusion,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06319,MTG-Jamendo,"metal, rock, electronic",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05819,Suno v3.5,"metal, rock, electronic",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06324,MTG-Jamendo,"metal, soundtrack, progressive",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02093,AudioLDM 2 Music,"metal, soundtrack, progressive",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06325,MTG-Jamendo,"metal, space, guitar",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02044,AudioLDM 2 Music,"metal, space, guitar",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06337,MTG-Jamendo,"orchestral, piano, flute",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01797,AudioLDM 2 Large,"orchestral, piano, flute",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06339,MTG-Jamendo,"pop, ambient, synthesizer",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05339,Suno v3,"pop, ambient, synthesizer",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06347,MTG-Jamendo,"pop, country, guitar",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00730,MusicGen Medium,"pop, country, guitar",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06348,MTG-Jamendo,"pop, disco, funk",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00925,MusicGen Medium,"pop, disco, funk",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06367,MTG-Jamendo,"pop, electronic, singersongwriter",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01301,MusicGen Large,"pop, electronic, singersongwriter",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06370,MTG-Jamendo,"pop, electronic, synthpop",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04870,Udio,"pop, electronic, synthpop",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06393,MTG-Jamendo,"pop, techno, latin",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05893,Suno v3.5,"pop, techno, latin",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06400,MTG-Jamendo,"postrock, keyboard, electricguitar",0,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00129,MusicGen Small,"postrock, keyboard, electricguitar",1,test,MusicGen Small,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06423,MTG-Jamendo,"rock, hardrock, hard",0,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01688,AudioLDM 2 Large,"rock, hardrock, hard",1,test,AudioLDM 2 Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06434,MTG-Jamendo,"rock, pop, progressive",0,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+04934,Udio,"rock, pop, progressive",1,test,Udio,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06437,MTG-Jamendo,"rock, pop, world",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05437,Suno v3,"rock, pop, world",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06465,MTG-Jamendo,"soundtrack, world, tribal",0,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+01028,MusicGen Large,"soundtrack, world, tribal",1,test,MusicGen Large,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06484,MTG-Jamendo,"triphop, experimental, progressive",0,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+00837,MusicGen Medium,"triphop, experimental, progressive",1,test,MusicGen Medium,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06490,MTG-Jamendo,"world, drums, percussion",0,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05490,Suno v3,"world, drums, percussion",1,test,Suno v3,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06497,MTG-Jamendo,"world, reggae, piano",0,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+02065,AudioLDM 2 Music,"world, reggae, piano",1,test,AudioLDM 2 Music,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+06499,MTG-Jamendo,"world, trance, classicalguitar",0,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601
+05999,Suno v3.5,"world, trance, classicalguitar",1,test,Suno v3.5,42,balanced_generator_group_split_v1,b84d4be5eda830b6eb714998569dba73530f2601

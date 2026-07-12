@@ -241,3 +241,7 @@ Crear `data/aime_splits.csv` con una seleccion reproducible y sin fugas:
 - particiones por `description`;
 - una estrategia documentada para seleccionar una IA por `description`;
 - control de distribucion por generador en la seleccion IA.
+
+## Manifiesto experimental
+
+El script `scripts/create_aime_splits.py` genera `data/aime_splits.csv` a partir de `data/interim/aime_metadata_minimal.parquet`, sin descargar ni decodificar audio. Se ejecuta con `python scripts/create_aime_splits.py`; fija la semilla `42` y realiza las particiones por `description`, nunca por fila.

@@ -5,3 +5,5 @@ pandas
 librosa
 soundfile
 scikit-learn
+pytest
+pyarrow
