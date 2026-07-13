@@ -16,3 +16,44 @@ Activar el entorno virtual en PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+## Baseline clasico MFCC + SVM
+
+El manifiesto experimental versionado es `data/aime_splits.csv`. No se regenera para entrenar el baseline.
+
+Extraer caracteristicas MFCC:
+
+```powershell
+python scripts/extract_aime_mfcc.py
+```
+
+Si los audios ya estan descargados localmente, se puede evitar la descarga desde Hugging Face indicando una carpeta ignorada por Git:
+
+```powershell
+python scripts/extract_aime_mfcc.py --audio-dir data/audio/aime_raw
+```
+
+Entrenar, seleccionar hiperparametros con validacion y evaluar una unica vez en test:
+
+```powershell
+python scripts/train_mfcc_svm.py
+```
+
+Artefactos principales:
+
+- `data/processed/aime_mfcc_features.parquet`
+- `data/processed/aime_mfcc_failures.csv`
+- `data/processed/aime_mfcc_extraction_summary.json`
+- `data/models/mfcc_svm_baseline.joblib`
+- `data/models/mfcc_svm_metrics.json`
+- `data/models/mfcc_svm_predictions.csv`
+- `data/models/mfcc_svm_confusion_matrix.png`
+- `docs/mfcc_svm_baseline_summary.md`
+
+Ejecutar tests:
+
+```powershell
+pytest
+```
