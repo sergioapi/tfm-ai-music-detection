@@ -215,48 +215,35 @@ def extract_features_from_manifest(
     mfcc_config = MfccConfig()
     manifest = load_manifest(manifest_path)
     validate_description_splits(manifest)
+    metadata_by_id = _metadata_by_id(manifest)
 
-    existing = _load_existing_features(output_path, overwrite)
+    columns = feature_columns(mfcc_config)
+    existing = _load_existing_features(output_path, overwrite, columns, metadata_by_id)
     processed_ids = set(existing["id"].astype(str).tolist()) if existing is not None else set()
     rows: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
-    dataset_by_id = None
-    if audio_dir is None:
-        dataset_by_id = _load_hf_dataset_by_id(dataset_name, dataset_revision)
 
     start = time.perf_counter()
-    columns = feature_columns(mfcc_config)
-    for index, record in manifest.iterrows():
-        audio_id = str(record["id"])
-        if audio_id in processed_ids:
-            continue
-        try:
-            signal = _load_audio_for_record(
-                record,
-                audio_dir=audio_dir,
-                dataset_by_id=dataset_by_id,
-                preprocess_config=preprocess_config,
-            )
-            features = extract_mfcc_features(
-                signal, preprocess_config.target_sample_rate, config=mfcc_config
-            )
-            row = {column: float(value) for column, value in zip(columns, features)}
-            for column in METADATA_COLUMNS:
-                row[column] = record[column]
-            rows.append(row)
-        except Exception as exc:  # noqa: BLE001 - every failed id must be reported.
-            failures.append(
-                {
-                    "id": audio_id,
-                    "description": record.get("description", ""),
-                    "model": record.get("model", ""),
-                    "split": record.get("split", ""),
-                    "phase": "feature_extraction",
-                    "reason": f"{type(exc).__name__}: {exc}",
-                }
-            )
-        if (index + 1) % 50 == 0:
-            print(f"processed_or_skipped={index + 1}/{len(manifest)}")
+    pending_ids = set(metadata_by_id).difference(processed_ids)
+    if audio_dir is None:
+        rows, failures, stream_stats = _extract_remote_streaming_rows(
+            pending_ids=pending_ids,
+            metadata_by_id=metadata_by_id,
+            columns=columns,
+            preprocess_config=preprocess_config,
+            mfcc_config=mfcc_config,
+            dataset_name=dataset_name,
+            dataset_revision=dataset_revision,
+        )
+    else:
+        rows, failures, stream_stats = _extract_local_rows(
+            manifest=manifest,
+            processed_ids=processed_ids,
+            audio_dir=audio_dir,
+            columns=columns,
+            preprocess_config=preprocess_config,
+            mfcc_config=mfcc_config,
+        )
 
     elapsed = time.perf_counter() - start
     new_features = pd.DataFrame(rows)
@@ -284,6 +271,7 @@ def extract_features_from_manifest(
         "n_processed_this_run": int(len(new_features)),
         "n_failed_this_run": int(len(failures_frame)),
         "feature_extraction_seconds": elapsed,
+        **stream_stats,
     }
     _write_json(summary, summary_path)
     if failures:
@@ -582,29 +570,212 @@ def _predict_split(
     return predictions.astype(int), scores, elapsed
 
 
+def _metadata_by_id(manifest: pd.DataFrame) -> dict[str, dict[str, Any]]:
+    duplicate_ids = manifest["id"][manifest["id"].astype(str).duplicated()].astype(str).tolist()
+    if duplicate_ids:
+        examples = sorted(set(duplicate_ids))[:10]
+        raise BaselineError(f"Manifest contains duplicate ids: {examples}")
+    return {
+        str(record["id"]): {column: record[column] for column in METADATA_COLUMNS}
+        for _, record in manifest.iterrows()
+    }
+
+
+def _extract_local_rows(
+    manifest: pd.DataFrame,
+    processed_ids: set[str],
+    audio_dir: Path,
+    columns: list[str],
+    preprocess_config: PreprocessConfig,
+    mfcc_config: MfccConfig,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    skipped = 0
+    for index, record in manifest.iterrows():
+        audio_id = str(record["id"])
+        if audio_id in processed_ids:
+            skipped += 1
+            continue
+        metadata = {column: record[column] for column in METADATA_COLUMNS}
+        try:
+            signal = _load_audio_for_record(record, audio_dir=audio_dir, preprocess_config=preprocess_config)
+            rows.append(_feature_row(metadata, signal, columns, preprocess_config, mfcc_config))
+        except Exception as exc:  # noqa: BLE001 - every failed id must be reported.
+            failures.append(_failure_row(metadata, "feature_extraction", exc))
+        if (index + 1) % 50 == 0:
+            _print_extraction_progress(
+                rows_scanned=index + 1,
+                ids_found=len(rows) + len(failures),
+                ids_remaining=max(0, len(manifest) - len(processed_ids) - len(rows) - len(failures)),
+                examples_processed=len(rows),
+                failures=len(failures),
+            )
+    return rows, failures, {"stream_rows_scanned": None, "n_skipped_existing": int(skipped)}
+
+
+def _extract_remote_streaming_rows(
+    pending_ids: set[str],
+    metadata_by_id: dict[str, dict[str, Any]],
+    columns: list[str],
+    preprocess_config: PreprocessConfig,
+    mfcc_config: MfccConfig,
+    dataset_name: str,
+    dataset_revision: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    if not pending_ids:
+        return [], [], {"stream_rows_scanned": 0, "stream_ids_found": 0, "stream_ids_missing": []}
+    stream = _load_hf_audio_stream(dataset_name, dataset_revision)
+    return _extract_remote_streaming_rows_from_iterable(
+        stream=stream,
+        pending_ids=pending_ids,
+        metadata_by_id=metadata_by_id,
+        columns=columns,
+        preprocess_config=preprocess_config,
+        mfcc_config=mfcc_config,
+    )
+
+
+def _load_hf_audio_stream(dataset_name: str, dataset_revision: str) -> Any:
+    if datasets is None:
+        raise BaselineError("Install `datasets` or pass --audio-dir with local audio files")
+    stream = datasets.load_dataset(
+        dataset_name,
+        split="train",
+        revision=dataset_revision,
+        streaming=True,
+    )
+    if not hasattr(stream, "decode"):
+        raise BaselineError("The installed datasets version does not expose IterableDataset.decode")
+    return stream.decode(False)
+
+
+def _extract_remote_streaming_rows_from_iterable(
+    stream: Any,
+    pending_ids: set[str],
+    metadata_by_id: dict[str, dict[str, Any]],
+    columns: list[str],
+    preprocess_config: PreprocessConfig,
+    mfcc_config: MfccConfig,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    rows_scanned = 0
+    ids_found = 0
+    pending_ids = set(pending_ids)
+    for row in stream:
+        rows_scanned += 1
+        audio_id = str(row["id"])
+        if audio_id not in pending_ids:
+            if rows_scanned % 250 == 0:
+                _print_extraction_progress(rows_scanned, ids_found, len(pending_ids), len(rows), len(failures))
+            continue
+
+        metadata = metadata_by_id[audio_id]
+        ids_found += 1
+        try:
+            signal = _decode_remote_audio_payload(row["audio"], preprocess_config)
+            rows.append(_feature_row(metadata, signal, columns, preprocess_config, mfcc_config))
+        except Exception as exc:  # noqa: BLE001 - every failed id must be reported.
+            failures.append(_failure_row(metadata, "feature_extraction", exc))
+        finally:
+            pending_ids.remove(audio_id)
+            del row
+
+        _print_extraction_progress(rows_scanned, ids_found, len(pending_ids), len(rows), len(failures))
+        if not pending_ids:
+            break
+
+    if pending_ids:
+        for audio_id in sorted(pending_ids):
+            failures.append(
+                {
+                    **metadata_by_id[audio_id],
+                    "phase": "dataset_streaming",
+                    "reason": f"Audio id {audio_id!r} was not found in streamed dataset",
+                }
+            )
+    stats = {
+        "stream_rows_scanned": int(rows_scanned),
+        "stream_ids_found": int(ids_found),
+        "stream_ids_missing": sorted(pending_ids),
+    }
+    return rows, failures, stats
+
+
+def _feature_row(
+    metadata: dict[str, Any],
+    signal: np.ndarray,
+    columns: list[str],
+    preprocess_config: PreprocessConfig,
+    mfcc_config: MfccConfig,
+) -> dict[str, Any]:
+    features = extract_mfcc_features(signal, preprocess_config.target_sample_rate, config=mfcc_config)
+    row = {column: float(value) for column, value in zip(columns, features)}
+    row.update(metadata)
+    return row
+
+
+def _failure_row(metadata: dict[str, Any], phase: str, exc: Exception) -> dict[str, Any]:
+    return {
+        "id": metadata.get("id", ""),
+        "description": metadata.get("description", ""),
+        "model": metadata.get("model", ""),
+        "split": metadata.get("split", ""),
+        "phase": phase,
+        "reason": f"{type(exc).__name__}: {exc}",
+    }
+
+
+def _print_extraction_progress(
+    rows_scanned: int,
+    ids_found: int,
+    ids_remaining: int,
+    examples_processed: int,
+    failures: int,
+) -> None:
+    print(
+        "rows_scanned="
+        f"{rows_scanned} ids_found={ids_found} ids_remaining={ids_remaining} "
+        f"examples_processed={examples_processed} failures={failures}"
+    )
+
+
 def _load_audio_for_record(
     record: pd.Series,
-    audio_dir: Path | None,
-    dataset_by_id: dict[str, Any] | None,
+    audio_dir: Path,
     preprocess_config: PreprocessConfig,
 ) -> np.ndarray:
     audio_id = str(record["id"])
-    if audio_dir is not None:
-        path = find_local_audio(audio_dir, audio_id)
-        return preprocess_audio_file(path, config=preprocess_config)
-    if dataset_by_id is None or audio_id not in dataset_by_id:
-        raise BaselineError(f"Audio id {audio_id!r} not found in dataset")
-    audio = dataset_by_id[audio_id]["audio"]
+    path = find_local_audio(audio_dir, audio_id)
+    return preprocess_audio_file(path, config=preprocess_config)
+
+
+def _decode_remote_audio_payload(audio: Any, preprocess_config: PreprocessConfig) -> np.ndarray:
     if isinstance(audio, dict) and "array" in audio and "sampling_rate" in audio:
         return preprocess_audio_array(audio["array"], int(audio["sampling_rate"]), preprocess_config)
-    if isinstance(audio, dict) and "path" in audio and audio["path"]:
-        return preprocess_audio_file(Path(audio["path"]), preprocess_config)
-    if isinstance(audio, dict) and "bytes" in audio and audio["bytes"]:
+    if isinstance(audio, dict) and "bytes" in audio and audio["bytes"] is not None:
         import io
 
         decoded, sample_rate = sf.read(io.BytesIO(audio["bytes"]), always_2d=False)
         return preprocess_audio_array(decoded, sample_rate, preprocess_config)
-    raise BaselineError(f"Unsupported audio payload for id {audio_id!r}")
+    if isinstance(audio, dict) and "path" in audio and audio["path"]:
+        try:
+            path = Path(str(audio["path"]))
+        except ValueError:
+            path = None
+        if path is not None and path.exists():
+            return preprocess_audio_file(path, preprocess_config)
+        try:
+            from datasets.utils.file_utils import xopen
+
+            with xopen(str(audio["path"]), "rb") as handle:
+                decoded, sample_rate = sf.read(handle, always_2d=False)
+            return preprocess_audio_array(decoded, sample_rate, preprocess_config)
+        except Exception as exc:  # noqa: BLE001
+            raise BaselineError(f"Could not read remote audio path {audio['path']!r}: {exc}") from exc
+
+    raise BaselineError("Unsupported remote audio payload")
 
 
 def find_local_audio(audio_dir: Path, audio_id: str) -> Path:
@@ -616,17 +787,50 @@ def find_local_audio(audio_dir: Path, audio_id: str) -> Path:
     return matches[0]
 
 
-def _load_hf_dataset_by_id(dataset_name: str, dataset_revision: str) -> dict[str, Any]:
-    if datasets is None:
-        raise BaselineError("Install `datasets` or pass --audio-dir with local audio files")
-    dataset = datasets.load_dataset(dataset_name, split="train", revision=dataset_revision)
-    return {str(row["id"]): row for row in dataset}
-
-
-def _load_existing_features(output_path: Path, overwrite: bool) -> pd.DataFrame | None:
+def _load_existing_features(
+    output_path: Path,
+    overwrite: bool,
+    columns: list[str],
+    metadata_by_id: dict[str, dict[str, Any]],
+) -> pd.DataFrame | None:
     if overwrite or not output_path.exists():
         return None
-    return pd.read_parquet(output_path)
+    existing = pd.read_parquet(output_path)
+    _validate_existing_features(existing, columns, metadata_by_id)
+    return existing
+
+
+def _validate_existing_features(
+    existing: pd.DataFrame,
+    columns: list[str],
+    metadata_by_id: dict[str, dict[str, Any]],
+) -> None:
+    missing = set(METADATA_COLUMNS + columns).difference(existing.columns)
+    if missing:
+        raise BaselineError(f"Existing features file missing columns: {sorted(missing)}")
+
+    ids = existing["id"].astype(str)
+    duplicate_ids = ids[ids.duplicated()].tolist()
+    if duplicate_ids:
+        examples = sorted(set(duplicate_ids))[:10]
+        raise BaselineError(f"Existing features contain duplicate ids: {examples}")
+
+    unknown_ids = sorted(set(ids).difference(metadata_by_id))
+    if unknown_ids:
+        raise BaselineError(f"Existing features contain ids not present in manifest: {unknown_ids[:10]}")
+
+    for _, row in existing.iterrows():
+        audio_id = str(row["id"])
+        expected = metadata_by_id[audio_id]
+        mismatched = [
+            column
+            for column in METADATA_COLUMNS
+            if str(row[column]) != str(expected[column])
+        ]
+        if mismatched:
+            raise BaselineError(
+                f"Existing features metadata mismatch for id {audio_id!r}: {mismatched}"
+            )
 
 
 def _combine_features(
@@ -638,7 +842,10 @@ def _combine_features(
     if not frames:
         return pd.DataFrame(columns=METADATA_COLUMNS + columns)
     combined = pd.concat(frames, ignore_index=True)
-    combined = combined.drop_duplicates(subset=["id"], keep="last")
+    duplicate_ids = combined["id"][combined["id"].astype(str).duplicated()].astype(str).tolist()
+    if duplicate_ids:
+        examples = sorted(set(duplicate_ids))[:10]
+        raise BaselineError(f"Combined features contain duplicate ids: {examples}")
     combined = combined.sort_values(["split", "description", "label", "id"]).reset_index(drop=True)
     return combined[METADATA_COLUMNS + columns]
 
