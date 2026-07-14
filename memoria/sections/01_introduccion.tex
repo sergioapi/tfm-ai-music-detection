@@ -1,0 +1,35 @@
+\chapter{Introducción}
+\label{cap:introduccion}
+
+\section{Introducción}
+\label{sec:introduccion:intro}
+En los últimos años, la generación automática de música mediante inteligencia artificial ha experimentado un avance muy significativo. La aparición de modelos text-to-music y de servicios que permiten utilizarlos con facilidad ha hecho que estas tecnologías se extiendan más allá de entornos especializados. Sistemas como MusicGen, AudioLDM2 o Stable Audio Open, junto con plataformas comerciales como Suno y Udio, han contribuido a popularizar su uso tanto en entornos experimentales como en contextos reales.
+
+Este progreso abre nuevas posibilidades creativas y productivas, pero también plantea retos importantes. A medida que la música generada por IA alcanza niveles de calidad cada vez mayores, resulta más difícil distinguir entre obras creadas por personas y contenido generado artificialmente. Esta situación no solo plantea un desafío técnico, sino que también afecta a cuestiones como la autenticidad del contenido, su trazabilidad y la protección de los derechos de autor. En este contexto, la detección de música generada por IA se ha convertido en un problema cada vez más relevante. Disponer de métodos capaces de identificar este tipo de contenido puede resultar útil en escenarios como plataformas de distribución, servicios de streaming, sistemas de recomendación, verificación de procedencia o análisis de copyright.
+
+Para abordar este problema, se han propuesto distintos métodos de detección basados en técnicas de procesamiento de audio y aprendizaje automático. Sin embargo, la literatura reciente señala que, aunque algunos detectores ofrecen resultados prometedores en entornos controlados, todavía presentan limitaciones de generalización y robustez cuando cambian los generadores utilizados, el tipo de audio analizado o las transformaciones aplicadas a la señal. En particular, algunos estudios señalan que modificaciones aparentemente simples, como el resampling o determinadas alteraciones del audio, pueden degradar de forma notable el rendimiento de estos sistemas.
+
+A partir de esta situación, el presente Trabajo Fin de Máster aborda el problema de la atribución cerrada del generador en música sintética desde una perspectiva comparativa y reproducible. En concreto, se propone diseñar e implementar un pipeline experimental común para evaluar diversas técnicas de representación de audio y diferentes modelos de clasificación bajo las mismas condiciones. Para ello, el trabajo se apoyará en un conjunto de datos de referencia utilizado en la literatura reciente y en varias combinaciones representativas de preprocesado, extracción de características y clasificación, con el objetivo de analizar qué enfoques ofrecen mejores resultados en la identificación del generador utilizado para crear una pieza musical sintética dentro de un mismo marco experimental.
+
+\section{Contexto del TFM}
+\label{sec:introduccion:contexto}
+Desarrolle de forma razonada los siguientes puntos:
+\begin {enumerate}
+\item Grado de dificultad o complejidad del tema (Para contestar a esta pregunta, considere los siguientes factores: ¿se da solución a un problema no resuelto previamente? ¿Se usan tecnologías muy novedosas o poco estudiadas? ¿Se ha resuelto un problema haciendo uso de recursos limitados o muy reducidos en comparación con soluciones previas?):
+\item Grado de cumplimiento de los objetivos planteados:
+\item Componente de investigación del trabajo:
+\item Potencial aplicación de este trabajo en un entorno académico o industrial:
+\end{enumerate}
+
+
+\section {Estructura de este documento}
+\label{sec:introduccion:estructura}
+El presente documento se estructura en los siguientes capítulos:
+\begin{itemize}
+    \item \textbf{Introducción:} presenta el contexto general del trabajo, el problema abordado, la motivación del TFM y la organización del documento.
+    \item \textbf{Estudio previo:} recoge la definición del problema, los objetivos, la metodología de trabajo, la planificación temporal y el presupuesto estimado del proyecto.
+    \item \textbf{Estado del arte:} revisa los trabajos más relevantes relacionados con la generación musical mediante IA, la detección y atribución de música sintética, los datasets disponibles, las técnicas de representación de audio y los modelos de clasificación empleados en la literatura.
+    \item \textbf{Descripción de la propuesta:} describe la solución planteada en este TFM, incluyendo el dataset utilizado, el pipeline experimental, las técnicas de preprocesado, las representaciones de audio consideradas, los modelos implementados y el diseño de los experimentos de atribución cerrada.
+    \item \textbf{Validación:} presenta las herramientas empleadas, los experimentos realizados, los resultados obtenidos y su análisis.
+    \item \textbf{Conclusiones:} recoge las conclusiones finales del trabajo, sus limitaciones y las posibles líneas de trabajo futuro.
+\end{itemize}
