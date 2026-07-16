@@ -2,14 +2,50 @@
 \label{cap:estudio-previo}
 
 \section{Introducción}
-Breve introducción al capítulo
+
+Este capítulo define los objetivos del TFM y la metodología empleada para organizar el trabajo. El estudio se centra en una tarea de clasificación binaria entre música producida por humanos y música generada mediante IA, utilizando AIME como conjunto de datos principal y un protocolo experimental común para comparar los modelos.
+
+La comparación incluye un enfoque clásico basado en MFCC + SVM y un único modelo profundo de audio preentrenado. La evaluación considera tanto el rendimiento predictivo como el comportamiento operacional, de forma que la selección del modelo tenga en cuenta su utilidad dentro de una prueba de concepto web.
 
 \section{Objetivos}
 
+\subsection{Objetivo general}
+
+Comparar un enfoque clásico basado en MFCC y SVM con un modelo profundo preentrenado para la detección de música generada mediante inteligencia artificial, evaluando ambos mediante medidas predictivas y operacionales bajo un protocolo experimental común.
+
+\subsection{Objetivos específicos}
+
+\begin{enumerate}
+    \item Revisar el estado del arte relacionado con la detección de música generada mediante IA.
+    \item Auditar y preparar AIME para su uso experimental.
+    \item Definir un protocolo reproducible de particionado, preprocesamiento y evaluación.
+    \item Implementar y evaluar el baseline MFCC + SVM.
+    \item Seleccionar, adaptar y evaluar un único modelo profundo preentrenado.
+    \item Comparar ambos enfoques mediante medidas predictivas y operacionales, y seleccionar el modelo con mejor equilibrio entre rendimiento predictivo y coste operacional.
+    \item Desarrollar y desplegar una prueba de concepto web que integre el modelo seleccionado.
+    \item Documentar decisiones, experimentos y artefactos para garantizar la reproducibilidad.
+\end{enumerate}
+
 \section{Metodología}
+
+El proyecto sigue un desarrollo iterativo e incremental organizado mediante fases, issues y ciclos de trabajo breves. Esta forma de trabajo permite dividir el TFM en tareas manejables, revisar los resultados de cada etapa y mantener trazabilidad entre decisiones, experimentos y artefactos generados.
+
+\subsection{Documentación y revisión bibliográfica}
+
+La memoria se redacta en LaTeX mediante Overleaf, manteniendo una estructura de capítulos coherente con los requisitos del TFM. La revisión bibliográfica se organiza de forma estructurada y trazable, de modo que las fuentes empleadas puedan relacionarse con las decisiones metodológicas y con el estado del arte descrito en la memoria.
+
+\subsection{Gestión del proyecto y control de versiones}
+
+El desarrollo se gestiona con Git y GitHub, utilizando ramas e issues para separar tareas y registrar cada bloque de trabajo. Las decisiones relevantes, los experimentos ejecutados y los artefactos producidos se documentan en el repositorio para facilitar su revisión posterior.
+
+\subsection{Preparación de los datos y reproducibilidad}
+
+La preparación experimental parte de la selección y auditoría de AIME como conjunto de datos principal. Antes del procesamiento de audio se generan particiones reproducibles, separando entrenamiento, validación y prueba. Esta separación permite controlar fugas de información y mantener el mismo conjunto de datos para evaluar los dos enfoques comparados.
+
+\subsection{Desarrollo y evaluación experimental}
+
+Los modelos se evalúan bajo el mismo protocolo experimental. La validación se utiliza para seleccionar configuraciones y el conjunto de prueba se reserva para la evaluación final. Durante el proceso se registran medidas predictivas y operacionales, y se incorporan pruebas automatizadas sobre los componentes críticos para comprobar que el particionado, el preprocesamiento y la evaluación respetan las condiciones definidas y no introducen fugas de información.
 
 \section{Planificación}
 
 \section{Presupuesto}
-
-\section{Conclusiones}
