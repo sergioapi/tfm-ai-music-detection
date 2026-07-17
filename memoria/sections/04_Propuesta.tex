@@ -1,7 +1,94 @@
 \chapter{Descripción de la propuesta}\label{cap:propuesta}
 
 \section{Introducción}
-En este capítulo explicaremos...
+
+Este capítulo documenta la selección y auditoría de AIME, la construcción del subconjunto experimental, el diseño de las particiones, el control de posibles fugas semánticas, el protocolo común de comparación y las medidas de evaluación empleadas para comparar un baseline clásico MFCC + SVM con un modelo profundo de audio preentrenado.
+
+\section{Formulación del problema}
+
+El problema se formula como una clasificación binaria entre música producida por humanos y música generada mediante inteligencia artificial. Cada ejemplo del subconjunto experimental recibe una etiqueta: la clase \texttt{0} corresponde a audio humano procedente de \texttt{MTG-Jamendo}, mientras que la clase \texttt{1} corresponde a audio generado mediante IA.
+
+Los dos enfoques comparados trabajan sobre el mismo conjunto de ejemplos y las mismas particiones. Esta decisión permite evaluar las diferencias entre modelos sin introducir variaciones en la composición de entrenamiento, validación y prueba. El objetivo del experimento es estimar la capacidad de discriminación entre ambas clases, sin atribuir una muestra a un generador concreto ni interpretar la salida como una medida calibrada sobre el origen del audio.
+
+\section{Selección del conjunto de datos AIME}
+
+AIME se utiliza como conjunto de datos principal del TFM. La tarjeta oficial lo presenta como \textit{AI Music Evaluation Dataset}, con audio generado por distintos modelos, audio procedente de \texttt{MTG-Jamendo} y metadatos como \texttt{id}, \texttt{model}, \texttt{description} y \texttt{audio} \cite{discoethAIME}. La misma tarjeta centraliza la disponibilidad del recurso y sus condiciones de uso. Su finalidad original está vinculada a la evaluación de modelos de generación musical y preferencias humanas, no a la definición de un conjunto de referencia estándar para detección \cite{groetschla2025benchmarking}.
+
+La elección de AIME se justifica por tres motivos principales:
+\begin{itemize}
+    \item disponibilidad documentada de ejemplos humanos y generados;
+    \item diversidad de generadores dentro de la clase IA;
+    \item existencia de metadatos útiles para el etiquetado y el particionado.
+\end{itemize}
+
+Esta reutilización exige definir un subconjunto experimental propio, documentar las particiones y aplicar controles de fuga de información antes de extraer características o entrenar modelos.
+
+\section{Auditoría y construcción del subconjunto experimental}
+
+La auditoría técnica de AIME inspecciona 6500 filas con los campos \texttt{id}, \texttt{model}, \texttt{description} y \texttt{audio}. En los metadatos revisados aparecen 500 ejemplos de \texttt{MTG-Jamendo} y 6000 ejemplos generados mediante IA, repartidos entre 12 generadores. El campo \texttt{description} contiene una combinación de tres etiquetas descriptivas; en los datos auditados existen 500 valores distintos, y cada uno agrupa trece ejemplos: uno humano y doce generados, correspondientes a los doce generadores disponibles.
+
+La regla de etiquetado binario se deriva del campo \texttt{model}. Los ejemplos cuyo modelo es \texttt{MTG-Jamendo} se etiquetan como clase humana, mientras que el resto de modelos se consideran clase generada mediante IA. Esta regla es coherente con la estructura observada en los metadatos y permite formular el experimento como una clasificación binaria.
+
+El subconjunto experimental contiene 1000 ejemplos: 500 humanos y 500 generados. Para cada valor de \texttt{description} se conserva el ejemplo humano y se selecciona un ejemplo generado. La selección de la clase generada se reparte entre los 12 generadores disponibles para mantener diversidad dentro de la clase IA sin convertir el problema en una tarea de atribución.
+
+La auditoría también identifica varias limitaciones relevantes. El campo \texttt{description} representa una agrupación semántica compartida, pero no identifica una canción, artista o grabación original. El campo \texttt{id} funciona como identificador interno de AIME y no permite recuperar de forma explícita artista, álbum o canción original de \texttt{MTG-Jamendo}. Además, los audios brutos presentan heterogeneidad técnica en duración, frecuencia de muestreo, número de canales, subtipo WAV y tamaño de archivo.
+
+\section{Diseño de las particiones}
+
+Las particiones se crean antes de segmentar audio o extraer características. El manifiesto \path{data/aime_splits.csv} contiene 1000 filas y fija tres particiones: entrenamiento, validación y prueba. Cada partición mantiene balance entre clases, como se muestra en la Tabla~\ref{tab:aime-particiones}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrr}
+        \hline
+        \textbf{Partición} & \textbf{Total} & \textbf{Humanos} & \textbf{Generados} \\
+        \hline
+        Entrenamiento & 700 & 350 & 350 \\
+        Validación & 150 & 75 & 75 \\
+        Prueba & 150 & 75 & 75 \\
+        \hline
+    \end{tabular}
+    \caption{Distribución de ejemplos por partición y clase en el manifiesto experimental.}
+    \label{tab:aime-particiones}
+\end{table}
+
+El criterio principal de agrupación es \texttt{description}. Todos los ejemplos asociados a una misma \texttt{description} permanecen en una única partición. Esta estrategia limita que los mismos condicionamientos semánticos aparezcan simultáneamente en entrenamiento y prueba, ya que \texttt{description} agrupa ejemplos relacionados por etiquetas de estilo o contenido, pero no identifica una canción concreta.
+
+Las particiones se generan con la semilla \texttt{42} mediante una estrategia de particionado equilibrado por generador y agrupación semántica. Las pruebas automáticas verifican el número total de filas, el balance de clases, la permanencia de cada grupo \texttt{description} en una única partición, la reproducibilidad del manifiesto generado y la presencia de todos los generadores en cada partición.
+
+En el subconjunto experimental están representados los doce generadores disponibles. La distribución es prácticamente uniforme: ocho generadores aportan 42 ejemplos, mientras que \texttt{AudioLDM 2 Large}, \texttt{MusicGen Medium}, \texttt{Riffusion} y \texttt{Suno v3.5} aportan 41 ejemplos.
+
+\section{Protocolo experimental común}
+
+El protocolo experimental común fija los elementos que deben compartir el baseline MFCC + SVM y el modelo profundo preentrenado. Ambos enfoques utilizan el mismo subconjunto, las mismas etiquetas binarias y las mismas particiones de entrenamiento, validación y prueba. La validación se reserva para seleccionar configuraciones, mientras que la partición de prueba se mantiene para la evaluación final.
+
+El preprocesamiento de entrada puede adaptarse a los requisitos de cada modelo. Esta flexibilidad es necesaria porque un enfoque basado en MFCC y un modelo profundo preentrenado pueden requerir formatos, frecuencias de muestreo o duraciones de entrada diferentes. La condición común es que cualquier transformación quede documentada y no modifique la composición de las particiones ni la correspondencia entre ejemplo, etiqueta y partición.
+
+En el baseline, el audio se procesa mediante fragmentos de diez segundos antes de extraer los MFCC. Esta duración caracteriza la configuración del enfoque clásico y no condiciona la entrada empleada por el modelo profundo. La configuración de entrada de cada enfoque se documenta junto con su evaluación.
+
+El protocolo también contempla el registro de artefactos y predicciones. Para cada experimento deben conservarse, según corresponda, el manifiesto usado, la configuración, los artefactos del modelo, las predicciones por ejemplo y las medidas de rendimiento calculadas. Esta trazabilidad permite reproducir la comparación y revisar posibles errores de particionado, preprocesamiento o evaluación.
+
+\section{Medidas de evaluación}
+
+La evaluación predictiva emplea \textit{balanced accuracy}, \textit{precision}, \textit{recall}, F1, ROC-AUC y la matriz de confusión.
+
+% TODO: definir y justificar las medidas operacionales tras seleccionar
+% el modelo profundo y estudiar las condiciones de despliegue.
+
+\section{Limitaciones del diseño experimental}
+
+El subconjunto experimental contiene 1000 ejemplos, por lo que solo cubre una parte del material disponible en AIME. Esta reducción permite trabajar con un diseño controlado y equilibrado, aunque limita la variedad de ejemplos que intervienen en la evaluación.
+
+La evaluación se realiza sobre un único corpus. En consecuencia, las medidas obtenidas describen el comportamiento de los modelos dentro de AIME y no proporcionan evidencia directa de generalización a otros conjuntos de datos, generadores o condiciones de audio.
+
+La diferente procedencia de las dos clases introduce otra limitación. La clase humana procede de \texttt{MTG-Jamendo}, mientras que la clase generada reúne ejemplos producidos por varios modelos de IA. Esta configuración puede hacer que parte de la separación aprendida dependa de características de origen y no solo de propiedades generales de la generación musical.
+
+También existen posibles atajos asociados a diferencias técnicas entre fuentes. La frecuencia de muestreo, el códec, la duración, el proceso de producción o el generador de origen pueden introducir señales que el modelo aprenda sin capturar propiedades generales de la música generada mediante IA.
+
+El agrupamiento por \texttt{description} limita fugas semánticas entre particiones, pero no garantiza separación por canción o artista, ya que ese campo no identifica una grabación original. Por tanto, la ausencia de evidencia de generalización externa debe tenerse en cuenta al interpretar la comparación entre modelos.
 
 \section{Conclusiones}
-En este capítulo concluimos que...
+
+La propuesta define un subconjunto equilibrado de 1000 ejemplos a partir de AIME, con 500 ejemplos humanos y 500 generados. El particionado se realiza de forma reproducible, mantiene balance de clases y aplica un control por agrupación semántica mediante \texttt{description}.
+
+Sobre este diseño se establece un protocolo común para comparar MFCC + SVM con un modelo profundo preentrenado. La comparación se apoya en las mismas particiones, una separación clara entre entrenamiento, validación y prueba, y las medidas predictivas definidas para la evaluación.
