@@ -1,9 +1,96 @@
 \chapter{Validación}\label{cap:validacion}
 
 \section{Introducción}
-En este capítulo explicaremos...
 
-\section {Herramientas}
+Este capítulo presenta la ejecución del baseline clásico MFCC + SVM, la selección de su configuración y los resultados obtenidos. La valoración final se realiza sobre la partición de prueba, acompañada de un análisis de los errores y de las limitaciones específicas del método.
+
+\section{Entorno y reproducibilidad}
+
+La ejecución se realizó con Python 3.11.9 en el entorno virtual del repositorio, donde se instalaron las dependencias del proyecto. Las pruebas automatizadas relacionadas con el baseline se ejecutaron correctamente en este entorno.
+
+El baseline se ejecutó con la semilla $42$ y utilizó el manifiesto experimental definido en el capítulo anterior. Las pruebas automatizadas verificaron el preprocesamiento, la extracción de características, la construcción del pipeline, la ausencia de solapamiento entre grupos y la carga del modelo guardado.
+
+Los artefactos principales generados fueron el fichero de características, el modelo entrenado, el fichero de medidas, las predicciones de validación y prueba, y la matriz de confusión de la partición de prueba.
+
+\section{Ejecución del baseline}
+
+La ejecución procesó los 1\,000 ejemplos del manifiesto experimental y no registró fallos. Se generaron características para todos los ejemplos y se conservaron las particiones definidas: 700 ejemplos en entrenamiento, 150 en validación y 150 en prueba. Las pruebas ejecutadas confirmaron que los grupos permanecían dentro de una única partición.
+
+\section{Selección de la configuración}
+
+La búsqueda de hiperparámetros siguió el procedimiento definido en la Sección~\ref{sec:baseline-mfcc-svm}. Cada configuración se entrenó con la partición de entrenamiento y se evaluó en la partición de validación. El criterio principal fue \textit{balanced accuracy}, con F1 de la clase IA como segundo criterio en caso de empate.
+
+La configuración seleccionada fue $C=10$ y $\gamma=0.01$. Tras la selección, se evaluó en la partición de prueba el modelo entrenado únicamente con la partición de entrenamiento, sin combinar entrenamiento y validación en un nuevo ajuste.
+
+\section{Resultados predictivos}
+
+La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseline. La fila de validación se incluye para documentar el proceso de selección, mientras que la valoración final del baseline se realiza sobre la partición de prueba.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+        \hline
+        \textbf{Partición} & \textbf{Balanced accuracy} & \textbf{Precision IA} & \textbf{Recall IA} & \textbf{F1 IA} & \textbf{ROC-AUC} \\
+        \hline
+        Validación & 0.7800 & 0.7625 & 0.8133 & 0.7871 & 0.8480 \\
+        Prueba & 0.8333 & 0.8472 & 0.8133 & 0.8299 & 0.9086 \\
+        \hline
+    \end{tabular}
+    }
+    \caption{Medidas predictivas del baseline MFCC + SVM en validación y prueba.}
+    \label{tab:mfcc-svm-resultados}
+\end{table}
+
+La matriz de confusión de prueba se muestra en la Figura~\ref{fig:mfcc-svm-confusion}. La figura utiliza las etiquetas \textit{human} y \textit{AI} para representar, respectivamente, la clase humana y la clase generada mediante IA.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{fig/mfcc_svm_confusion_matrix.png}
+    \caption{Matriz de confusión del baseline MFCC + SVM en la partición de prueba.}
+    \label{fig:mfcc-svm-confusion}
+\end{figure}
+
+\section{Tiempos de ejecución registrados}
+
+La Tabla~\ref{tab:mfcc-svm-tiempos} muestra los tiempos registrados por los artefactos del experimento. En ella se recogen exclusivamente las fases temporizadas durante la ejecución del baseline.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr}
+        \hline
+        \textbf{Fase registrada} & \textbf{Tiempo} \\
+        \hline
+        Extracción de características MFCC & 2461.73 s \\
+        Entrenamiento y búsqueda de hiperparámetros & 0.731 s \\
+        Predicción en validación sobre características calculadas & 0.012 s \\
+        Predicción en prueba sobre características calculadas & 0.014 s \\
+        \hline
+    \end{tabular}
+    \caption{Tiempos registrados durante la ejecución del baseline MFCC + SVM.}
+    \label{tab:mfcc-svm-tiempos}
+\end{table}
+
+El tiempo de predicción corresponde únicamente a la aplicación del SVM sobre características ya extraídas. Por tanto, no representa el tiempo total necesario para analizar audio desde el fichero original.
+
+\section{Análisis}
+
+En la partición de prueba, el baseline alcanza una \textit{balanced accuracy} de 0.8333. Esta medida promedia el recall de ambas clases y resume el comportamiento del clasificador sobre el conjunto de prueba.
+
+En la partición de prueba, la matriz de confusión registra 64 ejemplos humanos correctamente clasificados y 11 humanos clasificados como IA. Para la clase IA, 61 ejemplos se detectan correctamente y 14 se clasifican como humanos. La precision de la clase IA es superior a su recall, lo que significa que, entre los ejemplos predichos como IA, la proporción de aciertos es mayor que la proporción de ejemplos IA recuperados.
+
+Los errores no se distribuyen de forma idéntica entre clases: hay 14 falsos negativos de IA frente a 11 falsos positivos de IA. De forma equivalente, el recall de la clase humana es ligeramente superior al recall de la clase IA. Esta diferencia describe el comportamiento del baseline en esta partición concreta, sin extender la conclusión a otros corpus o generadores.
+
+El valor ROC-AUC de 0.9086 resume la ordenación de los ejemplos de ambas clases dentro de la partición de prueba. La matriz de confusión aporta la distribución de errores para el umbral de decisión utilizado.
+
+\section{Limitaciones del baseline}
+
+El baseline utiliza un único fragmento de diez segundos por ejemplo. La selección de la ventana de mayor energía descarta el resto del audio, por lo que la decisión del clasificador depende solo de una parte de cada muestra. Además, la media y la desviación típica de los MFCC eliminan la evolución temporal de los coeficientes.
+
+El modelo no realiza agregación a nivel de canción y puede apoyarse en diferencias acústicas o técnicas presentes en el corpus. Tampoco se ha evaluado en un conjunto externo, por lo que sus resultados deben interpretarse como una referencia experimental dentro del protocolo definido.
 
 \section{Conclusiones}
-En este capítulo concluimos que...
+
+La ejecución del baseline MFCC + SVM se completó sobre los 1\,000 ejemplos del manifiesto sin fallos registrados. La configuración seleccionada mediante validación fue $C=10$ y $\gamma=0.01$, entrenada sobre la partición de entrenamiento y evaluada finalmente en prueba.
+
+En la partición de prueba, el baseline alcanza una \textit{balanced accuracy} de 0.8333, F1 de la clase IA de 0.8299 y ROC-AUC de 0.9086. Estos resultados constituyen la referencia experimental para la comparación con el modelo profundo preentrenado.
