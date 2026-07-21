@@ -48,4 +48,159 @@ Los modelos se evalúan bajo el mismo protocolo experimental. La validación se 
 
 \section{Planificación}
 
+La planificación del TFM se ha definido para una dedicación total de 300 horas, correspondiente a los 12 ECTS del trabajo, durante el periodo comprendido entre el 22 de junio y el 15 de septiembre de 2026. La organización sigue un enfoque iterativo e incremental: GitHub Projects y el tablero Kanban estructuran el trabajo, las tareas se registran mediante issues, los cambios se desarrollan en ramas, los commits documentan la evolución del repositorio y las pull requests facilitan la revisión e integración de cada incremento. La documentación se actualiza de forma progresiva conforme se consolidan los avances experimentales y de desarrollo.
+
+La Tabla~\ref{tab:planificacion-tfm} resume las fases previstas, su periodo, la dedicación asignada y el resultado verificable asociado a cada una de ellas.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.18}
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}r>{\raggedright\arraybackslash}X}
+        \hline
+        \textbf{Fase} & \textbf{Periodo} & \textbf{Horas} & \textbf{Resultado o entregable} \\
+        \hline
+        Alcance, planificación y entorno & 22-30 de junio & 20~h & Alcance y objetivos definidos, viabilidad estudiada y entorno de trabajo configurado \\
+        Auditoría de AIME y preparación de particiones & 1-11 de julio & 24~h & Conjunto de datos auditado y particiones reproducibles preparadas \\
+        Revisión bibliográfica y estado del arte & 22 de junio-16 de julio & 26~h & Estado del arte actualizado y bibliografía relevante organizada \\
+        Baseline MFCC + SVM & 12-14 de julio & 22~h & Baseline implementado y evaluado mediante el protocolo experimental definido \\
+        Documentación del primer incremento & 15-20 de julio & 18~h & Metodología, dataset, particiones y baseline incorporados a la documentación \\
+        Selección y adaptación del modelo profundo & 21 de julio-5 de agosto & 52~h & Modelo profundo seleccionado, adaptado y evaluado \\
+        Comparación experimental y selección del modelo & 6-12 de agosto & 28~h & Comparación predictiva y operacional completada y modelo de despliegue seleccionado \\
+        Documentación del segundo incremento & 13-16 de agosto & 14~h & Modelo profundo, comparación, resultados y limitaciones documentados \\
+        Diseño e implementación de la aplicación web & 17 de agosto-2 de septiembre & 48~h & Aplicación web funcional con frontend, backend e integración del modelo seleccionado \\
+        Pruebas, despliegue y documentación de la aplicación & 3-7 de septiembre & 18~h & Evidencias de prueba, despliegue académico y documentación de la aplicación \\
+        Revisión final de memoria y artefactos & 8-13 de septiembre & 20~h & Memoria revisada y artefactos técnicos organizados para la entrega \\
+        Preparación de la presentación & 14-15 de septiembre & 10~h & Presentación y demostración preparadas \\
+        \hline
+        \textbf{Total} & \textbf{22 de junio-15 de septiembre} & \textbf{300~h} & \textbf{TFM preparado para su entrega} \\
+        \hline
+    \end{tabularx}
+    \caption{Planificación temporal y distribución de horas del TFM.}
+    \label{tab:planificacion-tfm}
+\end{table}
+
+La Figura~\ref{fig:planificacion-gantt} representa visualmente el cronograma del trabajo y permite observar el solapamiento parcial entre la revisión bibliográfica, la preparación del dataset y los primeros incrementos experimentales.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig/diagrama-gantt.png}
+    \caption{Planificación temporal del TFM entre el 22 de junio y el 15 de septiembre de 2026.}
+    \label{fig:planificacion-gantt}
+\end{figure}
+
+Las dependencias principales se articulan en torno al protocolo experimental común. La auditoría del dataset precede a los experimentos porque fija las particiones y las condiciones de evaluación. A partir de esa base, el baseline MFCC + SVM y el modelo profundo preentrenado utilizan el mismo protocolo para que la comparación pueda interpretarse sin cambios en la composición de los datos.
+
+La comparación experimental depende de la evaluación de ambos enfoques, y la selección del modelo de despliegue considera de forma conjunta el rendimiento predictivo y el comportamiento operacional. La aplicación web depende del artefacto y del preprocesamiento del modelo seleccionado, mientras que el cierre del proyecto requiere completar las pruebas, el despliegue académico y la actualización final de la memoria y de los artefactos técnicos.
+
 \section{Presupuesto}
+
+El presupuesto estima el coste económico asociado al desarrollo del TFM durante las 300 horas de dedicación planificada. Su finalidad es valorar el esfuerzo y los recursos necesarios para el trabajo académico, por lo que distingue entre costes imputados, como la dedicación, la amortización del hardware, la electricidad y la conexión a Internet, y costes directos de herramientas, servicios y datos. No representa una factura real ni una contratación efectiva de dichos recursos.
+
+\subsection*{Recursos humanos}
+
+Para estimar el valor económico de la dedicación se toma como referencia el coste laboral medio por hora efectiva publicado por el Instituto Nacional de Estadística para el primer trimestre de 2026. La tarifa utilizada, 24,88~\euro{}/h~\cite{ineETCL1T2026}, actúa como referencia económica general para valorar la dedicación, no como una tarifa salarial específica de un perfil profesional concreto.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrr}
+        \hline
+        \textbf{Concepto} & \textbf{Horas} & \textbf{Coste por hora} & \textbf{Coste total} \\
+        \hline
+        Trabajo dedicado al desarrollo del TFM & 300~h & 24,88~\euro{}/h & 7.464,00~\euro{} \\
+        \hline
+        \textbf{Total de recursos humanos} & \textbf{300~h} &  & \textbf{7.464,00~\euro{}} \\
+        \hline
+    \end{tabular}
+    \caption{Coste imputado de los recursos humanos.}
+    \label{tab:presupuesto-recursos-humanos}
+\end{table}
+
+\subsection*{Recursos materiales, suministros y comunicaciones}
+
+La amortización del hardware se calcula a partir de precios estimados representativos y de una vida útil de cuatro años. Esta vida útil equivale a una amortización lineal anual del 25~\%, porcentaje que coincide con el coeficiente lineal máximo indicado por la Agencia Tributaria para equipos destinados a procesos de información \cite{aeatCoeficientesAmortizacion2025}. El coste imputado al TFM se obtiene aplicando el periodo de 86 días mediante la expresión:
+
+\[
+    \text{coste amortizado} = \text{precio estimado} \times \frac{86}{4 \times 365}.
+\]
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrllr@{}}
+        \hline
+        \textbf{Recurso} & \textbf{Precio estimado} & \textbf{Vida útil} & \textbf{Periodo imputado} & \textbf{Coste amortizado} \\
+        \hline
+        Ordenador portátil & 900,00~\euro{} & 4 años & 86 días & 53,01~\euro{} \\
+        Monitor externo & 110,00~\euro{} & 4 años & 86 días & 6,48~\euro{} \\
+        Teclado, ratón y auriculares & 45,00~\euro{} & 4 años & 86 días & 2,65~\euro{} \\
+        \hline
+        \textbf{Total de amortización} &  &  &  & \textbf{62,14~\euro{}} \\
+        \hline
+    \end{tabularx}
+    \caption{Coste imputado por amortización del hardware durante el periodo del TFM.}
+    \label{tab:presupuesto-amortizacion}
+\end{table}
+
+El coste eléctrico se estima con una potencia media de 0,12~kW para el conjunto formado por el portátil, el monitor y los periféricos. Se trata de un supuesto de consumo medio, no de una medición directa. Como precio de referencia se utiliza 0,2669~\euro{}/kWh, correspondiente a Eurostat para España durante el segundo semestre de 2025, con impuestos incluidos y banda doméstica de 2.500 a 4.999 kWh en el dataset nrg\_pc\_204 \cite{eurostatNrgPc2042025S2}:
+
+\[
+    0{,}12~\text{kW} \times 300~\text{h} = 36{,}00~\text{kWh}
+\]
+
+\[
+    36{,}00~\text{kWh} \times 0{,}2669~\text{\euro{}/kWh} = 9{,}61~\text{\euro{}}
+\]
+
+La conexión a Internet se valora mediante una cuota doméstica representativa de 30,00~\euro{} mensuales. Para el periodo imputado de 86 días, equivalente a 2,827 meses, el cálculo se realiza de forma proporcional sobre el año completo:
+
+\[
+    30{,}00 \times \frac{86}{365} \times 12 = 84{,}82~\text{\euro{}}
+\]
+
+\subsection*{Software, herramientas, servicios y datos}
+
+Los servicios empleados o previstos para la gestión, documentación, publicación y despliegue están disponibles mediante planes gratuitos o acceso abierto, por lo que su coste directo imputado al proyecto es de 0,00~\euro{}. La Tabla~\ref{tab:presupuesto-herramientas} agrupa los recursos considerados.
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}Xr}
+        \hline
+        \textbf{Recurso} & \textbf{Modalidad} & \textbf{Coste} \\
+        \hline
+        GitHub y GitHub Projects & Plan gratuito & 0,00~\euro{} \\
+        Clockify & Plan gratuito & 0,00~\euro{} \\
+        Overleaf & Plan gratuito & 0,00~\euro{} \\
+        Hugging Face Hub y Hugging Face Spaces & Plan gratuito & 0,00~\euro{} \\
+        Vercel & Plan gratuito & 0,00~\euro{} \\
+        Dataset AIME & Acceso abierto & 0,00~\euro{} \\
+        \hline
+        \textbf{Total de software, servicios y datos} &  & \textbf{0,00~\euro{}} \\
+        \hline
+    \end{tabularx}
+    \caption{Software, herramientas, servicios y datos considerados en el presupuesto.}
+    \label{tab:presupuesto-herramientas}
+\end{table}
+
+\subsection*{Resumen final}
+
+La Tabla~\ref{tab:presupuesto-resumen} resume el presupuesto estimado del TFM. El coste total imputado asciende a 7.620,57~\euro{}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lr}
+        \hline
+        \textbf{Categoría} & \textbf{Coste} \\
+        \hline
+        Recursos humanos & 7.464,00~\euro{} \\
+        Amortización de hardware & 62,14~\euro{} \\
+        Electricidad & 9,61~\euro{} \\
+        Internet & 84,82~\euro{} \\
+        Software, servicios y datos & 0,00~\euro{} \\
+        \hline
+        \textbf{Total estimado} & \textbf{7.620,57~\euro{}} \\
+        \hline
+    \end{tabular}
+    \caption{Resumen final del presupuesto estimado del TFM.}
+    \label{tab:presupuesto-resumen}
+\end{table}
