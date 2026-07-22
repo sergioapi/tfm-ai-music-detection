@@ -18,13 +18,13 @@ La ejecución procesó los 1\,000 ejemplos del manifiesto experimental y no regi
 
 \section{Selección de la configuración}
 
-La búsqueda de hiperparámetros siguió el procedimiento definido en la Sección~\ref{sec:baseline-mfcc-svm}. Cada configuración se entrenó con la partición de entrenamiento y se evaluó en la partición de validación. El criterio principal fue \textit{balanced accuracy}, con F1 de la clase IA como segundo criterio en caso de empate.
+La búsqueda de hiperparámetros aplicó el procedimiento definido en la Sección~\ref{sec:baseline-mfcc-svm} a las 16 configuraciones evaluadas. Cada configuración se entrenó con la partición de entrenamiento y se valoró sobre la partición de validación.
 
-La configuración seleccionada fue $C=10$ y $\gamma=0{,}01$. Tras la selección, se evaluó en la partición de prueba el modelo entrenado únicamente con la partición de entrenamiento, sin combinar entrenamiento y validación en un nuevo ajuste.
+La configuración $C=10$ y $\gamma=0{,}01$ obtuvo en validación una \textit{balanced accuracy} de 0,7800 y un F1 de la clase IA de 0,7871. Este fue el mejor valor de \textit{balanced accuracy} entre las configuraciones evaluadas, por lo que no fue necesario aplicar el criterio secundario de desempate. Tras la selección, se evaluó en la partición de prueba el modelo entrenado únicamente con la partición de entrenamiento, sin combinar entrenamiento y validación en un nuevo ajuste.
 
-\section{Resultados predictivos}
+\section{Resultados predictivos y análisis}
 
-La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseline. La fila de validación se incluye para documentar el proceso de selección, mientras que la valoración final del baseline se realiza sobre la partición de prueba.
+La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseline. IA se considera la clase positiva; \textit{balanced accuracy} incorpora el recall de ambas clases, mientras que \textit{precision}, \textit{recall} y F1 se muestran para la clase IA. La matriz de confusión permite examinar el comportamiento completo del clasificador. La fila de validación documenta el proceso de selección, mientras que la valoración final del baseline se realiza sobre la partición de prueba.
 
 \begin{table}[H]
     \centering
@@ -42,7 +42,11 @@ La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseli
     \label{tab:mfcc-svm-resultados}
 \end{table}
 
-La matriz de confusión de prueba se muestra en la Figura~\ref{fig:mfcc-svm-confusion}. La figura utiliza las etiquetas \textit{human} y \textit{AI} para representar, respectivamente, la clase humana y la clase generada mediante IA.
+En la partición de prueba, el baseline obtiene 125 aciertos sobre 150 ejemplos. El recall humano es $64/75 = 0{,}8533$ y el recall IA es $61/75 = 0{,}8133$, de modo que la \textit{balanced accuracy} resulta $(0{,}8533 + 0{,}8133) / 2 = 0{,}8333$. La diferencia entre ambos recalls es 0,0400, con una mejor recuperación de la clase humana en esta partición. Esta interpretación se limita al test de AIME utilizado en el protocolo experimental.
+
+La \textit{precision} IA es 0,8472, el recall IA es 0,8133 y el F1 IA es 0,8299. La \textit{precision} IA es ligeramente superior al recall IA, en consonancia con los 14 falsos negativos de la clase IA y los 11 falsos positivos observados en la matriz de confusión.
+
+Como se observa en la Figura~\ref{fig:mfcc-svm-confusion}, la matriz de confusión registra 64 ejemplos humanos correctamente clasificados y 61 ejemplos IA correctamente detectados, junto con los errores entre ambas clases.
 
 \begin{figure}[H]
     \centering
@@ -50,6 +54,8 @@ La matriz de confusión de prueba se muestra en la Figura~\ref{fig:mfcc-svm-conf
     \caption{Matriz de confusión del baseline MFCC + SVM en la partición de prueba.}
     \label{fig:mfcc-svm-confusion}
 \end{figure}
+
+El ROC-AUC de prueba es 0,9086, lo que refleja una capacidad favorable de ordenación de los \textit{scores} en el test. Bajo la interpretación habitual de AUC, un ejemplo IA elegido al azar recibe un \textit{score} superior al de un ejemplo humano elegido al azar en aproximadamente el 90,86~\% de los pares. Los \textit{scores} de \textit{decision\_function} no son probabilidades calibradas, y ROC-AUC no depende del único umbral usado por la matriz de confusión. La evaluación mantiene el umbral de decisión del clasificador y no ajusta un umbral adicional mediante la partición de prueba.
 
 \section{Tiempos de ejecución registrados}
 
@@ -71,19 +77,7 @@ La Tabla~\ref{tab:mfcc-svm-tiempos} muestra los tiempos registrados por los arte
     \label{tab:mfcc-svm-tiempos}
 \end{table}
 
-El tiempo de predicción corresponde únicamente a la aplicación del SVM sobre características ya extraídas. Por tanto, no representa el tiempo total necesario para analizar audio desde el fichero original.
-
-En esta ejecución se registraron la extracción de MFCC, el entrenamiento con búsqueda de hiperparámetros y la predicción sobre características calculadas. Todavía no se registraron el tiempo de carga del modelo, el consumo de RAM, el tamaño del modelo ni la latencia completa desde el archivo de audio; estas medidas deberán completarse durante la comparación operacional.
-
-\section{Análisis}
-
-En la partición de prueba, el baseline alcanza una \textit{balanced accuracy} de 0,8333. Esta medida promedia el recall de ambas clases y resume el comportamiento del clasificador sobre el conjunto de prueba.
-
-En la partición de prueba, la matriz de confusión registra 64 ejemplos humanos correctamente clasificados y 11 humanos clasificados como IA. Para la clase IA, 61 ejemplos se detectan correctamente y 14 se clasifican como humanos. La precision de la clase IA es superior a su recall, lo que significa que, entre los ejemplos predichos como IA, la proporción de aciertos es mayor que la proporción de ejemplos IA recuperados.
-
-Los errores no se distribuyen de forma idéntica entre clases: hay 14 falsos negativos de IA frente a 11 falsos positivos de IA. De forma equivalente, el recall de la clase humana es ligeramente superior al recall de la clase IA. Esta diferencia describe el comportamiento del baseline en esta partición concreta, sin extender la conclusión a otros corpus o generadores.
-
-El valor ROC-AUC de 0,9086 resume la ordenación de los ejemplos de ambas clases dentro de la partición de prueba. La matriz de confusión aporta la distribución de errores para el umbral de decisión utilizado.
+El tiempo de predicción mide exclusivamente la aplicación de la SVM sobre características previamente extraídas; la extracción de MFCC se registra por separado. Los tiempos disponibles permiten separar la extracción de características del entrenamiento y de la clasificación mediante la SVM.
 
 \section{Limitaciones del baseline}
 

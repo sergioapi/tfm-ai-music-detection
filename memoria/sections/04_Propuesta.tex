@@ -12,9 +12,9 @@ Los dos enfoques comparados trabajan sobre el mismo conjunto de ejemplos y las m
 
 \section{Selección del conjunto de datos AIME}
 
-AIME se utiliza como conjunto de datos principal del TFM. La tarjeta oficial lo presenta como \textit{AI Music Evaluation Dataset}, con audio generado por distintos modelos, audio procedente de MTG-Jamendo y metadatos asociados a cada muestra \cite{discoethAIME}. La misma tarjeta centraliza la disponibilidad del recurso y sus condiciones de uso. Su finalidad original está vinculada a la evaluación de modelos de generación musical y preferencias humanas, no a la definición de un conjunto de referencia estándar para detección \cite{groetschla2025benchmarking}.
+AIME se utiliza como dataset principal del TFM. La tarjeta oficial lo presenta como \textit{AI Music Evaluation Dataset} e incluye pistas generadas por distintos modelos, pistas procedentes de MTG-Jamendo y metadatos sobre su procedencia y descripción \cite{discoethAIME}. Estas características permiten construir un subconjunto equilibrado y definir un protocolo propio para la clasificación binaria.
 
-Las condiciones de licencia no son uniformes para todo el dataset. Según la tarjeta oficial, las 6\,000 pistas generadas se distribuyen bajo licencia CC BY 4.0, mientras que las 500 pistas procedentes de MTG-Jamendo mantienen licencias individuales por pista. Además, las etiquetas descriptivas procedentes de MTG-Jamendo se distribuyen bajo licencia CC BY-NC-SA 4.0 \cite{discoethAIME}.
+Las condiciones de uso dependen de la procedencia del contenido: las 6\,000 pistas generadas se distribuyen bajo licencia CC BY 4.0; las 500 pistas procedentes de MTG-Jamendo conservan la licencia individual de cada pista; y sus etiquetas descriptivas se distribuyen bajo licencia CC BY-NC-SA 4.0 \cite{discoethAIME}.
 
 La elección de AIME se justifica por tres motivos principales:
 \begin{itemize}
@@ -29,7 +29,7 @@ Esta elección hace necesario definir un subconjunto experimental propio y un pa
 
 La auditoría técnica de AIME abarca 6\,500 filas. En la estructura observada aparecen 500 ejemplos humanos procedentes de MTG-Jamendo y 6\,000 ejemplos generados mediante IA. Estos últimos están repartidos entre doce generadores, con 500 muestras por cada fuente generativa.
 
-En AIME, el campo \textit{description} contiene tres etiquetas separadas por comas que describen cada muestra \cite{discoethAIME}. En los metadatos auditados se identificaron 500 combinaciones distintas; una de ellas es \textit{ambient, blues, piano}. Cada combinación aparece en trece filas: una correspondiente a una muestra humana de MTG-Jamendo y doce correspondientes a muestras generadas, una por cada modelo incluido en el conjunto de datos.
+En AIME, el campo \textit{description} contiene tres etiquetas separadas por comas que describen cada muestra \cite{discoethAIME}. En los metadatos auditados se identificaron 500 combinaciones distintas; por ejemplo, \textit{ambient, blues, piano}. Cada combinación aparece en trece filas: una correspondiente a una muestra humana de MTG-Jamendo y doce correspondientes a muestras generadas, una por cada modelo incluido en el conjunto de datos.
 
 En este TFM, las muestras que presentan la misma combinación de etiquetas se consideran parte de un mismo grupo semántico. Comparten la misma información de etiquetas, aunque los audios proceden de fuentes diferentes. Esta estructura permite vincular una muestra humana con las doce generaciones asociadas y utilizar el grupo como unidad para construir el subconjunto experimental.
 
@@ -65,11 +65,15 @@ En el subconjunto experimental están representados los doce generadores disponi
 \section{Baseline clásico MFCC + SVM}
 \label{sec:baseline-mfcc-svm}
 
-El baseline clásico se define como un pipeline a nivel de fragmento. Cada audio se convierte a \textit{float32} y, cuando contiene más de un canal, se mezcla a mono mediante la media de canales. A continuación se selecciona un fragmento de diez segundos: en audios largos se conserva la ventana de mayor energía y, en audios cortos, la señal se completa con ceros. El fragmento resultante se remuestrea a 16 kHz y queda representado por 160\,000 muestras.
+El baseline clásico se define como un pipeline a nivel de fragmento. Cada señal se representa mediante muestras en coma flotante de 32 bits. Cuando el archivo contiene varios canales, estos se promedian para obtener una única señal monofónica, de modo que todos los ejemplos compartan el mismo formato de entrada.
 
-La representación acústica se basa en coeficientes cepstrales en escala Mel. Para cada fragmento se calculan 20 MFCC y se resumen mediante la media y la desviación típica de cada coeficiente. De esta forma, cada ejemplo queda descrito por un vector final de 40 características. Estas características se almacenan para poder reutilizarlas durante el entrenamiento y la evaluación.
+A continuación se selecciona un fragmento consecutivo de diez segundos. Cuando el audio supera esa duración, se comparan todas las ventanas posibles de diez segundos mediante la suma de los cuadrados de sus muestras y se conserva la ventana con mayor energía. Esta elección prioriza el tramo con mayor actividad de señal dentro del archivo. En audios más cortos, la señal se completa con ceros hasta alcanzar la duración objetivo. El fragmento resultante se remuestrea a 16 kHz y queda representado por 160\,000 muestras.
 
-La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una máquina de vectores de soporte con kernel RBF \cite{cortes1995support}. El escalado se ajusta únicamente con la partición de entrenamiento. El clasificador emplea \textit{decision\_function}, que devuelve un score continuo asociado al margen de decisión. Su signo determina el lado de la frontera en el que se sitúa la muestra y su magnitud refleja su separación respecto a dicha frontera. Estos scores se emplean para calcular ROC-AUC.
+La representación acústica se basa en 20 MFCC calculados para cada fragmento. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación.
+
+La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una SVM con kernel RBF \cite{cortes1995support}. \textit{StandardScaler} centra cada característica y la escala según la desviación calculada en entrenamiento; sus parámetros se ajustan únicamente con la partición de entrenamiento para evitar fugas de información. La SVM utiliza el kernel RBF para modelar una frontera de decisión no lineal sobre el espacio de características.
+
+El clasificador emplea \textit{decision\_function}, que devuelve un \textit{score} continuo asociado al margen de decisión. Este \textit{score} no es una probabilidad: su signo determina el lado de la frontera en el que se sitúa la muestra y su magnitud refleja la separación respecto a dicha frontera. Los \textit{scores} se emplean para calcular ROC-AUC.
 
 La selección de hiperparámetros contempla 16 configuraciones, resultantes de combinar $C \in \{0{,}1;\ 1;\ 10;\ 100\}$ y $\gamma \in \{\textit{scale};\ 0{,}001;\ 0{,}01;\ 0{,}1\}$. Cada configuración se entrena con la partición de entrenamiento y se evalúa en la partición de validación. El criterio principal es \textit{balanced accuracy}; en caso de empate, se utiliza F1 de la clase IA como segundo criterio. La partición de prueba se reserva para la evaluación final.
 
@@ -77,15 +81,17 @@ La selección de hiperparámetros contempla 16 configuraciones, resultantes de c
 
 El protocolo experimental común fija los elementos que deben compartir el baseline MFCC + SVM y el modelo profundo preentrenado. Ambos enfoques utilizan el mismo subconjunto, las mismas etiquetas binarias y las mismas particiones de entrenamiento, validación y prueba. La validación se reserva para seleccionar configuraciones, mientras que la partición de prueba se mantiene para la evaluación final.
 
-El preprocesamiento de entrada puede adaptarse a los requisitos de cada modelo. Esta flexibilidad es necesaria porque un enfoque basado en MFCC y un modelo profundo preentrenado pueden requerir formatos, frecuencias de muestreo o duraciones de entrada diferentes. La condición común es que cualquier transformación quede documentada y no modifique la composición de las particiones ni la correspondencia entre ejemplo, etiqueta y partición.
+El protocolo permite adaptar el preprocesamiento a los requisitos de cada enfoque, siempre que se conserven las mismas muestras, etiquetas y particiones, y que las transformaciones aplicadas queden documentadas.
 
 La configuración de entrada de cada enfoque se documenta junto con su evaluación. El protocolo también contempla la conservación de información suficiente para reproducir la comparación y revisar posibles errores de particionado, preprocesamiento o evaluación.
 
 \section{Medidas de evaluación}
 
-La evaluación predictiva emplea \textit{balanced accuracy}, \textit{precision}, \textit{recall}, F1, ROC-AUC \cite{fawcett2006roc} y la matriz de confusión.
+La evaluación predictiva emplea la clase IA como clase positiva. \textit{Balanced accuracy} promedia el recall de ambas clases y otorga el mismo peso a la clase humana y a la clase IA, por lo que se utiliza como criterio principal de selección. En caso de empate se emplea F1 de la clase IA como criterio secundario, al resumir el equilibrio entre \textit{precision} y \textit{recall} de la clase positiva.
 
-La evaluación operacional considerará, cuando pueda registrarse, el tiempo de preprocesamiento, el tiempo de carga del modelo, la latencia de inferencia por fragmento, la latencia de análisis por canción cuando exista agregación, el tiempo de entrenamiento, el consumo de RAM y VRAM, el tamaño del modelo, la viabilidad de inferencia en CPU y la viabilidad de despliegue en Hugging Face Spaces. Cada experimento documentará únicamente las medidas efectivamente registradas.
+\textit{Precision} IA mide la proporción de predicciones IA que son correctas, mientras que \textit{recall} IA mide la proporción de ejemplos IA detectados. ROC-AUC evalúa la ordenación de los \textit{scores} sin depender de un único umbral \cite{fawcett2006roc}. La matriz de confusión muestra la distribución concreta de aciertos y errores entre las dos clases.
+
+La evaluación operacional contempla el tiempo de preprocesamiento, el tiempo de carga del modelo, la latencia de inferencia por fragmento, la latencia de análisis por canción cuando exista agregación, el tiempo de entrenamiento, el consumo de RAM y VRAM, el tamaño del modelo, la viabilidad de inferencia en CPU y la viabilidad de despliegue en Hugging Face Spaces. Cada experimento documenta únicamente las medidas efectivamente registradas.
 
 \section{Limitaciones del diseño experimental}
 

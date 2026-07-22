@@ -3,9 +3,7 @@
 
 \section{Introducción}
 
-Este capítulo define los objetivos del TFM y la metodología empleada para organizar el trabajo. El estudio se centra en una tarea de clasificación binaria entre música producida por humanos y música generada mediante IA, utilizando AIME como conjunto de datos principal y un protocolo experimental común para comparar los modelos.
-
-La comparación incluye un enfoque clásico basado en MFCC + SVM y un único modelo profundo de audio preentrenado. La evaluación considera tanto el rendimiento predictivo como el comportamiento operacional, de forma que la selección del modelo tenga en cuenta su utilidad dentro de una prueba de concepto web.
+Este capítulo presenta los objetivos del TFM, la metodología de trabajo, la planificación temporal y el presupuesto estimado del proyecto. Estos elementos establecen el marco de organización y seguimiento aplicado durante su desarrollo.
 
 \section{Objetivos}
 
@@ -20,8 +18,8 @@ Comparar un enfoque clásico basado en MFCC y SVM con un modelo profundo preentr
     \item Auditar y preparar AIME para su uso experimental.
     \item Definir un protocolo reproducible de particionado, preprocesamiento y evaluación.
     \item Implementar y evaluar el baseline MFCC + SVM.
-    \item Seleccionar, adaptar y evaluar un único modelo profundo preentrenado.
-    \item Comparar ambos enfoques mediante medidas predictivas y operacionales, y seleccionar el modelo con mejor equilibrio entre rendimiento predictivo y coste operacional.
+    \item Seleccionar, adaptar y evaluar un modelo profundo preentrenado.
+    \item Comparar ambos enfoques y seleccionar el modelo más adecuado para la prueba de concepto, considerando conjuntamente su rendimiento predictivo y su viabilidad operacional.
     \item Desarrollar y desplegar una prueba de concepto web que integre el modelo seleccionado.
     \item Documentar decisiones, experimentos y artefactos para garantizar la reproducibilidad.
 \end{enumerate}
@@ -44,7 +42,7 @@ La preparación experimental parte de la selección y auditoría de AIME como co
 
 \subsection{Desarrollo y evaluación experimental}
 
-Los modelos se evalúan bajo el mismo protocolo experimental. La validación se utiliza para seleccionar configuraciones y el conjunto de prueba se reserva para la evaluación final. Durante el proceso se registran medidas predictivas y operacionales, y se incorporan pruebas automatizadas sobre los componentes críticos para comprobar que el particionado, el preprocesamiento y la evaluación respetan las condiciones definidas y no introducen fugas de información.
+Los modelos se evalúan bajo el mismo protocolo experimental. La partición de validación se emplea para seleccionar las configuraciones, mientras que la partición de prueba se reserva para la evaluación final. Durante el proceso se registran medidas predictivas y operacionales, y se incorporan pruebas automatizadas sobre los componentes críticos para comprobar que el particionado, el preprocesamiento y la evaluación respetan las condiciones definidas y no introducen fugas de información.
 
 \section{Planificación}
 
@@ -89,32 +87,26 @@ La Figura~\ref{fig:planificacion-gantt} representa visualmente el cronograma del
     \label{fig:planificacion-gantt}
 \end{figure}
 
-Las dependencias principales se articulan en torno al protocolo experimental común. La auditoría del dataset precede a los experimentos porque fija las particiones y las condiciones de evaluación. A partir de esa base, el baseline MFCC + SVM y el modelo profundo preentrenado utilizan el mismo protocolo para que la comparación pueda interpretarse sin cambios en la composición de los datos.
+Las principales dependencias entre las fases son las siguientes:
 
-La comparación experimental depende de la evaluación de ambos enfoques, y la selección del modelo de despliegue considera de forma conjunta el rendimiento predictivo y el comportamiento operacional. La aplicación web depende del artefacto y del preprocesamiento del modelo seleccionado, mientras que el cierre del proyecto requiere completar las pruebas, el despliegue académico y la actualización final de la memoria y de los artefactos técnicos.
+\begin{itemize}
+    \item La auditoría de AIME y la generación de las particiones preceden a la ejecución de los experimentos.
+    \item El baseline y el modelo profundo deben evaluarse mediante el mismo protocolo antes de realizar la comparación.
+    \item La selección del modelo para la aplicación depende de los resultados predictivos y operacionales de ambos enfoques.
+    \item La implementación web requiere el artefacto y el preprocesamiento del modelo seleccionado, mientras que las pruebas y el despliegue preceden al cierre del proyecto.
+\end{itemize}
 
 \section{Presupuesto}
 
-El presupuesto estima el coste económico asociado al desarrollo del TFM durante las 300 horas de dedicación planificada. Su finalidad es valorar el esfuerzo y los recursos necesarios para el trabajo académico, por lo que distingue entre costes imputados, como la dedicación, la amortización del hardware, la electricidad y la conexión a Internet, y costes directos de herramientas, servicios y datos. No representa una factura real ni una contratación efectiva de dichos recursos.
+El presupuesto estima el coste económico asociado al desarrollo del TFM durante las 300 horas de dedicación planificada. Su finalidad es valorar el esfuerzo y los recursos necesarios para el trabajo académico, por lo que distingue entre costes imputados, como la dedicación, la amortización del hardware, la electricidad y la conexión a Internet, y costes directos de herramientas, servicios y datos. Se interpreta como una estimación presupuestaria del proyecto académico.
 
 \subsection*{Recursos humanos}
 
-Para estimar el valor económico de la dedicación se toma como referencia el coste laboral medio por hora efectiva publicado por el Instituto Nacional de Estadística para el primer trimestre de 2026. La tarifa utilizada, 24,88~\euro{}/h~\cite{ineETCL1T2026}, actúa como referencia económica general para valorar la dedicación, no como una tarifa salarial específica de un perfil profesional concreto.
+Para valorar la dedicación se toma como referencia el coste laboral medio por hora efectiva publicado por el Instituto Nacional de Estadística para el primer trimestre de 2026, de 24,88~\euro{}/h~\cite{ineETCL1T2026}. Aplicado a las 300 horas planificadas, el coste imputado de los recursos humanos asciende a 7.464,00~\euro{}.
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{lrrr}
-        \hline
-        \textbf{Concepto} & \textbf{Horas} & \textbf{Coste por hora} & \textbf{Coste total} \\
-        \hline
-        Trabajo dedicado al desarrollo del TFM & 300~h & 24,88~\euro{}/h & 7.464,00~\euro{} \\
-        \hline
-        \textbf{Total de recursos humanos} & \textbf{300~h} &  & \textbf{7.464,00~\euro{}} \\
-        \hline
-    \end{tabular}
-    \caption{Coste imputado de los recursos humanos.}
-    \label{tab:presupuesto-recursos-humanos}
-\end{table}
+\[
+    300~\text{h} \times 24{,}88~\text{\euro{}/h} = 7{.}464{,}00~\text{\euro{}}
+\]
 
 \subsection*{Recursos materiales, suministros y comunicaciones}
 
@@ -142,14 +134,10 @@ La amortización del hardware se calcula a partir de precios estimados represent
     \label{tab:presupuesto-amortizacion}
 \end{table}
 
-El coste eléctrico se estima con una potencia media de 0,12~kW para el conjunto formado por el portátil, el monitor y los periféricos. Se trata de un supuesto de consumo medio, no de una medición directa. Como precio de referencia se utiliza 0,2669~\euro{}/kWh, correspondiente a Eurostat para España durante el segundo semestre de 2025, con impuestos incluidos y banda doméstica de 2.500 a 4.999 kWh en el dataset nrg\_pc\_204 \cite{eurostatNrgPc2042025S2}:
+El coste eléctrico se estima con una potencia media de 0,12~kW para el conjunto formado por el portátil, el monitor y los periféricos. Se trata de un supuesto de consumo medio, no de una medición directa. Como precio de referencia se utiliza 0,2669~\euro{}/kWh, correspondiente a Eurostat para España durante el segundo semestre de 2025, con impuestos incluidos y banda doméstica de 2.500 a 4.999 kWh \cite{eurostatNrgPc2042025S2}:
 
 \[
-    0{,}12~\text{kW} \times 300~\text{h} = 36{,}00~\text{kWh}
-\]
-
-\[
-    36{,}00~\text{kWh} \times 0{,}2669~\text{\euro{}/kWh} = 9{,}61~\text{\euro{}}
+    0{,}12~\text{kW} \times 300~\text{h} \times 0{,}2669~\text{\euro{}/kWh} = 9{,}61~\text{\euro{}}
 \]
 
 La conexión a Internet se valora mediante una cuota doméstica representativa de 30,00~\euro{} mensuales. Para el periodo imputado de 86 días, equivalente a 2,827 meses, el cálculo se realiza de forma proporcional sobre el año completo:
