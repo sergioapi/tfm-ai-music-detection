@@ -1,0 +1,112 @@
+\chapter{Descripción de la propuesta}\label{cap:propuesta}
+
+\section{Introducción}
+
+Este capítulo presenta el diseño experimental del TFM. A partir de AIME se construyen el subconjunto de trabajo y sus particiones, y se define el baseline MFCC + SVM dentro del protocolo común de comparación con un modelo profundo preentrenado.
+
+\section{Formulación del problema}
+
+El problema se formula como una clasificación binaria entre música producida por humanos y música generada mediante inteligencia artificial. Cada ejemplo del subconjunto experimental recibe una etiqueta: la clase $0$ corresponde a audio humano procedente de MTG-Jamendo, mientras que la clase $1$ corresponde a audio generado mediante IA.
+
+Los dos enfoques comparados trabajan sobre el mismo conjunto de ejemplos y las mismas particiones. Esta decisión permite evaluar las diferencias entre modelos sin introducir variaciones en la composición de las particiones de entrenamiento, validación y prueba. El objetivo del experimento es estimar la capacidad de discriminación entre ambas clases, sin atribuir una muestra a un generador concreto ni interpretar la salida como una medida calibrada sobre el origen del audio.
+
+\section{Selección del conjunto de datos AIME}
+
+AIME se utiliza como dataset principal del TFM. La tarjeta oficial lo presenta como \textit{AI Music Evaluation Dataset} e incluye pistas generadas por distintos modelos, pistas procedentes de MTG-Jamendo y metadatos sobre su procedencia y descripción \cite{discoethAIME}. Estas características permiten construir un subconjunto equilibrado y definir un protocolo propio para la clasificación binaria.
+
+Las condiciones de uso dependen de la procedencia del contenido: las 6\,000 pistas generadas se distribuyen bajo licencia CC BY 4.0; las 500 pistas procedentes de MTG-Jamendo conservan la licencia individual de cada pista; y sus etiquetas descriptivas se distribuyen bajo licencia CC BY-NC-SA 4.0 \cite{discoethAIME}.
+
+La elección de AIME se justifica por tres motivos principales:
+\begin{itemize}
+    \item disponibilidad documentada de ejemplos humanos y generados;
+    \item diversidad de generadores dentro de la clase IA;
+    \item existencia de metadatos útiles para el etiquetado y el particionado.
+\end{itemize}
+
+Esta elección hace necesario definir un subconjunto experimental propio y un particionado adaptado a la tarea binaria del TFM.
+
+\section{Auditoría y construcción del subconjunto experimental}
+
+La auditoría técnica de AIME abarca 6\,500 filas. En la estructura observada aparecen 500 ejemplos humanos procedentes de MTG-Jamendo y 6\,000 ejemplos generados mediante IA. Estos últimos están repartidos entre doce generadores, con 500 muestras por cada fuente generativa.
+
+En AIME, el campo \textit{description} contiene tres etiquetas separadas por comas que describen cada muestra \cite{discoethAIME}. En los metadatos auditados se identificaron 500 combinaciones distintas; por ejemplo, \textit{ambient, blues, piano}. Cada combinación aparece en trece filas: una correspondiente a una muestra humana de MTG-Jamendo y doce correspondientes a muestras generadas, una por cada modelo incluido en el conjunto de datos.
+
+En este TFM, las muestras que presentan la misma combinación de etiquetas se consideran parte de un mismo grupo semántico. Comparten la misma información de etiquetas, aunque los audios proceden de fuentes diferentes. Esta estructura permite vincular una muestra humana con las doce generaciones asociadas y utilizar el grupo como unidad para construir el subconjunto experimental.
+
+Para cada uno de los 500 grupos se conserva la muestra humana y se selecciona una de las doce muestras generadas. El resultado contiene dos ejemplos por grupo y un total de 1\,000 muestras: 500 humanas y 500 generadas. La selección de la clase generada se distribuye de forma prácticamente uniforme entre los doce modelos para mantener diversidad dentro de la clase IA sin convertir el problema en una tarea de atribución.
+
+La regla de etiquetado binario se define a partir del campo \textit{model}. Las muestras cuyo valor es MTG-Jamendo se etiquetan como clase humana, mientras que las asociadas al resto de modelos se consideran generadas mediante IA. Esta regla es coherente con la estructura observada y permite formular el experimento como una clasificación binaria.
+
+\section{Diseño de las particiones}
+
+Las particiones se construyen antes de extraer fragmentos temporales o características. El manifiesto \path{data/aime_splits.csv} contiene 1\,000 filas y fija tres particiones: entrenamiento, validación y prueba. Cada partición mantiene balance entre clases, como se muestra en la Tabla~\ref{tab:aime-particiones}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrr}
+        \hline
+        \textbf{Partición} & \textbf{Total} & \textbf{Humanos} & \textbf{Generados} \\
+        \hline
+        Entrenamiento & 700 & 350 & 350 \\
+        Validación & 150 & 75 & 75 \\
+        Prueba & 150 & 75 & 75 \\
+        \hline
+    \end{tabular}
+    \caption{Distribución de ejemplos por partición y clase en el manifiesto experimental.}
+    \label{tab:aime-particiones}
+\end{table}
+
+El particionado utiliza como unidad de agrupación cada combinación de etiquetas. La muestra humana y la muestra generada seleccionada para un mismo grupo se asignan siempre a la misma partición. De esta forma, una combinación idéntica no puede aparecer simultáneamente en entrenamiento, validación o prueba, lo que controla una posible fuga semántica.
+
+Las particiones se generan con la semilla $42$ mediante una estrategia de particionado equilibrado por generador y agrupación semántica. El manifiesto contiene 350 grupos en entrenamiento, 75 en validación y 75 en prueba. Las pruebas automáticas verifican el número total de filas, el balance de clases, la permanencia de cada grupo en una única partición, la reproducibilidad del manifiesto generado y la presencia de todos los generadores en cada partición.
+
+En el subconjunto experimental están representados los doce generadores disponibles. La distribución es prácticamente uniforme: ocho generadores aportan 42 ejemplos, mientras que AudioLDM 2 Large, MusicGen Medium, Riffusion y Suno v3.5 aportan 41 ejemplos.
+
+\section{Baseline clásico MFCC + SVM}
+\label{sec:baseline-mfcc-svm}
+
+El baseline clásico se define como un pipeline a nivel de fragmento. Cada señal se representa mediante muestras en coma flotante de 32 bits. Cuando el archivo contiene varios canales, estos se promedian para obtener una única señal monofónica, de modo que todos los ejemplos compartan el mismo formato de entrada.
+
+A continuación se selecciona un fragmento consecutivo de diez segundos. Cuando el audio supera esa duración, se comparan todas las ventanas posibles de diez segundos mediante la suma de los cuadrados de sus muestras y se conserva la ventana con mayor energía. Esta elección prioriza el tramo con mayor actividad de señal dentro del archivo. En audios más cortos, la señal se completa con ceros hasta alcanzar la duración objetivo. El fragmento resultante se remuestrea a 16 kHz y queda representado por 160\,000 muestras.
+
+La representación acústica se basa en 20 MFCC calculados para cada fragmento. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación.
+
+La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una SVM con kernel RBF \cite{cortes1995support}. \textit{StandardScaler} centra cada característica y la escala según la desviación calculada en entrenamiento; sus parámetros se ajustan únicamente con la partición de entrenamiento para evitar fugas de información. La SVM utiliza el kernel RBF para modelar una frontera de decisión no lineal sobre el espacio de características.
+
+El clasificador emplea \textit{decision\_function}, que devuelve un \textit{score} continuo asociado al margen de decisión. Este \textit{score} no es una probabilidad: su signo determina el lado de la frontera en el que se sitúa la muestra y su magnitud refleja la separación respecto a dicha frontera. Los \textit{scores} se emplean para calcular ROC-AUC.
+
+La selección de hiperparámetros contempla 16 configuraciones, resultantes de combinar $C \in \{0{,}1;\ 1;\ 10;\ 100\}$ y $\gamma \in \{\textit{scale};\ 0{,}001;\ 0{,}01;\ 0{,}1\}$. Cada configuración se entrena con la partición de entrenamiento y se evalúa en la partición de validación. El criterio principal es \textit{balanced accuracy}; en caso de empate, se utiliza F1 de la clase IA como segundo criterio. La partición de prueba se reserva para la evaluación final.
+
+\section{Protocolo experimental común}
+
+El protocolo experimental común fija los elementos que deben compartir el baseline MFCC + SVM y el modelo profundo preentrenado. Ambos enfoques utilizan el mismo subconjunto, las mismas etiquetas binarias y las mismas particiones de entrenamiento, validación y prueba. La validación se reserva para seleccionar configuraciones, mientras que la partición de prueba se mantiene para la evaluación final.
+
+El protocolo permite adaptar el preprocesamiento a los requisitos de cada enfoque, siempre que se conserven las mismas muestras, etiquetas y particiones, y que las transformaciones aplicadas queden documentadas.
+
+La configuración de entrada de cada enfoque se documenta junto con su evaluación. El protocolo también contempla la conservación de información suficiente para reproducir la comparación y revisar posibles errores de particionado, preprocesamiento o evaluación.
+
+\section{Medidas de evaluación}
+
+La evaluación predictiva emplea la clase IA como clase positiva. \textit{Balanced accuracy} promedia el recall de ambas clases y otorga el mismo peso a la clase humana y a la clase IA, por lo que se utiliza como criterio principal de selección. En caso de empate se emplea F1 de la clase IA como criterio secundario, al resumir el equilibrio entre \textit{precision} y \textit{recall} de la clase positiva.
+
+\textit{Precision} IA mide la proporción de predicciones IA que son correctas, mientras que \textit{recall} IA mide la proporción de ejemplos IA detectados. ROC-AUC evalúa la ordenación de los \textit{scores} sin depender de un único umbral \cite{fawcett2006roc}. La matriz de confusión muestra la distribución concreta de aciertos y errores entre las dos clases.
+
+La evaluación operacional contempla el tiempo de preprocesamiento, el tiempo de carga del modelo, la latencia de inferencia por fragmento, la latencia de análisis por canción cuando exista agregación, el tiempo de entrenamiento, el consumo de RAM y VRAM, el tamaño del modelo, la viabilidad de inferencia en CPU y la viabilidad de despliegue en Hugging Face Spaces. Cada experimento documenta únicamente las medidas efectivamente registradas.
+
+\section{Limitaciones del diseño experimental}
+
+El subconjunto experimental contiene 1\,000 ejemplos, por lo que solo cubre una parte del material disponible en AIME. Esta reducción permite trabajar con un diseño controlado y equilibrado, aunque limita la variedad de ejemplos que intervienen en la evaluación.
+
+La evaluación se realiza sobre un único corpus. En consecuencia, las medidas obtenidas describen el comportamiento de los modelos dentro de AIME y no proporcionan evidencia directa de generalización a otros conjuntos de datos, generadores o condiciones de audio.
+
+La diferente procedencia de las dos clases introduce otra limitación. La clase humana procede de MTG-Jamendo, mientras que la clase generada reúne ejemplos producidos por varios modelos de IA. Esta configuración puede hacer que parte de la separación aprendida dependa de características de origen y no solo de propiedades generales de la generación musical.
+
+Los metadatos de AIME no incluyen identificadores de canción, artista, álbum o grabación original. En consecuencia, el particionado puede controlar la repetición de combinaciones de etiquetas, pero no establecer grupos basados en la identidad de una obra o de un intérprete.
+
+También existen posibles atajos asociados a diferencias técnicas entre fuentes. La frecuencia de muestreo, el códec, la duración, el proceso de producción o el generador de origen pueden introducir señales que el modelo aprenda sin capturar propiedades generales de la música generada mediante IA. Además, los audios brutos presentan heterogeneidad técnica en duración, frecuencia de muestreo, número de canales, subtipo WAV y tamaño de archivo.
+
+\section{Conclusiones}
+
+La propuesta define un subconjunto equilibrado a partir de AIME, con una muestra humana y una muestra generada por cada grupo semántico. El particionado se realiza de forma reproducible, mantiene balance de clases y evita que una misma combinación de etiquetas aparezca en particiones distintas.
+
+Sobre este diseño se establece el baseline clásico MFCC + SVM y un protocolo común para compararlo con un modelo profundo preentrenado. La comparación se apoya en las mismas particiones, una separación clara entre entrenamiento, validación y prueba, y las medidas predictivas definidas para la evaluación.

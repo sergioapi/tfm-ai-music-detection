@@ -1,0 +1,28 @@
+\chapter{Introducción}
+\label{cap:introduccion}
+
+\section{Introducción}
+\label{sec:introduccion:intro}
+
+La generación musical mediante inteligencia artificial ha avanzado de forma notable en los últimos años. Los modelos actuales permiten producir piezas musicales completas a partir de descripciones textuales u otras condiciones de entrada, y su uso se ha extendido más allá de entornos técnicos especializados. Este escenario abre posibilidades creativas y productivas, pero también dificulta distinguir con claridad entre música producida por humanos y música generada mediante IA.
+
+La detección de este tipo de contenido se plantea como un problema relevante dentro del análisis de audio. En este TFM, la tarea se formula como una clasificación binaria entre música producida por humanos y música generada mediante IA. La evaluación se centra en el comportamiento de distintos enfoques de clasificación bajo un protocolo experimental común, sin abordar la atribución a un sistema concreto.
+
+El trabajo compara un método clásico, basado en \textit{Mel-frequency cepstral coefficients} (MFCC) y un clasificador \textit{support vector machine} (SVM), con un modelo profundo de audio preentrenado. Esta comparación permite enfrentar una aproximación tradicional, basada en características acústicas resumidas, con una estrategia que aprovecha representaciones aprendidas previamente a partir de grandes colecciones de audio.
+
+Ambos enfoques se evalúan utilizando el mismo conjunto de datos y las mismas particiones. El preprocesamiento se documenta en cada caso y se adapta a los requisitos de entrada de cada modelo sin comprometer la comparabilidad del experimento. De este modo, la evaluación puede registrar tanto medidas de rendimiento predictivo como medidas operacionales.
+
+La inclusión de medidas operacionales responde a la integración posterior del modelo seleccionado en una prueba de concepto web, donde también influyen el tiempo de procesamiento, el tamaño del modelo, el consumo de recursos y la viabilidad de despliegue. Por ello, la selección se basa en el equilibrio entre rendimiento predictivo y coste operacional. La aplicación ofrece una estimación experimental sobre el origen probable del audio analizado, no una certificación de autenticidad.
+
+\section{Estructura de este documento}
+\label{sec:introduccion:estructura}
+
+El presente documento se organiza en los siguientes capítulos:
+\begin{itemize}
+    \item \textbf{Introducción:} presenta el contexto del trabajo, la motivación del problema, el alcance de la clasificación binaria y la estructura general de la memoria.
+    \item \textbf{Estado del arte:} revisa trabajos y recursos relacionados con la generación musical mediante IA, la detección de música sintética, los conjuntos de datos disponibles y los enfoques de análisis de audio relevantes para este TFM.
+    \item \textbf{Estudio previo:} define los objetivos del TFM, la metodología general y los elementos de planificación y presupuesto asociados al desarrollo del proyecto.
+    \item \textbf{Descripción de la propuesta:} describe el planteamiento experimental y la arquitectura de la prueba de concepto, incluyendo el conjunto de datos, el preprocesamiento, los modelos comparados y los criterios de selección.
+    \item \textbf{Validación:} recoge el protocolo de evaluación, las medidas de rendimiento predictivo y operacional, y la comparación entre el baseline clásico y el modelo profundo seleccionado.
+    \item \textbf{Conclusiones:} resume los resultados obtenidos, las limitaciones del trabajo y las posibles líneas de mejora futuras.
+\end{itemize}
