@@ -8,11 +8,13 @@ Este capítulo presenta el diseño experimental del TFM. A partir de AIME se con
 
 El problema se formula como una clasificación binaria entre música producida por humanos y música generada mediante inteligencia artificial. Cada ejemplo del subconjunto experimental recibe una etiqueta: la clase $0$ corresponde a audio humano procedente de MTG-Jamendo, mientras que la clase $1$ corresponde a audio generado mediante IA.
 
-Los dos enfoques comparados trabajan sobre el mismo conjunto de ejemplos y las mismas particiones. Esta decisión permite evaluar las diferencias entre modelos sin introducir variaciones en la composición de entrenamiento, validación y prueba. El objetivo del experimento es estimar la capacidad de discriminación entre ambas clases, sin atribuir una muestra a un generador concreto ni interpretar la salida como una medida calibrada sobre el origen del audio.
+Los dos enfoques comparados trabajan sobre el mismo conjunto de ejemplos y las mismas particiones. Esta decisión permite evaluar las diferencias entre modelos sin introducir variaciones en la composición de las particiones de entrenamiento, validación y prueba. El objetivo del experimento es estimar la capacidad de discriminación entre ambas clases, sin atribuir una muestra a un generador concreto ni interpretar la salida como una medida calibrada sobre el origen del audio.
 
 \section{Selección del conjunto de datos AIME}
 
 AIME se utiliza como conjunto de datos principal del TFM. La tarjeta oficial lo presenta como \textit{AI Music Evaluation Dataset}, con audio generado por distintos modelos, audio procedente de MTG-Jamendo y metadatos asociados a cada muestra \cite{discoethAIME}. La misma tarjeta centraliza la disponibilidad del recurso y sus condiciones de uso. Su finalidad original está vinculada a la evaluación de modelos de generación musical y preferencias humanas, no a la definición de un conjunto de referencia estándar para detección \cite{groetschla2025benchmarking}.
+
+Las condiciones de licencia no son uniformes para todo el dataset. Según la tarjeta oficial, las 6\,000 pistas generadas se distribuyen bajo licencia CC BY 4.0, mientras que las 500 pistas procedentes de MTG-Jamendo mantienen licencias individuales por pista. Además, las etiquetas descriptivas procedentes de MTG-Jamendo se distribuyen bajo licencia CC BY-NC-SA 4.0 \cite{discoethAIME}.
 
 La elección de AIME se justifica por tres motivos principales:
 \begin{itemize}
@@ -69,7 +71,7 @@ La representación acústica se basa en coeficientes cepstrales en escala Mel. P
 
 La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una máquina de vectores de soporte con kernel RBF \cite{cortes1995support}. El escalado se ajusta únicamente con la partición de entrenamiento. El clasificador emplea \textit{decision\_function}, que devuelve un score continuo asociado al margen de decisión. Su signo determina el lado de la frontera en el que se sitúa la muestra y su magnitud refleja su separación respecto a dicha frontera. Estos scores se emplean para calcular ROC-AUC.
 
-La selección de hiperparámetros contempla 16 configuraciones, resultantes de combinar $C \in \{0.1, 1, 10, 100\}$ y $\gamma \in \{\mathit{scale}, 0.001, 0.01, 0.1\}$. Cada configuración se entrena con la partición de entrenamiento y se evalúa en la partición de validación. El criterio principal es \textit{balanced accuracy}; en caso de empate, se utiliza F1 de la clase IA como segundo criterio. La partición de prueba se reserva para la evaluación final.
+La selección de hiperparámetros contempla 16 configuraciones, resultantes de combinar $C \in \{0{,}1;\ 1;\ 10;\ 100\}$ y $\gamma \in \{\textit{scale};\ 0{,}001;\ 0{,}01;\ 0{,}1\}$. Cada configuración se entrena con la partición de entrenamiento y se evalúa en la partición de validación. El criterio principal es \textit{balanced accuracy}; en caso de empate, se utiliza F1 de la clase IA como segundo criterio. La partición de prueba se reserva para la evaluación final.
 
 \section{Protocolo experimental común}
 
@@ -83,8 +85,7 @@ La configuración de entrada de cada enfoque se documenta junto con su evaluaci�
 
 La evaluación predictiva emplea \textit{balanced accuracy}, \textit{precision}, \textit{recall}, F1, ROC-AUC \cite{fawcett2006roc} y la matriz de confusión.
 
-% TODO: definir y justificar las medidas operacionales tras seleccionar
-% el modelo profundo y estudiar las condiciones de despliegue.
+La evaluación operacional considerará, cuando pueda registrarse, el tiempo de preprocesamiento, el tiempo de carga del modelo, la latencia de inferencia por fragmento, la latencia de análisis por canción cuando exista agregación, el tiempo de entrenamiento, el consumo de RAM y VRAM, el tamaño del modelo, la viabilidad de inferencia en CPU y la viabilidad de despliegue en Hugging Face Spaces. Cada experimento documentará únicamente las medidas efectivamente registradas.
 
 \section{Limitaciones del diseño experimental}
 
