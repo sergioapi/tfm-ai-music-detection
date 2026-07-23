@@ -1,0 +1,69 @@
+experiment:
+  name: mert_frozen_embeddings
+  phase: preparacion_y_trazabilidad
+  seed: 42
+
+dataset:
+  name: disco-eth/AIME
+  manifest_path: data/aime_splits.csv
+  split_policy: fixed_manifest_by_description
+  train_validation_selection_only: true
+  test_locked_until_configuration_closed: true
+
+model:
+  identifier: m-a-p/MERT-v1-95M
+  immutable_revision: 12af15fef9d0ac838c3f475bfbbf26d2060dd4f5
+  revision_status: verified_from_huggingface_tree_page
+  trust_remote_code: true
+  encoder_frozen: true
+  eval_mode: true
+  no_grad: true
+  expected_embedding_dim: 768
+
+runtime:
+  device: auto
+  device_is_configurable: true
+  weights_download_allowed_in_phase_1: false
+  model_execution_allowed_in_phase_1: false
+
+audio_input:
+  mono: true
+  dtype: float32
+  sample_rate_hz: 24000
+  total_duration_seconds: 10.0
+  window_duration_seconds: 5.0
+  num_windows: 2
+
+embedding:
+  extraction_strategy: precompute_embeddings
+  hidden_state: last_hidden_state
+  window_pooling: temporal_mean
+  window_aggregation: mean
+  final_shape_per_example: [768]
+
+classifier:
+  pipeline:
+    - StandardScaler
+    - SVC
+  svm:
+    kernel: rbf
+    probability: false
+    hyperparameter_grid:
+      C: [0.1, 1, 10, 100]
+      gamma: [scale, 0.001, 0.01, 0.1]
+  selection_metric_primary: balanced_accuracy
+  selection_metric_tiebreak: f1_ai
+
+contingency:
+  model_identifier: MIT/ast-finetuned-audioset-10-10-0.4593
+  activation_policy: only_if_mert_is_technically_inviable_or_meets_abandonment_criteria
+  implemented_in_phase_1: false
+
+pending_verification:
+  - reproducible_load_with_pinned_library_versions
+  - trust_remote_code_review_before_execution
+  - vram_with_batch_1_frozen_encoder_5s_windows
+  - cpu_latency_and_memory
+  - full_embedding_extraction_time
+  - finite_embeddings_on_manifest_samples
+  - validation_performance_against_baseline

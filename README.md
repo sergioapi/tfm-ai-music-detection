@@ -52,6 +52,10 @@ Artefactos principales:
 - `data/models/mfcc_svm_confusion_matrix.png`
 - `docs/mfcc_svm_baseline_summary.md`
 
+## Modelo profundo preentrenado
+
+La decision inicial selecciona `m-a-p/MERT-v1-95M` como encoder profundo principal congelado. La trazabilidad esta en `docs/decisions/seleccion-modelo-profundo-mert.md` y la configuracion inicial en `configs/mert_frozen_embeddings.yaml`.
+
 Ejecutar tests:
 
 ```powershell
