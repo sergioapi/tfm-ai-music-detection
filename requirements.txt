@@ -8,3 +8,8 @@ scikit-learn
 pytest
 pyarrow
 matplotlib
+torch
+transformers
+huggingface_hub
+PyYAML
+psutil

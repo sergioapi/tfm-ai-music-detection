@@ -67,3 +67,16 @@ pending_verification:
   - full_embedding_extraction_time
   - finite_embeddings_on_manifest_samples
   - validation_performance_against_baseline
+
+smoke_test:
+  allowed_split: train
+  sample_pairs: 6
+  total_examples: 12
+  preferred_ai_generators: [Udio, Riffusion]
+  selection_policy: paired_human_ai_by_description_distinct_ai_generators
+  batch_size: 1
+  allowed_devices: [cpu, cuda, auto]
+  determinism_tolerance_abs: 1.0e-5
+  output_path: data/processed/mert_smoke_test_result.json
+  summary_path: docs/mert_smoke_test_summary.md
+  store_full_embeddings: false

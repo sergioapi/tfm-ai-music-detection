@@ -56,6 +56,38 @@ Artefactos principales:
 
 La decision inicial selecciona `m-a-p/MERT-v1-95M` como encoder profundo principal congelado. La trazabilidad esta en `docs/decisions/seleccion-modelo-profundo-mert.md` y la configuracion inicial en `configs/mert_frozen_embeddings.yaml`.
 
+Smoke test rapido de MERT en CPU con una pareja train:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu --max-pairs 1
+```
+
+Smoke test completo con las doce muestras train:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu
+```
+
+Si hay CUDA disponible:
+
+```powershell
+python scripts/smoke_test_mert.py --device cuda
+```
+
+Si los audios ya estan descargados localmente:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu --audio-dir data/audio/aime_raw
+```
+
+Resumen tecnico del smoke test:
+
+- `docs/mert_smoke_test_summary.md`
+
+Resultado estructurado generado localmente:
+
+- `data/processed/mert_smoke_test_result.json`
+
 Ejecutar tests:
 
 ```powershell
