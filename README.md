@@ -88,6 +88,23 @@ Resultado estructurado generado localmente:
 
 - `data/processed/mert_smoke_test_result.json`
 
+Extraer embeddings MERT para los 1000 ejemplos del manifiesto, en CPU y con reanudacion si ya existe un CSV parcial:
+
+```powershell
+python scripts/extract_mert_embeddings.py --device cpu
+```
+
+Artefactos locales generados por la extraccion:
+
+- `data/processed/aime_mert_embeddings.csv`
+- `data/processed/aime_mert_embeddings.parquet`
+- `data/processed/aime_mert_embedding_extraction_summary.json`
+- `data/processed/aime_mert_embedding_failures.csv`, solo si se registran fallos
+
+Resumen tecnico de la extraccion:
+
+- `docs/mert_embedding_extraction_summary.md`
+
 Ejecutar tests:
 
 ```powershell

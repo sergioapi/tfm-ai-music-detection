@@ -60,13 +60,11 @@ contingency:
   implemented_in_phase_1: false
 
 pending_verification:
-  - reproducible_load_with_pinned_library_versions
-  - trust_remote_code_review_before_execution
-  - vram_with_batch_1_frozen_encoder_5s_windows
-  - cpu_latency_and_memory
-  - full_embedding_extraction_time
-  - finite_embeddings_on_manifest_samples
+  - cuda_execution
   - validation_performance_against_baseline
+  - predictive_classifier_selection_on_embeddings
+  - operational_costs_for_candidate_model
+  - final_deployment_viability
 
 smoke_test:
   allowed_split: train
@@ -80,3 +78,14 @@ smoke_test:
   output_path: data/processed/mert_smoke_test_result.json
   summary_path: docs/mert_smoke_test_summary.md
   store_full_embeddings: false
+
+embedding_extraction:
+  output_csv_path: data/processed/aime_mert_embeddings.csv
+  output_parquet_path: data/processed/aime_mert_embeddings.parquet
+  failures_path: data/processed/aime_mert_embedding_failures.csv
+  summary_path: data/processed/aime_mert_embedding_extraction_summary.json
+  progress_every_rows: 250
+  expected_rows: 1000
+  expected_embedding_dim: 768
+  expected_output_dtype: float32
+  store_full_embeddings: true
