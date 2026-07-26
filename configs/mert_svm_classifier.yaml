@@ -1,0 +1,56 @@
+experiment:
+  name: mert_svm_classifier_selection
+  phase: seleccion_clasificador_supervisado
+  seed: 42
+
+input:
+  embeddings_path: data/processed/aime_mert_embeddings.parquet
+  manifest_path: data/aime_splits.csv
+  expected_rows: 1000
+  expected_embedding_dim: 768
+  expected_embedding_dtype: float32
+  embedding_prefix: mert_
+  metadata_columns: [id, description, model, label, split]
+  label_column: label
+  split_column: split
+  id_column: id
+  positive_label: 1
+  splits:
+    train: train
+    validation: val
+    test: test
+  expected_split_distribution:
+    train: 700
+    val: 150
+    test: 150
+  expected_label_distribution:
+    0: 500
+    1: 500
+
+classifier:
+  pipeline:
+    - StandardScaler
+    - SVC
+  svc_probability: false
+  candidates:
+    - name: svm_linear
+      kernel: linear
+      C: [0.01, 0.1, 1, 10]
+    - name: svm_rbf
+      kernel: rbf
+      C: [0.1, 1, 10]
+      gamma: [scale, 0.001, 0.01]
+
+selection_rule:
+  - maximize: balanced_accuracy
+  - maximize: roc_auc
+  - maximize: f1_ai
+  - minimize: prediction_latency_seconds_per_example
+  - prefer: linear
+
+outputs:
+  model_path: data/models/mert_svm_selection_model.joblib
+  results_path: data/models/mert_svm_selection_results.json
+  validation_predictions_path: data/models/mert_svm_validation_predictions.csv
+  validation_confusion_matrix_path: data/models/mert_svm_validation_confusion_matrix.png
+  report_path: docs/mert_svm_selection_summary.md

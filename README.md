@@ -105,6 +105,23 @@ Resumen tecnico de la extraccion:
 
 - `docs/mert_embedding_extraction_summary.md`
 
+Entrenar y seleccionar el clasificador SVM sobre los embeddings MERT, manteniendo test bloqueado:
+
+```powershell
+python scripts/train_mert_svm_classifier.py --config configs/mert_svm_classifier.yaml
+```
+
+Artefactos locales generados por la seleccion:
+
+- `data/models/mert_svm_selection_model.joblib`
+- `data/models/mert_svm_selection_results.json`
+- `data/models/mert_svm_validation_predictions.csv`
+- `data/models/mert_svm_validation_confusion_matrix.png`
+
+Resumen tecnico de la seleccion:
+
+- `docs/mert_svm_selection_summary.md`
+
 Ejecutar tests:
 
 ```powershell
