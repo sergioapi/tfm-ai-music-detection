@@ -1,0 +1,91 @@
+experiment:
+  name: mert_frozen_embeddings
+  phase: preparacion_y_trazabilidad
+  seed: 42
+
+dataset:
+  name: disco-eth/AIME
+  manifest_path: data/aime_splits.csv
+  split_policy: fixed_manifest_by_description
+  train_validation_selection_only: true
+  test_locked_until_configuration_closed: true
+
+model:
+  identifier: m-a-p/MERT-v1-95M
+  immutable_revision: 12af15fef9d0ac838c3f475bfbbf26d2060dd4f5
+  revision_status: verified_from_huggingface_tree_page
+  trust_remote_code: true
+  encoder_frozen: true
+  eval_mode: true
+  no_grad: true
+  expected_embedding_dim: 768
+
+runtime:
+  device: auto
+  device_is_configurable: true
+  weights_download_allowed_in_phase_1: false
+  model_execution_allowed_in_phase_1: false
+
+audio_input:
+  mono: true
+  dtype: float32
+  sample_rate_hz: 24000
+  total_duration_seconds: 10.0
+  window_duration_seconds: 5.0
+  num_windows: 2
+
+embedding:
+  extraction_strategy: precompute_embeddings
+  hidden_state: last_hidden_state
+  window_pooling: temporal_mean
+  window_aggregation: mean
+  final_shape_per_example: [768]
+
+classifier:
+  pipeline:
+    - StandardScaler
+    - SVC
+  svm:
+    kernel: rbf
+    probability: false
+    hyperparameter_grid:
+      C: [0.1, 1, 10, 100]
+      gamma: [scale, 0.001, 0.01, 0.1]
+  selection_metric_primary: balanced_accuracy
+  selection_metric_tiebreak: f1_ai
+
+contingency:
+  model_identifier: MIT/ast-finetuned-audioset-10-10-0.4593
+  activation_policy: only_if_mert_is_technically_inviable_or_meets_abandonment_criteria
+  implemented_in_phase_1: false
+
+pending_verification:
+  - cuda_execution
+  - validation_performance_against_baseline
+  - predictive_classifier_selection_on_embeddings
+  - operational_costs_for_candidate_model
+  - final_deployment_viability
+
+smoke_test:
+  allowed_split: train
+  sample_pairs: 6
+  total_examples: 12
+  preferred_ai_generators: [Udio, Riffusion]
+  selection_policy: paired_human_ai_by_description_distinct_ai_generators
+  batch_size: 1
+  allowed_devices: [cpu, cuda, auto]
+  determinism_tolerance_abs: 1.0e-5
+  output_path: data/processed/mert_smoke_test_result.json
+  summary_path: docs/mert_smoke_test_summary.md
+  store_full_embeddings: false
+
+embedding_extraction:
+  output_csv_path: data/processed/aime_mert_embeddings.csv
+  output_parquet_path: data/processed/aime_mert_embeddings.parquet
+  failures_path: data/processed/aime_mert_embedding_failures.csv
+  summary_path: data/processed/aime_mert_embedding_extraction_summary.json
+  progress_every_rows: 250
+  expected_rows: 1000
+  expected_embedding_dim: 768
+  expected_output_dtype: float32
+  store_full_embeddings: true

@@ -52,6 +52,92 @@ Artefactos principales:
 - `data/models/mfcc_svm_confusion_matrix.png`
 - `docs/mfcc_svm_baseline_summary.md`
 
+## Modelo profundo preentrenado
+
+La decision inicial selecciona `m-a-p/MERT-v1-95M` como encoder profundo principal congelado. La trazabilidad esta en `docs/decisions/seleccion-modelo-profundo-mert.md` y la configuracion inicial en `configs/mert_frozen_embeddings.yaml`.
+
+Smoke test rapido de MERT en CPU con una pareja train:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu --max-pairs 1
+```
+
+Smoke test completo con las doce muestras train:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu
+```
+
+Si hay CUDA disponible:
+
+```powershell
+python scripts/smoke_test_mert.py --device cuda
+```
+
+Si los audios ya estan descargados localmente:
+
+```powershell
+python scripts/smoke_test_mert.py --device cpu --audio-dir data/audio/aime_raw
+```
+
+Resumen tecnico del smoke test:
+
+- `docs/mert_smoke_test_summary.md`
+
+Resultado estructurado generado localmente:
+
+- `data/processed/mert_smoke_test_result.json`
+
+Extraer embeddings MERT para los 1000 ejemplos del manifiesto, en CPU y con reanudacion si ya existe un CSV parcial:
+
+```powershell
+python scripts/extract_mert_embeddings.py --device cpu
+```
+
+Artefactos locales generados por la extraccion:
+
+- `data/processed/aime_mert_embeddings.csv`
+- `data/processed/aime_mert_embeddings.parquet`
+- `data/processed/aime_mert_embedding_extraction_summary.json`
+- `data/processed/aime_mert_embedding_failures.csv`, solo si se registran fallos
+
+Resumen tecnico de la extraccion:
+
+- `docs/mert_embedding_extraction_summary.md`
+
+Entrenar y seleccionar el clasificador SVM sobre los embeddings MERT, manteniendo test bloqueado:
+
+```powershell
+python scripts/train_mert_svm_classifier.py --config configs/mert_svm_classifier.yaml
+```
+
+Artefactos locales generados por la seleccion:
+
+- `data/models/mert_svm_selection_model.joblib`
+- `data/models/mert_svm_selection_results.json`
+- `data/models/mert_svm_validation_predictions.csv`
+- `data/models/mert_svm_validation_confusion_matrix.png`
+
+Resumen tecnico de la seleccion:
+
+- `docs/mert_svm_selection_summary.md`
+
+Evaluar una unica vez en test el clasificador MERT + SVM ya seleccionado, sin reentrenar:
+
+```powershell
+python scripts/evaluate_mert_svm_test.py --config configs/mert_svm_classifier.yaml
+```
+
+Artefactos locales generados por la evaluacion final:
+
+- `data/models/mert_svm_test_metrics.json`
+- `data/models/mert_svm_test_predictions.csv`
+- `data/models/mert_svm_test_confusion_matrix.png`
+
+Resumen tecnico de la evaluacion final:
+
+- `docs/mert_svm_test_summary.md`
+
 Ejecutar tests:
 
 ```powershell
