@@ -122,6 +122,22 @@ Resumen tecnico de la seleccion:
 
 - `docs/mert_svm_selection_summary.md`
 
+Evaluar una unica vez en test el clasificador MERT + SVM ya seleccionado, sin reentrenar:
+
+```powershell
+python scripts/evaluate_mert_svm_test.py --config configs/mert_svm_classifier.yaml
+```
+
+Artefactos locales generados por la evaluacion final:
+
+- `data/models/mert_svm_test_metrics.json`
+- `data/models/mert_svm_test_predictions.csv`
+- `data/models/mert_svm_test_confusion_matrix.png`
+
+Resumen tecnico de la evaluacion final:
+
+- `docs/mert_svm_test_summary.md`
+
 Ejecutar tests:
 
 ```powershell

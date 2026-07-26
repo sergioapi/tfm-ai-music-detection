@@ -54,3 +54,31 @@ outputs:
   validation_predictions_path: data/models/mert_svm_validation_predictions.csv
   validation_confusion_matrix_path: data/models/mert_svm_validation_confusion_matrix.png
   report_path: docs/mert_svm_selection_summary.md
+
+final_evaluation:
+  protocol:
+    fit_split: train
+    selection_split: val
+    retrain_with_train_val: false
+    evaluation_split: test
+    positive_label: 1
+    decision_threshold: 0.0
+    evaluate_once: true
+  selected_candidate:
+    name: svm_linear
+    kernel: linear
+    C: 0.1
+    gamma:
+    probability: false
+  expected_validation_metrics:
+    balanced_accuracy: 0.8666666666666667
+    precision_ai: 0.8395061728395061
+    recall_ai: 0.9066666666666666
+    f1_ai: 0.8717948717948718
+    roc_auc: 0.9217777777777779
+    confusion_matrix: [[62, 13], [7, 68]]
+  outputs:
+    metrics_path: data/models/mert_svm_test_metrics.json
+    predictions_path: data/models/mert_svm_test_predictions.csv
+    confusion_matrix_path: data/models/mert_svm_test_confusion_matrix.png
+    report_path: docs/mert_svm_test_summary.md

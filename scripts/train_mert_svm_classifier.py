@@ -471,7 +471,13 @@ def approximate_serialized_size_bytes(pipeline: Pipeline) -> int:
     return len(buffer.getvalue())
 
 
-def save_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, output_path: Path) -> None:
+def save_confusion_matrix(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    output_path: Path,
+    *,
+    title: str = "MERT + SVM validation confusion matrix",
+) -> None:
     if plt is None or ConfusionMatrixDisplay is None:
         raise MertSvmClassifierError("matplotlib is required to save the confusion matrix image")
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -483,7 +489,7 @@ def save_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, output_path: P
         cmap="Blues",
         colorbar=False,
     )
-    display.ax_.set_title("MERT + SVM validation confusion matrix")
+    display.ax_.set_title(title)
     display.figure_.tight_layout()
     display.figure_.savefig(output_path, dpi=160)
     plt.close(display.figure_)
@@ -582,7 +588,7 @@ def write_markdown_report(result: dict[str, Any], output_path: Path) -> None:
             "",
             "## Siguiente paso",
             "",
-            "Cerrar la configuracion, decidir si procede reentrenar con `train + val` y evaluar una unica vez sobre test para comparar formalmente con el baseline clasico.",
+            "La evaluacion final sobre test se realizo en la fase posterior y queda documentada en `docs/mert_svm_test_summary.md`. El siguiente paso es realizar una comparacion formal con MFCC + SVM en una issue distinta.",
             "",
         ]
     )

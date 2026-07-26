@@ -83,4 +83,4 @@ La configuracion se selecciono maximizando `balanced_accuracy` en validacion; en
 
 ## Siguiente paso
 
-Cerrar la configuracion, decidir si procede reentrenar con `train + val` y evaluar una unica vez sobre test para comparar formalmente con el baseline clasico.
+La evaluacion final sobre test se realizo en la fase posterior y queda documentada en `docs/mert_svm_test_summary.md`. El siguiente paso es realizar una comparacion formal con MFCC + SVM en una issue distinta.
