@@ -1,0 +1,340 @@
+{
+  "comparability_warnings": [
+    "The 1693580 bytes recorded for MERT correspond only to StandardScaler + SVM, not to the full deep pipeline.",
+    "The approximately 10.9 GB peak RSS belongs to bulk embedding extraction and is not the memory required for one MVP request.",
+    "Remote streaming times are not comparable with local inference latency.",
+    "MERT SVM latency excludes the encoder.",
+    "MFCC SVM latency excludes MFCC feature extraction.",
+    "There is no comparable end-to-end latency measurement per complete song.",
+    "Decision scores come from decision_function and are not calibrated probabilities."
+  ],
+  "confusion_matrices": {
+    "mert_svm_test": [
+      [
+        61,
+        14
+      ],
+      [
+        13,
+        62
+      ]
+    ],
+    "mert_svm_validation": [
+      [
+        62,
+        13
+      ],
+      [
+        7,
+        68
+      ]
+    ],
+    "mfcc_svm_test": [
+      [
+        64,
+        11
+      ],
+      [
+        14,
+        61
+      ]
+    ]
+  },
+  "data_not_available": [
+    "Comparable end-to-end latency per complete song",
+    "Final song-level aggregation strategy",
+    "MVP maximum duration limit",
+    "MVP maximum upload size",
+    "MVP timeout",
+    "Calibrated confidence percentage",
+    "External-dataset generalization evidence"
+  ],
+  "differences_mert_minus_mfcc": {
+    "test": {
+      "balanced_accuracy": -0.013333333333333308,
+      "f1_ai": -0.008739919808983254,
+      "precision_ai": -0.0314327485380117,
+      "recall_ai": 0.013333333333333308,
+      "roc_auc": -0.010133333333333328
+    },
+    "test_counts": {
+      "false_negatives": -1,
+      "false_positives": 3,
+      "n_correct": -2
+    },
+    "validation": {
+      "balanced_accuracy": 0.08666666666666667,
+      "f1_ai": 0.08469809760132341,
+      "precision_ai": 0.07700617283950617,
+      "recall_ai": 0.09333333333333327,
+      "roc_auc": 0.07377777777777794
+    }
+  },
+  "error_counts": {
+    "mert_svm_test": {
+      "false_negatives": 13,
+      "false_positives": 14,
+      "n_correct": 123,
+      "n_examples": 150,
+      "true_negatives": 61,
+      "true_positives": 62
+    },
+    "mfcc_svm_test": {
+      "false_negatives": 14,
+      "false_positives": 11,
+      "n_correct": 125,
+      "n_examples": 150,
+      "true_negatives": 64,
+      "true_positives": 61
+    }
+  },
+  "final_configurations": {
+    "mert_svm": {
+      "audio": {
+        "num_windows": 2,
+        "sample_rate_hz": 24000,
+        "total_duration_seconds": 10.0,
+        "total_samples": 240000,
+        "window_duration_seconds": 5.0,
+        "window_samples": 120000
+      },
+      "decision_threshold": 0.0,
+      "embedding_dim": 768,
+      "encoder": "m-a-p/MERT-v1-95M",
+      "encoder_revision": "12af15fef9d0ac838c3f475bfbbf26d2060dd4f5",
+      "name": "MERT frozen embeddings + StandardScaler + SVM linear",
+      "pipeline": [
+        "StandardScaler",
+        "SVC"
+      ],
+      "pooling": {
+        "hidden_state": "last_hidden_state",
+        "window_aggregation": "mean",
+        "window_pooling": "temporal_mean"
+      },
+      "svm": {
+        "C": 0.1,
+        "classes": [
+          0,
+          1
+        ],
+        "gamma": null,
+        "kernel": "linear",
+        "probability": false
+      }
+    },
+    "mfcc_svm": {
+      "features": "MFCC mean and standard deviation",
+      "n_mfcc": 20,
+      "name": "MFCC + StandardScaler + SVM RBF",
+      "pipeline": [
+        "StandardScaler",
+        "SVC"
+      ],
+      "preprocessing": {
+        "duration_seconds": 10.0,
+        "target_sample_rate": 16000
+      },
+      "svm": {
+        "C": 10,
+        "gamma": 0.01,
+        "kernel": "rbf",
+        "probability": false
+      }
+    }
+  },
+  "mert_status": {
+    "better_validation": true,
+    "close_test_result": true,
+    "cpu_viable": true,
+    "failed_experiment": false,
+    "higher_test_recall_ai": true,
+    "kept_as_experimental_comparison": true
+  },
+  "mvp_implications": {
+    "backend_preprocessing": "Reproduce the MFCC preprocessing used in the experiments.",
+    "forensic_detector_claim": false,
+    "initial_flow": "Synchronous flow by default for simplicity, to be confirmed during MVP integration.",
+    "model_loading": "Load the MFCC joblib pipeline once during FastAPI startup.",
+    "open_aggregation": true,
+    "open_limits": [
+      "upload size",
+      "audio duration",
+      "timeout",
+      "number of fragments"
+    ],
+    "output_calibrated_probability": false,
+    "redis": "Not included in this phase."
+  },
+  "operational_metrics": {
+    "mert_svm": {
+      "encoder_inference_seconds_mean_per_10s_clip": 0.8239466807993595,
+      "encoder_inference_seconds_mean_per_5s_window": 0.41197334039967975,
+      "encoder_model_load_seconds": 0.6107143999543041,
+      "encoder_snapshot_size_bytes": 377578388,
+      "latency_scope": "SVM classifier latency excludes MERT encoder; encoder timings are recorded separately",
+      "pipeline_complexity": "high",
+      "preprocessing_seconds_mean_per_clip": 0.23499847060081083,
+      "processor_load_seconds": 0.6254458000184968,
+      "rss_after_encoder_load_bytes": 499437568,
+      "rss_peak_extraction_bytes": 10918952960,
+      "rss_peak_scope": "bulk embedding extraction, streaming, decoding, preprocessing, inference and writing",
+      "smoke_test_encoder_inference_seconds_per_clip": 0.7180642666935455,
+      "svm_classifier_latency_seconds_per_embedding": 0.0001129840003947417,
+      "svm_classifier_load_seconds": 0.01322179997805506,
+      "svm_classifier_prediction_seconds_test": 0.016947600059211254,
+      "svm_joblib_size_bytes": 1693580,
+      "svm_joblib_size_is_full_pipeline": false
+    },
+    "mfcc_svm": {
+      "classifier_latency_seconds_per_fragment_test": 8.974399999715387e-05,
+      "classifier_prediction_seconds_test": 0.013461599999573082,
+      "feature_extraction_seconds_total": 2461.7319427999973,
+      "latency_scope": "SVM classifier on precomputed MFCC features; MFCC extraction not included",
+      "memory_note": "No registrada: no se anade dependencia nueva para medir memoria.",
+      "memory_rss_bytes": null,
+      "pipeline_complexity": "low",
+      "pipeline_joblib_size_bytes": 139462,
+      "training_and_search_seconds": 0.7313823999938904
+    }
+  },
+  "protocol": {
+    "dataset": "AIME",
+    "duplicates": {
+      "manifest": 0,
+      "mert_test_predictions": 0,
+      "mfcc_predictions": 0
+    },
+    "label_distribution": {
+      "0": 500,
+      "1": 500
+    },
+    "manifest": "data/aime_splits.csv",
+    "n_examples": 1000,
+    "positive_label": 1,
+    "retrained_with_train_val": false,
+    "score_source": "decision_function",
+    "scores_are_calibrated_probabilities": false,
+    "split_distribution": {
+      "test": 150,
+      "train": 700,
+      "val": 150
+    },
+    "test_ids_match": true,
+    "test_label_alignment": true,
+    "test_used_for_selection": false
+  },
+  "schema_version": "1.0",
+  "selected_model": {
+    "id": "mfcc_svm",
+    "name": "MFCC + StandardScaler + SVM RBF",
+    "selected_for": "MVP web"
+  },
+  "selection_reasons": [
+    "Better final test balanced accuracy, precision AI, F1 AI and ROC-AUC.",
+    "Two more correct predictions on AIME test.",
+    "Fewer false positives on AIME test.",
+    "Much smaller local joblib artifact.",
+    "Fewer runtime dependencies.",
+    "No deep encoder has to be loaded at API startup.",
+    "Lower cold-start, memory and deployment risk.",
+    "Simpler initial FastAPI and Hugging Face Spaces integration.",
+    "MERT does not provide a global predictive improvement that compensates its operational cost."
+  ],
+  "sources": {
+    "primary": [
+      "data/aime_splits.csv",
+      "data/models/mfcc_svm_metrics.json",
+      "data/models/mfcc_svm_predictions.csv",
+      "data/processed/aime_mfcc_extraction_summary.json",
+      "data/models/mfcc_svm_baseline.joblib",
+      "data/models/mert_svm_selection_results.json",
+      "data/models/mert_svm_test_metrics.json",
+      "data/models/mert_svm_test_predictions.csv",
+      "data/processed/aime_mert_embedding_extraction_summary.json",
+      "data/processed/mert_smoke_test_result.json",
+      "configs/mert_frozen_embeddings.yaml",
+      "configs/mert_svm_classifier.yaml",
+      "data/models/mert_svm_selection_model.joblib"
+    ],
+    "secondary": [
+      "docs/mfcc_svm_baseline_summary.md",
+      "docs/mert_embedding_extraction_summary.md",
+      "docs/mert_svm_selection_summary.md",
+      "docs/mert_svm_test_summary.md",
+      "docs/decisions/seleccion-modelo-profundo-mert.md"
+    ]
+  },
+  "test_metrics": {
+    "mert_svm": {
+      "balanced_accuracy": 0.8200000000000001,
+      "confusion_matrix": [
+        [
+          61,
+          14
+        ],
+        [
+          13,
+          62
+        ]
+      ],
+      "f1_ai": 0.8211920529801324,
+      "precision_ai": 0.8157894736842105,
+      "recall_ai": 0.8266666666666667,
+      "roc_auc": 0.8984888888888889
+    },
+    "mfcc_svm": {
+      "balanced_accuracy": 0.8333333333333334,
+      "confusion_matrix": [
+        [
+          64,
+          11
+        ],
+        [
+          14,
+          61
+        ]
+      ],
+      "f1_ai": 0.8299319727891157,
+      "precision_ai": 0.8472222222222222,
+      "recall_ai": 0.8133333333333334,
+      "roc_auc": 0.9086222222222222
+    }
+  },
+  "validation_metrics": {
+    "mert_svm": {
+      "balanced_accuracy": 0.8666666666666667,
+      "confusion_matrix": [
+        [
+          62,
+          13
+        ],
+        [
+          7,
+          68
+        ]
+      ],
+      "f1_ai": 0.8717948717948718,
+      "precision_ai": 0.8395061728395061,
+      "recall_ai": 0.9066666666666666,
+      "roc_auc": 0.9217777777777779
+    },
+    "mfcc_svm": {
+      "balanced_accuracy": 0.78,
+      "confusion_matrix": [
+        [
+          56,
+          19
+        ],
+        [
+          14,
+          61
+        ]
+      ],
+      "f1_ai": 0.7870967741935484,
+      "precision_ai": 0.7625,
+      "recall_ai": 0.8133333333333334,
+      "roc_auc": 0.848
+    }
+  }
+}
