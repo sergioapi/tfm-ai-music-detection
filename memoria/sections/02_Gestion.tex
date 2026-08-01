@@ -9,7 +9,7 @@ Este capítulo presenta los objetivos del TFM, la metodología de trabajo, la pl
 
 \subsection{Objetivo general}
 
-Comparar un enfoque clásico basado en MFCC y SVM con un modelo profundo preentrenado para la detección de música generada mediante inteligencia artificial, evaluando ambos mediante medidas predictivas y operacionales bajo un protocolo experimental común.
+Comparar un enfoque clásico basado en MFCC y SVM con un enfoque profundo basado en MERT congelado y SVM para la detección de música generada mediante inteligencia artificial, evaluando ambos mediante medidas predictivas y operacionales bajo un diseño experimental común.
 
 \subsection{Objetivos específicos}
 
@@ -17,8 +17,8 @@ Comparar un enfoque clásico basado en MFCC y SVM con un modelo profundo preentr
     \item Revisar el estado del arte relacionado con la detección de música generada mediante IA.
     \item Auditar y preparar AIME para su uso experimental.
     \item Definir un protocolo reproducible de particionado, preprocesamiento y evaluación.
-    \item Implementar y evaluar el baseline MFCC + SVM.
-    \item Seleccionar, adaptar y evaluar un modelo profundo preentrenado.
+    \item Seleccionar, implementar y evaluar un baseline clásico basado en MFCC y SVM.
+    \item Seleccionar, adaptar y evaluar un enfoque profundo basado en MERT y SVM.
     \item Comparar ambos enfoques y seleccionar el modelo más adecuado para la prueba de concepto, considerando conjuntamente su rendimiento predictivo y su viabilidad operacional.
     \item Desarrollar y desplegar una prueba de concepto web que integre el modelo seleccionado.
     \item Documentar decisiones, experimentos y artefactos para garantizar la reproducibilidad.
@@ -38,11 +38,13 @@ El desarrollo se gestiona con Git y GitHub, utilizando ramas e issues para separ
 
 \subsection{Preparación de los datos y reproducibilidad}
 
-La preparación experimental parte de la selección y auditoría de AIME como conjunto de datos principal. Antes del procesamiento de audio se generan particiones reproducibles, separando entrenamiento, validación y prueba. Esta separación permite controlar fugas de información y mantener el mismo conjunto de datos para evaluar los dos enfoques comparados.
+La preparación experimental parte de la selección y auditoría de AIME como conjunto de datos principal. Antes del procesamiento de audio se generan particiones reproducibles. El manifiesto se divide en \textit{train}, \textit{val} y \textit{test}, correspondientes respectivamente al ajuste del modelo, la selección de la configuración y la evaluación final. Esta separación permite controlar fugas de información y mantener el mismo conjunto de datos para evaluar los dos enfoques comparados.
 
 \subsection{Desarrollo y evaluación experimental}
 
-Los modelos se evalúan bajo el mismo protocolo experimental. La partición de validación se emplea para seleccionar las configuraciones, mientras que la partición de prueba se reserva para la evaluación final. Durante el proceso se registran medidas predictivas y operacionales, y se incorporan pruebas automatizadas sobre los componentes críticos para comprobar que el particionado, el preprocesamiento y la evaluación respetan las condiciones definidas y no introducen fugas de información.
+Los modelos se evaluaron bajo el procedimiento definido durante la preparación de los datos. Los experimentos se ejecutaron en el entorno virtual del proyecto, configurado con Python 3.11.9. Durante el proceso se registraron medidas predictivas y operacionales, y la reproducibilidad se apoyó en artefactos estructurados y pruebas automatizadas sobre los componentes críticos.
+
+La metodología experimental distingue entre cuatro formas de abordar la clasificación: características manuales con aprendizaje automático clásico, embeddings de un modelo profundo congelado con un clasificador supervisado, fine-tuning parcial y fine-tuning completo. En el desarrollo realizado se ejecutaron las dos primeras. El baseline utilizó MFCC con una SVM, mientras que el enfoque profundo empleó MERT como encoder congelado para obtener embeddings y entrenó después una SVM sobre esas representaciones.
 
 \section{Planificación}
 
@@ -61,12 +63,12 @@ La Tabla~\ref{tab:planificacion-tfm} resume las fases previstas, su periodo, la 
         Alcance, planificación y entorno & 22-30 de junio & 20~h & Alcance y objetivos definidos, viabilidad estudiada y entorno de trabajo configurado \\
         Auditoría de AIME y preparación de particiones & 1-11 de julio & 24~h & Conjunto de datos auditado y particiones reproducibles preparadas \\
         Revisión bibliográfica y estado del arte & 22 de junio-16 de julio & 26~h & Estado del arte actualizado y bibliografía relevante organizada \\
-        Baseline MFCC + SVM & 12-14 de julio & 22~h & Baseline implementado y evaluado mediante el protocolo experimental definido \\
+        Baseline MFCC + SVM & 12-14 de julio & 22~h & Baseline implementado y evaluado mediante el procedimiento experimental definido \\
         Documentación del primer incremento & 15-20 de julio & 18~h & Metodología, dataset, particiones y baseline incorporados a la documentación \\
         Selección y adaptación del modelo profundo & 21 de julio-5 de agosto & 52~h & Modelo profundo seleccionado, adaptado y evaluado \\
         Comparación experimental y selección del modelo & 6-12 de agosto & 28~h & Comparación predictiva y operacional completada y modelo de despliegue seleccionado \\
         Documentación del segundo incremento & 13-16 de agosto & 14~h & Modelo profundo, comparación, resultados y limitaciones documentados \\
-        Diseño e implementación de la aplicación web & 17 de agosto-2 de septiembre & 48~h & Aplicación web funcional con frontend, backend e integración del modelo seleccionado \\
+        Diseño e implementación de la aplicación web & 17 de agosto-2 de septiembre & 48~h & Aplicación web funcional con integración del modelo seleccionado \\
         Pruebas, despliegue y documentación de la aplicación & 3-7 de septiembre & 18~h & Evidencias de prueba, despliegue académico y documentación de la aplicación \\
         Revisión final de memoria y artefactos & 8-13 de septiembre & 20~h & Memoria revisada y artefactos técnicos organizados para la entrega \\
         Preparación de la presentación & 14-15 de septiembre & 10~h & Presentación y demostración preparadas \\
@@ -91,7 +93,7 @@ Las principales dependencias entre las fases son las siguientes:
 
 \begin{itemize}
     \item La auditoría de AIME y la generación de las particiones preceden a la ejecución de los experimentos.
-    \item El baseline y el modelo profundo deben evaluarse mediante el mismo protocolo antes de realizar la comparación.
+    \item El baseline y el modelo profundo deben evaluarse mediante el mismo procedimiento antes de realizar la comparación.
     \item La selección del modelo para la aplicación depende de los resultados predictivos y operacionales de ambos enfoques.
     \item La implementación web requiere el artefacto y el preprocesamiento del modelo seleccionado, mientras que las pruebas y el despliegue preceden al cierre del proyecto.
 \end{itemize}
