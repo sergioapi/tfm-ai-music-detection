@@ -2,29 +2,17 @@
 
 \section{Introducción}
 
-Este capítulo presenta la ejecución del baseline clásico MFCC + SVM, la selección de su configuración y los resultados obtenidos. La valoración final se realiza sobre la partición de prueba, acompañada de un análisis de los errores y de las limitaciones específicas del método.
+Este capítulo presenta la validación experimental de los dos enfoques implementados: el baseline clásico MFCC + SVM y el enfoque profundo basado en MERT congelado y SVM. Se recogen la ejecución de los experimentos, la selección de configuraciones, la evaluación final en \textit{test}, la comparación predictiva y operacional, y la selección del modelo para la prueba de concepto web.
 
-\section{Entorno y reproducibilidad}
+\section{Baseline MFCC + SVM}
 
-La ejecución se realizó con Python 3.11.9 en el entorno virtual del repositorio, donde se instalaron las dependencias del proyecto. Las pruebas automatizadas relacionadas con el baseline se ejecutaron correctamente en este entorno.
+\subsection*{Configuración y selección}
 
-El baseline se ejecutó con la semilla $42$ y utilizó el manifiesto experimental definido en el capítulo anterior. Las pruebas automatizadas verificaron el preprocesamiento, la extracción de características, la construcción del pipeline, la ausencia de solapamiento entre grupos y la carga del modelo guardado.
+El baseline procesó los 1\,000 ejemplos del manifiesto experimental sin registrar fallos.
 
-Los artefactos principales generados fueron el fichero de características, el modelo entrenado, el fichero de medidas, las predicciones de validación y prueba, y la matriz de confusión de la partición de prueba.
+La búsqueda de hiperparámetros evaluó 16 configuraciones de SVM RBF, combinando $C \in \{0{,}1;\ 1;\ 10;\ 100\}$ y $\gamma \in \{\textit{scale};\ 0{,}001;\ 0{,}01;\ 0{,}1\}$. La configuración seleccionada fue $C=10$ y $\gamma=0{,}01$, ajustada con \textit{train} y seleccionada con \textit{val}.
 
-\section{Ejecución del baseline}
-
-La ejecución procesó los 1\,000 ejemplos del manifiesto experimental y no registró fallos. Se generaron características para todos los ejemplos y se conservaron las particiones definidas: 700 ejemplos en entrenamiento, 150 en validación y 150 en prueba. Las pruebas ejecutadas confirmaron que los grupos permanecían dentro de una única partición.
-
-\section{Selección de la configuración}
-
-La búsqueda de hiperparámetros aplicó el procedimiento definido en la Sección~\ref{sec:baseline-mfcc-svm} a las 16 configuraciones evaluadas. Cada configuración se entrenó con la partición de entrenamiento y se valoró sobre la partición de validación.
-
-La configuración $C=10$ y $\gamma=0{,}01$ obtuvo en validación una \textit{balanced accuracy} de 0,7800 y un F1 de la clase IA de 0,7871. Este fue el mejor valor de \textit{balanced accuracy} entre las configuraciones evaluadas, por lo que no fue necesario aplicar el criterio secundario de desempate. Tras la selección, se evaluó en la partición de prueba el modelo entrenado únicamente con la partición de entrenamiento, sin combinar entrenamiento y validación en un nuevo ajuste.
-
-\section{Resultados predictivos y análisis}
-
-La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseline. IA se considera la clase positiva; \textit{balanced accuracy} incorpora el recall de ambas clases, mientras que \textit{precision}, \textit{recall} y F1 se muestran para la clase IA. La matriz de confusión permite examinar el comportamiento completo del clasificador. La fila de validación documenta el proceso de selección, mientras que la valoración final del baseline se realiza sobre la partición de prueba.
+\subsection*{Resultados}
 
 \begin{table}[H]
     \centering
@@ -33,60 +21,143 @@ La Tabla~\ref{tab:mfcc-svm-resultados} resume las medidas predictivas del baseli
         \hline
         \textbf{Partición} & \textbf{Balanced accuracy} & \textbf{Precision IA} & \textbf{Recall IA} & \textbf{F1 IA} & \textbf{ROC-AUC} \\
         \hline
-        Validación & 0,7800 & 0,7625 & 0,8133 & 0,7871 & 0,8480 \\
-        Prueba & 0,8333 & 0,8472 & 0,8133 & 0,8299 & 0,9086 \\
+        \textit{val} & 0,7800 & 0,7625 & 0,8133 & 0,7871 & 0,8480 \\
+        \textit{test} & 0,8333 & 0,8472 & 0,8133 & 0,8299 & 0,9086 \\
         \hline
     \end{tabular}
     }
-    \caption{Medidas predictivas del baseline MFCC + SVM en validación y prueba.}
+    \caption{Medidas predictivas del baseline MFCC + SVM en \textit{val} y \textit{test}.}
     \label{tab:mfcc-svm-resultados}
 \end{table}
 
-En la partición de prueba, el baseline obtiene 125 aciertos sobre 150 ejemplos. El recall humano es $64/75 = 0{,}8533$ y el recall IA es $61/75 = 0{,}8133$, de modo que la \textit{balanced accuracy} resulta $(0{,}8533 + 0{,}8133) / 2 = 0{,}8333$. La diferencia entre ambos recalls es 0,0400, con una mejor recuperación de la clase humana en esta partición. Esta interpretación se limita al test de AIME utilizado en el protocolo experimental.
-
-La \textit{precision} IA es 0,8472, el recall IA es 0,8133 y el F1 IA es 0,8299. La \textit{precision} IA es ligeramente superior al recall IA, en consonancia con los 14 falsos negativos de la clase IA y los 11 falsos positivos observados en la matriz de confusión.
-
-Como se observa en la Figura~\ref{fig:mfcc-svm-confusion}, la matriz de confusión registra 64 ejemplos humanos correctamente clasificados y 61 ejemplos IA correctamente detectados, junto con los errores entre ambas clases.
+En \textit{test}, el baseline obtiene 125 aciertos sobre 150 ejemplos. La matriz de confusión muestra que clasifica correctamente 64 de los 75 ejemplos humanos y 61 de los 75 ejemplos IA, con 11 falsos positivos y 14 falsos negativos. Esta distribución indica una dificultad ligeramente mayor para reconocer la clase IA, coherente con un recall humano de 0,8533 y un recall IA de 0,8133. La Figura~\ref{fig:mfcc-svm-confusion} recoge esta distribución de aciertos y errores.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.72\textwidth]{fig/mfcc_svm_confusion_matrix.png}
-    \caption{Matriz de confusión del baseline MFCC + SVM en la partición de prueba.}
+    \caption{Matriz de confusión del baseline MFCC + SVM en \textit{test}.}
     \label{fig:mfcc-svm-confusion}
 \end{figure}
 
-El ROC-AUC de prueba es 0,9086, lo que refleja una capacidad favorable de ordenación de los \textit{scores} en el test. Bajo la interpretación habitual de AUC, un ejemplo IA elegido al azar recibe un \textit{score} superior al de un ejemplo humano elegido al azar en aproximadamente el 90,86~\% de los pares. Los \textit{scores} de \textit{decision\_function} no son probabilidades calibradas, y ROC-AUC no depende del único umbral usado por la matriz de confusión. La evaluación mantiene el umbral de decisión del clasificador y no ajusta un umbral adicional mediante la partición de prueba.
+\section{MERT congelado + SVM}
 
-\section{Tiempos de ejecución registrados}
+\subsection*{Extracción de embeddings}
 
-La Tabla~\ref{tab:mfcc-svm-tiempos} muestra los tiempos registrados por los artefactos del experimento. En ella se recogen exclusivamente las fases temporizadas durante la ejecución del baseline.
+Antes de procesar el subconjunto completo se ejecutó un smoke test técnico en CPU. Esta prueba verificó las dimensiones de entrada y salida, la presencia de valores finitos, el determinismo de la extracción y la viabilidad de ejecución en CPU.
+
+La extracción completa procesó los 1\,000 ejemplos del manifiesto sin fallos, IDs ausentes ni duplicados. Cada clip produjo un vector de 768 componentes y el conjunto completo quedó representado mediante una matriz de forma $(1000, 768)$. Los embeddings se almacenaron como float32 y sus metadatos se verificaron frente al manifiesto.
+
+\subsection*{Selección del clasificador}
+
+El clasificador sobre embeddings se construyó como un pipeline \textit{StandardScaler} + SVM. Se evaluaron candidatos con kernel lineal y RBF. Todos los candidatos se ajustaron con \textit{train} y se seleccionaron con \textit{val}. La regla de selección maximizó \textit{balanced accuracy}; en caso de empate, consideró ROC-AUC, F1 de la clase IA, menor latencia media de predicción y preferencia por kernel lineal. La configuración seleccionada fue una SVM lineal con $C=0{,}1$. Las medidas obtenidas por esta configuración en \textit{val} se recogen en la Tabla~\ref{tab:mert-svm-validacion}.
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{lr}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
         \hline
-        \textbf{Fase registrada} & \textbf{Tiempo} \\
+        \textbf{Modelo} & \textbf{Balanced accuracy} & \textbf{Precision IA} & \textbf{Recall IA} & \textbf{F1 IA} & \textbf{ROC-AUC} \\
         \hline
-        Extracción de características MFCC & 2.461,73 s \\
-        Entrenamiento y búsqueda de hiperparámetros & 0,731 s \\
-        Predicción en validación sobre características calculadas & 0,012 s \\
-        Predicción en prueba sobre características calculadas & 0,014 s \\
+        MERT + SVM lineal & 0,8667 & 0,8395 & 0,9067 & 0,8718 & 0,9218 \\
         \hline
     \end{tabular}
-    \caption{Tiempos registrados durante la ejecución del baseline MFCC + SVM.}
-    \label{tab:mfcc-svm-tiempos}
+    }
+    \caption{Medidas de \textit{val} del clasificador seleccionado sobre embeddings MERT.}
+    \label{tab:mert-svm-validacion}
 \end{table}
 
-El tiempo de predicción mide exclusivamente la aplicación de la SVM sobre características previamente extraídas; la extracción de MFCC se registra por separado. Los tiempos disponibles permiten separar la extracción de características del entrenamiento y de la clasificación mediante la SVM.
+\subsection*{Resultados}
 
-\section{Limitaciones del baseline}
+Una vez fijada la configuración mediante \textit{val}, el enfoque basado en MERT se evaluó en \textit{test} utilizando los embeddings precomputados y una SVM lineal con $C=0{,}1$. La Tabla~\ref{tab:mert-svm-test} recoge las medidas obtenidas.
 
-El baseline utiliza un único fragmento de diez segundos por ejemplo. La selección de la ventana de mayor energía descarta el resto del audio, por lo que la decisión del clasificador depende solo de una parte de cada muestra. Además, la media y la desviación típica de los MFCC eliminan la evolución temporal de los coeficientes.
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+        \hline
+        \textbf{Modelo} & \textbf{Balanced accuracy} & \textbf{Precision IA} & \textbf{Recall IA} & \textbf{F1 IA} & \textbf{ROC-AUC} \\
+        \hline
+        MERT + SVM lineal & 0,8200 & 0,8158 & 0,8267 & 0,8212 & 0,8985 \\
+        \hline
+    \end{tabular}
+    }
+    \caption{Medidas de \textit{test} de MERT + SVM lineal.}
+    \label{tab:mert-svm-test}
+\end{table}
 
-El modelo no realiza agregación a nivel de canción y puede apoyarse en diferencias acústicas o técnicas presentes en el corpus. Tampoco se ha evaluado en un conjunto externo, por lo que sus resultados deben interpretarse como una referencia experimental dentro del protocolo definido.
+En \textit{test}, el enfoque basado en MERT obtuvo 123 aciertos sobre 150 ejemplos. Clasificó correctamente 61 de los 75 ejemplos humanos y 62 de los 75 ejemplos IA, con 14 falsos positivos y 13 falsos negativos. La distribución de errores entre ambas clases fue prácticamente equilibrada, como muestra la Figura~\ref{fig:mert-svm-confusion}.
 
-\section{Conclusiones}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.72\textwidth]{fig/mert_svm_test_confusion_matrix.png}
+    \caption{Matriz de confusión de MERT + SVM lineal en \textit{test}.}
+    \label{fig:mert-svm-confusion}
+\end{figure}
 
-La ejecución del baseline MFCC + SVM se completó sobre los 1\,000 ejemplos del manifiesto sin fallos registrados. La configuración seleccionada mediante validación fue $C=10$ y $\gamma=0{,}01$, entrenada sobre la partición de entrenamiento y evaluada finalmente en prueba.
+\section{Comparación y selección del modelo}
 
-En la partición de prueba, el baseline alcanza una \textit{balanced accuracy} de 0,8333, F1 de la clase IA de 0,8299 y ROC-AUC de 0,9086. Estos resultados constituyen la referencia experimental para la comparación con el modelo profundo preentrenado.
+\subsection*{Comparación predictiva}
+
+La Tabla~\ref{tab:comparacion-test} presenta las medidas de \textit{test} de ambos enfoques y la diferencia MERT menos MFCC.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lrrrrr}
+        \hline
+        \textbf{Modelo} & \textbf{Balanced accuracy} & \textbf{Precision IA} & \textbf{Recall IA} & \textbf{F1 IA} & \textbf{ROC-AUC} \\
+        \hline
+        MFCC + SVM RBF & 0,8333 & 0,8472 & 0,8133 & 0,8299 & 0,9086 \\
+        MERT + SVM lineal & 0,8200 & 0,8158 & 0,8267 & 0,8212 & 0,8985 \\
+        Diferencia MERT - MFCC & -0,0133 & -0,0314 & +0,0133 & -0,0087 & -0,0101 \\
+        \hline
+    \end{tabular}
+    }
+    \caption{Comparación predictiva en \textit{test}.}
+    \label{tab:comparacion-test}
+\end{table}
+
+La Tabla~\ref{tab:comparacion-errores} compara los aciertos y errores principales de ambos enfoques.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrr}
+        \hline
+        \textbf{Modelo} & \textbf{Aciertos} & \textbf{Falsos positivos} & \textbf{Falsos negativos} \\
+        \hline
+        MFCC + SVM RBF & 125 & 11 & 14 \\
+        MERT + SVM lineal & 123 & 14 & 13 \\
+        Diferencia MERT - MFCC & -2 & +3 & -1 \\
+        \hline
+    \end{tabular}
+    \caption{Comparación de aciertos, falsos positivos y falsos negativos en \textit{test}.}
+    \label{tab:comparacion-errores}
+\end{table}
+
+En \textit{test}, los resultados de ambos enfoques fueron próximos. MFCC + SVM alcanzó una ligera ventaja en \textit{balanced accuracy}, precision IA, F1 IA y ROC-AUC, además de obtener 125 aciertos frente a los 123 del enfoque profundo. MERT + SVM presentó un recall IA ligeramente superior y un falso negativo menos. Las diferencias observadas se circunscriben al \textit{test} de AIME empleado en el experimento.
+
+\subsection*{Comparación operacional}
+
+La comparación operacional de la Tabla~\ref{tab:comparacion-operacional} se refiere al clasificador aplicado sobre representaciones ya calculadas. En el baseline se usan características MFCC ya extraídas, mientras que en el enfoque profundo se usan embeddings MERT ya extraídos. El tamaño corresponde al clasificador serializado; en el caso de MERT no incluye el processor ni el encoder.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrr}
+        \hline
+        \textbf{Modelo} & \textbf{Latencia (ms/ejemplo)} & \textbf{Tamaño (MB)} \\
+        \hline
+        MFCC + SVM RBF & 0,090 & 0,14 \\
+        MERT + SVM lineal & 0,113 & 1,69 \\
+        \hline
+    \end{tabular}
+    \caption{Comparación operacional de los clasificadores.}
+    \label{tab:comparacion-operacional}
+\end{table}
+
+La latencia de la SVM sobre embeddings MERT es cercana a la del baseline una vez calculada la representación. Sin embargo, la ejecución completa de MERT incorpora además la carga y ejecución del processor y del encoder profundo. La inferencia registrada del encoder fue de aproximadamente 0,824 segundos por clip de diez segundos en CPU.
+
+El clasificador serializado del enfoque MFCC ocupa menos espacio y su pipeline requiere menos componentes. Las mediciones disponibles tienen alcances distintos y se tratan como evidencias operacionales parciales: la tabla compara clasificadores sobre representaciones ya calculadas, mientras que la ejecución completa de MERT incorpora el coste del encoder.
+
+\subsection*{Selección}
+
+MFCC + \textit{StandardScaler} + SVM RBF fue seleccionado como modelo para la prueba de concepto web. La decisión se basa en su ligera ventaja en la mayoría de las medidas de \textit{test}, sus dos aciertos adicionales y el menor número de falsos positivos. Desde el punto de vista operacional, también presenta un clasificador serializado de menor tamaño, requiere menos componentes y evita el coste de ejecutar un encoder profundo durante la inferencia. El enfoque basado en MERT obtuvo resultados próximos al baseline y un recall IA ligeramente superior, pero su pipeline incorpora processor, encoder y dependencias adicionales.
