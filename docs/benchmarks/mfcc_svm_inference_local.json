@@ -1,0 +1,1081 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-08-03T15:23:26.571342+00:00",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.11.9",
+    "numpy": "2.4.6",
+    "librosa": "0.11.0",
+    "soundfile": "0.14.0",
+    "libsndfile": "1.2.2",
+    "scikit_learn": "1.9.0",
+    "joblib": "1.5.3",
+    "psutil": "7.2.2",
+    "cpu": "Intel64 Family 6 Model 165 Stepping 2, GenuineIntel",
+    "cpu_count_logical": 16,
+    "cpu_count_physical": 8,
+    "ram_total_bytes": 16935022592
+  },
+  "artifact": {
+    "path": "data/models/mfcc_svm_baseline.joblib",
+    "size_bytes": 139462,
+    "sha256": "ee4359aa9f9942a1179184a28834c5a1b6d901253ac82bce90a32472451a0336"
+  },
+  "service_load": {
+    "load_seconds": 0.7697131000459194,
+    "rss_before_bytes": 154783744,
+    "rss_after_bytes": 166096896,
+    "rss_increase_bytes": 11313152,
+    "warnings": [
+      {
+        "category": "InconsistentVersionWarning",
+        "message": "Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.9.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:\nhttps://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations"
+      },
+      {
+        "category": "InconsistentVersionWarning",
+        "message": "Trying to unpickle estimator SVC from version 1.8.0 when using version 1.9.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:\nhttps://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations"
+      },
+      {
+        "category": "InconsistentVersionWarning",
+        "message": "Trying to unpickle estimator Pipeline from version 1.8.0 when using version 1.9.0. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:\nhttps://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations"
+      }
+    ]
+  },
+  "first_inference": {
+    "ai_score": -0.25926259435054533,
+    "predicted_label": 0,
+    "predicted_class": "human",
+    "n_fragments": 1,
+    "wall_clock_seconds": 3.6467071000952274,
+    "decode_seconds": 0.003475799923762679,
+    "segmentation_seconds": 0.00015700003132224083,
+    "preprocessing_seconds": 9.139999747276306e-05,
+    "mfcc_seconds": 3.6395449000410736,
+    "prediction_seconds": 0.0020159000996500254,
+    "aggregation_seconds": 5.08998055011034e-05,
+    "total_seconds": 3.6453537000343204,
+    "rss_before_bytes": 166227968,
+    "rss_after_bytes": 257343488,
+    "rss_peak_bytes": 257343488,
+    "rss_peak_increase_bytes": 91115520,
+    "real_time_factor": 0.36453537000343206,
+    "audio_seconds_per_processing_second": 2.743218031190184
+  },
+  "audios": [
+    {
+      "audio": {
+        "path": "data/audio/aime_acceptance_raw/audioldm-2-large_01631.wav",
+        "name": "audioldm-2-large_01631.wav",
+        "extension": ".wav",
+        "size_bytes": 640058,
+        "duration_seconds": 10.0,
+        "sample_rate": 16000,
+        "channels": 1,
+        "expected_fragments": 1
+      },
+      "repetitions": [
+        {
+          "ai_score": -0.25926259435054533,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 1,
+          "wall_clock_seconds": 0.012657499872148037,
+          "decode_seconds": 0.0015626000240445137,
+          "segmentation_seconds": 8.610007353127003e-05,
+          "preprocessing_seconds": 6.969994865357876e-05,
+          "mfcc_seconds": 0.009596999967470765,
+          "prediction_seconds": 0.0006772999186068773,
+          "aggregation_seconds": 3.7300167605280876e-05,
+          "total_seconds": 0.01204509986564517,
+          "rss_before_bytes": 257343488,
+          "rss_after_bytes": 257581056,
+          "rss_peak_bytes": 257581056,
+          "rss_peak_increase_bytes": 237568,
+          "real_time_factor": 0.001204509986564517,
+          "audio_seconds_per_processing_second": 830.21312496726
+        },
+        {
+          "ai_score": -0.25926259435054533,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 1,
+          "wall_clock_seconds": 0.01151939993724227,
+          "decode_seconds": 0.001482000108808279,
+          "segmentation_seconds": 7.819989696145058e-05,
+          "preprocessing_seconds": 7.280008867383003e-05,
+          "mfcc_seconds": 0.008742399979382753,
+          "prediction_seconds": 0.0006895000115036964,
+          "aggregation_seconds": 3.9899954572319984e-05,
+          "total_seconds": 0.011120100039988756,
+          "rss_before_bytes": 257581056,
+          "rss_after_bytes": 257585152,
+          "rss_peak_bytes": 257585152,
+          "rss_peak_increase_bytes": 4096,
+          "real_time_factor": 0.0011120100039988755,
+          "audio_seconds_per_processing_second": 899.2724853229029
+        },
+        {
+          "ai_score": -0.25926259435054533,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 1,
+          "wall_clock_seconds": 0.011662499979138374,
+          "decode_seconds": 0.0014343000948429108,
+          "segmentation_seconds": 9.629991836845875e-05,
+          "preprocessing_seconds": 7.400009781122208e-05,
+          "mfcc_seconds": 0.00881120003759861,
+          "prediction_seconds": 0.0006611999124288559,
+          "aggregation_seconds": 4.20999713242054e-05,
+          "total_seconds": 0.011135300155729055,
+          "rss_before_bytes": 257585152,
+          "rss_after_bytes": 257585152,
+          "rss_peak_bytes": 259751936,
+          "rss_peak_increase_bytes": 2166784,
+          "real_time_factor": 0.0011135300155729055,
+          "audio_seconds_per_processing_second": 898.0449435711934
+        },
+        {
+          "ai_score": -0.25926259435054533,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 1,
+          "wall_clock_seconds": 0.012088199844583869,
+          "decode_seconds": 0.0017140998970717192,
+          "segmentation_seconds": 0.00011039990931749344,
+          "preprocessing_seconds": 8.079991675913334e-05,
+          "mfcc_seconds": 0.009012799942865968,
+          "prediction_seconds": 0.0006536999717354774,
+          "aggregation_seconds": 3.950018435716629e-05,
+          "total_seconds": 0.011625999817624688,
+          "rss_before_bytes": 257585152,
+          "rss_after_bytes": 257589248,
+          "rss_peak_bytes": 258879488,
+          "rss_peak_increase_bytes": 1294336,
+          "real_time_factor": 0.001162599981762469,
+          "audio_seconds_per_processing_second": 860.1410766272576
+        },
+        {
+          "ai_score": -0.25926259435054533,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 1,
+          "wall_clock_seconds": 0.011594800045713782,
+          "decode_seconds": 0.0014063999988138676,
+          "segmentation_seconds": 8.370005525648594e-05,
+          "preprocessing_seconds": 9.310012683272362e-05,
+          "mfcc_seconds": 0.008887599920853972,
+          "prediction_seconds": 0.0006756999064236879,
+          "aggregation_seconds": 3.9899954572319984e-05,
+          "total_seconds": 0.011201199842616916,
+          "rss_before_bytes": 257589248,
+          "rss_after_bytes": 257597440,
+          "rss_peak_bytes": 257597440,
+          "rss_peak_increase_bytes": 8192,
+          "real_time_factor": 0.0011201199842616916,
+          "audio_seconds_per_processing_second": 892.7615023841695
+        }
+      ],
+      "summary": {
+        "wall_clock_seconds": {
+          "mean": 0.011904479935765266,
+          "median": 0.011662499979138374,
+          "min": 0.01151939993724227,
+          "max": 0.012657499872148037,
+          "std": 0.000425096358126049
+        },
+        "total_seconds": {
+          "mean": 0.011425539944320917,
+          "median": 0.011201199842616916,
+          "min": 0.011120100039988756,
+          "max": 0.01204509986564517,
+          "std": 0.0003610816550834807
+        },
+        "decode_seconds": {
+          "mean": 0.001519880024716258,
+          "median": 0.001482000108808279,
+          "min": 0.0014063999988138676,
+          "max": 0.0017140998970717192,
+          "std": 0.00011061906333494927
+        },
+        "preprocessing_seconds": {
+          "mean": 7.808003574609757e-05,
+          "median": 7.400009781122208e-05,
+          "min": 6.969994865357876e-05,
+          "max": 9.310012683272362e-05,
+          "std": 8.339670056929097e-06
+        },
+        "mfcc_seconds": {
+          "mean": 0.009010199969634414,
+          "median": 0.008887599920853972,
+          "min": 0.008742399979382753,
+          "max": 0.009596999967470765,
+          "std": 0.0003068190271191007
+        },
+        "prediction_seconds": {
+          "mean": 0.000671479944139719,
+          "median": 0.0006756999064236879,
+          "min": 0.0006536999717354774,
+          "max": 0.0006895000115036964,
+          "std": 1.263494743123787e-05
+        },
+        "real_time_factor": {
+          "mean": 0.0011425539944320917,
+          "median": 0.0011201199842616916,
+          "min": 0.0011120100039988755,
+          "max": 0.001204509986564517,
+          "std": 3.610816550834809e-05
+        },
+        "rss_peak_bytes": {
+          "mean": 258279014.4,
+          "median": 257597440.0,
+          "min": 257581056.0,
+          "max": 259751936.0,
+          "std": 890303.4544517054
+        }
+      },
+      "determinism": {
+        "is_deterministic": true,
+        "same_fragment_count": true,
+        "same_predicted_label": true,
+        "same_ai_score_within_tolerance": true,
+        "score_tolerance": 1e-09,
+        "values": {
+          "n_fragments": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "predicted_label": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ai_score": [
+            -0.25926259435054533,
+            -0.25926259435054533,
+            -0.25926259435054533,
+            -0.25926259435054533,
+            -0.25926259435054533
+          ]
+        }
+      }
+    },
+    {
+      "audio": {
+        "path": "data/audio/aime_acceptance_raw/riffusion_02631.wav",
+        "name": "riffusion_02631.wav",
+        "extension": ".wav",
+        "size_bytes": 902364,
+        "duration_seconds": 10.23,
+        "sample_rate": 44100,
+        "channels": 1,
+        "expected_fragments": 2
+      },
+      "repetitions": [
+        {
+          "ai_score": -1.0988480319918703,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 2,
+          "wall_clock_seconds": 0.02962350007146597,
+          "decode_seconds": 0.003995399922132492,
+          "segmentation_seconds": 0.0005954999942332506,
+          "preprocessing_seconds": 0.005810600006952882,
+          "mfcc_seconds": 0.01787809981033206,
+          "prediction_seconds": 0.0006742998957633972,
+          "aggregation_seconds": 3.8499943912029266e-05,
+          "total_seconds": 0.0290117000695318,
+          "rss_before_bytes": 257585152,
+          "rss_after_bytes": 257720320,
+          "rss_peak_bytes": 263647232,
+          "rss_peak_increase_bytes": 6062080,
+          "real_time_factor": 0.0028359433108046724,
+          "audio_seconds_per_processing_second": 352.61635738277835
+        },
+        {
+          "ai_score": -1.0988480319918703,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 2,
+          "wall_clock_seconds": 0.028210100019350648,
+          "decode_seconds": 0.0025995001196861267,
+          "segmentation_seconds": 0.00040330016054213047,
+          "preprocessing_seconds": 0.006317599909380078,
+          "mfcc_seconds": 0.017548499861732125,
+          "prediction_seconds": 0.0007003999780863523,
+          "aggregation_seconds": 4.139984957873821e-05,
+          "total_seconds": 0.02763030002824962,
+          "rss_before_bytes": 257720320,
+          "rss_after_bytes": 257724416,
+          "rss_peak_bytes": 261627904,
+          "rss_peak_increase_bytes": 3907584,
+          "real_time_factor": 0.0027009090936705397,
+          "audio_seconds_per_processing_second": 370.2457081371067
+        },
+        {
+          "ai_score": -1.0988480319918703,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 2,
+          "wall_clock_seconds": 0.029029000084847212,
+          "decode_seconds": 0.0025671999901533127,
+          "segmentation_seconds": 0.00037860008887946606,
+          "preprocessing_seconds": 0.006457299925386906,
+          "mfcc_seconds": 0.018220899859443307,
+          "prediction_seconds": 0.0006564001087099314,
+          "aggregation_seconds": 3.7400051951408386e-05,
+          "total_seconds": 0.028336700052022934,
+          "rss_before_bytes": 257724416,
+          "rss_after_bytes": 257724416,
+          "rss_peak_bytes": 262926336,
+          "rss_peak_increase_bytes": 5201920,
+          "real_time_factor": 0.0027699609044010685,
+          "audio_seconds_per_processing_second": 361.015925680086
+        },
+        {
+          "ai_score": -1.0988480319918703,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 2,
+          "wall_clock_seconds": 0.027554200030863285,
+          "decode_seconds": 0.0026009001303464174,
+          "segmentation_seconds": 0.00036780000664293766,
+          "preprocessing_seconds": 0.005879199830815196,
+          "mfcc_seconds": 0.017384600127115846,
+          "prediction_seconds": 0.0006392998620867729,
+          "aggregation_seconds": 3.550015389919281e-05,
+          "total_seconds": 0.026924700010567904,
+          "rss_before_bytes": 257724416,
+          "rss_after_bytes": 257724416,
+          "rss_peak_bytes": 263655424,
+          "rss_peak_increase_bytes": 5931008,
+          "real_time_factor": 0.002631935484903998,
+          "audio_seconds_per_processing_second": 379.9485229541923
+        },
+        {
+          "ai_score": -1.0988480319918703,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 2,
+          "wall_clock_seconds": 0.02769839996472001,
+          "decode_seconds": 0.002636499935761094,
+          "segmentation_seconds": 0.0003646998666226864,
+          "preprocessing_seconds": 0.005662200041115284,
+          "mfcc_seconds": 0.01762349996715784,
+          "prediction_seconds": 0.0006302001420408487,
+          "aggregation_seconds": 3.4599797800183296e-05,
+          "total_seconds": 0.02696809987537563,
+          "rss_before_bytes": 257724416,
+          "rss_after_bytes": 257724416,
+          "rss_peak_bytes": 263479296,
+          "rss_peak_increase_bytes": 5754880,
+          "real_time_factor": 0.0026361778959311465,
+          "audio_seconds_per_processing_second": 379.33707036367576
+        }
+      ],
+      "summary": {
+        "wall_clock_seconds": {
+          "mean": 0.028423040034249426,
+          "median": 0.028210100019350648,
+          "min": 0.027554200030863285,
+          "max": 0.02962350007146597,
+          "std": 0.0007916592089619285
+        },
+        "total_seconds": {
+          "mean": 0.027774300007149578,
+          "median": 0.02763030002824962,
+          "min": 0.026924700010567904,
+          "max": 0.0290117000695318,
+          "std": 0.0008049804377056847
+        },
+        "decode_seconds": {
+          "mean": 0.0028799000196158887,
+          "median": 0.0026009001303464174,
+          "min": 0.0025671999901533127,
+          "max": 0.003995399922132492,
+          "std": 0.0005581809713442346
+        },
+        "preprocessing_seconds": {
+          "mean": 0.006025379942730069,
+          "median": 0.005879199830815196,
+          "min": 0.005662200041115284,
+          "max": 0.006457299925386906,
+          "std": 0.0003070329191458261
+        },
+        "mfcc_seconds": {
+          "mean": 0.017731119925156236,
+          "median": 0.01762349996715784,
+          "min": 0.017384600127115846,
+          "max": 0.018220899859443307,
+          "std": 0.0002920601253287074
+        },
+        "prediction_seconds": {
+          "mean": 0.0006601199973374605,
+          "median": 0.0006564001087099314,
+          "min": 0.0006302001420408487,
+          "max": 0.0007003999780863523,
+          "std": 2.516370287827017e-05
+        },
+        "real_time_factor": {
+          "mean": 0.002714985337942285,
+          "median": 0.0027009090936705397,
+          "min": 0.002631935484903998,
+          "max": 0.0028359433108046724,
+          "std": 7.868821482949019e-05
+        },
+        "rss_peak_bytes": {
+          "mean": 263067238.4,
+          "median": 263479296.0,
+          "min": 261627904.0,
+          "max": 263655424.0,
+          "std": 767291.7754225181
+        }
+      },
+      "determinism": {
+        "is_deterministic": true,
+        "same_fragment_count": true,
+        "same_predicted_label": true,
+        "same_ai_score_within_tolerance": true,
+        "score_tolerance": 1e-09,
+        "values": {
+          "n_fragments": [
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "predicted_label": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ai_score": [
+            -1.0988480319918703,
+            -1.0988480319918703,
+            -1.0988480319918703,
+            -1.0988480319918703,
+            -1.0988480319918703
+          ]
+        }
+      }
+    },
+    {
+      "audio": {
+        "path": "data/audio/aime_acceptance_raw/udio_04501.wav",
+        "name": "udio_04501.wav",
+        "extension": ".wav",
+        "size_bytes": 6303878,
+        "duration_seconds": 32.832,
+        "sample_rate": 48000,
+        "channels": 2,
+        "expected_fragments": 4
+      },
+      "repetitions": [
+        {
+          "ai_score": 0.23088082139439772,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 4,
+          "wall_clock_seconds": 0.09180080005899072,
+          "decode_seconds": 0.021496500121429563,
+          "segmentation_seconds": 0.004172999877482653,
+          "preprocessing_seconds": 0.026971699902787805,
+          "mfcc_seconds": 0.03646490001119673,
+          "prediction_seconds": 0.0008113000076264143,
+          "aggregation_seconds": 0.00010380009189248085,
+          "total_seconds": 0.09005509992130101,
+          "rss_before_bytes": 257708032,
+          "rss_after_bytes": 258945024,
+          "rss_peak_bytes": 286171136,
+          "rss_peak_increase_bytes": 28463104,
+          "real_time_factor": 0.0027429063085191584,
+          "audio_seconds_per_processing_second": 364.5767983011715
+        },
+        {
+          "ai_score": 0.23088082139439772,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 4,
+          "wall_clock_seconds": 0.08710829983465374,
+          "decode_seconds": 0.01500590005889535,
+          "segmentation_seconds": 0.004263400100171566,
+          "preprocessing_seconds": 0.029047699877992272,
+          "mfcc_seconds": 0.0364418001845479,
+          "prediction_seconds": 0.0007581999525427818,
+          "aggregation_seconds": 3.8499943912029266e-05,
+          "total_seconds": 0.08558059995993972,
+          "rss_before_bytes": 258945024,
+          "rss_after_bytes": 259436544,
+          "rss_peak_bytes": 287023104,
+          "rss_peak_increase_bytes": 28078080,
+          "real_time_factor": 0.0026066215874737974,
+          "audio_seconds_per_processing_second": 383.63834812292345
+        },
+        {
+          "ai_score": 0.23088082139439772,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 4,
+          "wall_clock_seconds": 0.08763749990612268,
+          "decode_seconds": 0.015012599993497133,
+          "segmentation_seconds": 0.004225699929520488,
+          "preprocessing_seconds": 0.028060700045898557,
+          "mfcc_seconds": 0.037947800010442734,
+          "prediction_seconds": 0.0007308998610824347,
+          "aggregation_seconds": 4.650000482797623e-05,
+          "total_seconds": 0.08606830006465316,
+          "rss_before_bytes": 259436544,
+          "rss_after_bytes": 259436544,
+          "rss_peak_bytes": 289615872,
+          "rss_peak_increase_bytes": 30179328,
+          "real_time_factor": 0.0026214760009945527,
+          "audio_seconds_per_processing_second": 381.4644878002367
+        },
+        {
+          "ai_score": 0.23088082139439772,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 4,
+          "wall_clock_seconds": 0.08592070010490716,
+          "decode_seconds": 0.01495669991709292,
+          "segmentation_seconds": 0.004204099997878075,
+          "preprocessing_seconds": 0.027292300015687943,
+          "mfcc_seconds": 0.037196299992501736,
+          "prediction_seconds": 0.0007310998626053333,
+          "aggregation_seconds": 3.769993782043457e-05,
+          "total_seconds": 0.08444479992613196,
+          "rss_before_bytes": 259436544,
+          "rss_after_bytes": 259436544,
+          "rss_peak_bytes": 286588928,
+          "rss_peak_increase_bytes": 27152384,
+          "real_time_factor": 0.002572027288198464,
+          "audio_seconds_per_processing_second": 388.7983632943624
+        },
+        {
+          "ai_score": 0.23088082139439772,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 4,
+          "wall_clock_seconds": 0.08425000007264316,
+          "decode_seconds": 0.015358699951320887,
+          "segmentation_seconds": 0.004165400052443147,
+          "preprocessing_seconds": 0.02689239988103509,
+          "mfcc_seconds": 0.035378400003537536,
+          "prediction_seconds": 0.0007000998593866825,
+          "aggregation_seconds": 3.569992259144783e-05,
+          "total_seconds": 0.08255469985306263,
+          "rss_before_bytes": 259436544,
+          "rss_after_bytes": 259436544,
+          "rss_peak_bytes": 288583680,
+          "rss_peak_increase_bytes": 29147136,
+          "real_time_factor": 0.0025144584506902605,
+          "audio_seconds_per_processing_second": 397.69994995363055
+        }
+      ],
+      "summary": {
+        "wall_clock_seconds": {
+          "mean": 0.08734345999546349,
+          "median": 0.08710829983465374,
+          "min": 0.08425000007264316,
+          "max": 0.09180080005899072,
+          "std": 0.0025140954720331873
+        },
+        "total_seconds": {
+          "mean": 0.08574069994501769,
+          "median": 0.08558059995993972,
+          "min": 0.08255469985306263,
+          "max": 0.09005509992130101,
+          "std": 0.0024729316385151572
+        },
+        "decode_seconds": {
+          "mean": 0.01636608000844717,
+          "median": 0.015012599993497133,
+          "min": 0.01495669991709292,
+          "max": 0.021496500121429563,
+          "std": 0.0025692168068548703
+        },
+        "preprocessing_seconds": {
+          "mean": 0.027652959944680332,
+          "median": 0.027292300015687943,
+          "min": 0.02689239988103509,
+          "max": 0.029047699877992272,
+          "std": 0.0008104559101134006
+        },
+        "mfcc_seconds": {
+          "mean": 0.036685840040445325,
+          "median": 0.03646490001119673,
+          "min": 0.035378400003537536,
+          "max": 0.037947800010442734,
+          "std": 0.0008568409101378785
+        },
+        "prediction_seconds": {
+          "mean": 0.0007463199086487293,
+          "median": 0.0007310998626053333,
+          "min": 0.0007000998593866825,
+          "max": 0.0008113000076264143,
+          "std": 3.733435235375128e-05
+        },
+        "real_time_factor": {
+          "mean": 0.0026114979271752463,
+          "median": 0.0026066215874737974,
+          "min": 0.0025144584506902605,
+          "max": 0.0027429063085191584,
+          "std": 7.532077359025208e-05
+        },
+        "rss_peak_bytes": {
+          "mean": 287596544.0,
+          "median": 287023104.0,
+          "min": 286171136.0,
+          "max": 289615872.0,
+          "std": 1298309.2434085186
+        }
+      },
+      "determinism": {
+        "is_deterministic": true,
+        "same_fragment_count": true,
+        "same_predicted_label": true,
+        "same_ai_score_within_tolerance": true,
+        "score_tolerance": 1e-09,
+        "values": {
+          "n_fragments": [
+            4,
+            4,
+            4,
+            4,
+            4
+          ],
+          "predicted_label": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "ai_score": [
+            0.23088082139439772,
+            0.23088082139439772,
+            0.23088082139439772,
+            0.23088082139439772,
+            0.23088082139439772
+          ]
+        }
+      }
+    },
+    {
+      "audio": {
+        "path": "data/audio/aime_acceptance_raw/suno-v3_05001.wav",
+        "name": "suno-v3_05001.wav",
+        "extension": ".wav",
+        "size_bytes": 23040078,
+        "duration_seconds": 120.0,
+        "sample_rate": 48000,
+        "channels": 2,
+        "expected_fragments": 12
+      },
+      "repetitions": [
+        {
+          "ai_score": 0.9763889692813458,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 12,
+          "wall_clock_seconds": 0.287660300033167,
+          "decode_seconds": 0.06699820002540946,
+          "segmentation_seconds": 0.014504499966278672,
+          "preprocessing_seconds": 0.09130199998617172,
+          "mfcc_seconds": 0.10846689995378256,
+          "prediction_seconds": 0.000983299920335412,
+          "aggregation_seconds": 4.0899962186813354e-05,
+          "total_seconds": 0.2823401999194175,
+          "rss_before_bytes": 259420160,
+          "rss_after_bytes": 255500288,
+          "rss_peak_bytes": 371544064,
+          "rss_peak_increase_bytes": 112123904,
+          "real_time_factor": 0.002352834999328479,
+          "audio_seconds_per_processing_second": 425.01917911175633
+        },
+        {
+          "ai_score": 0.9763889692813458,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 12,
+          "wall_clock_seconds": 0.2765742000192404,
+          "decode_seconds": 0.05265480000525713,
+          "segmentation_seconds": 0.015792899997904897,
+          "preprocessing_seconds": 0.09372800006531179,
+          "mfcc_seconds": 0.10885129985399544,
+          "prediction_seconds": 0.0010171998292207718,
+          "aggregation_seconds": 3.760005347430706e-05,
+          "total_seconds": 0.272124599898234,
+          "rss_before_bytes": 255500288,
+          "rss_after_bytes": 258265088,
+          "rss_peak_bytes": 368046080,
+          "rss_peak_increase_bytes": 112545792,
+          "real_time_factor": 0.00226770499915195,
+          "audio_seconds_per_processing_second": 440.97446553849306
+        },
+        {
+          "ai_score": 0.9763889692813458,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 12,
+          "wall_clock_seconds": 0.2701630999799818,
+          "decode_seconds": 0.049357099924236536,
+          "segmentation_seconds": 0.014317899942398071,
+          "preprocessing_seconds": 0.0938754000235349,
+          "mfcc_seconds": 0.10679659992456436,
+          "prediction_seconds": 0.001119700027629733,
+          "aggregation_seconds": 4.109996370971203e-05,
+          "total_seconds": 0.2655556998215616,
+          "rss_before_bytes": 258265088,
+          "rss_after_bytes": 258957312,
+          "rss_peak_bytes": 400633856,
+          "rss_peak_increase_bytes": 142368768,
+          "real_time_factor": 0.00221296416517968,
+          "audio_seconds_per_processing_second": 451.8825996980416
+        },
+        {
+          "ai_score": 0.9763889692813458,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 12,
+          "wall_clock_seconds": 0.27071619988419116,
+          "decode_seconds": 0.05026739998720586,
+          "segmentation_seconds": 0.01486039999872446,
+          "preprocessing_seconds": 0.09223019983619452,
+          "mfcc_seconds": 0.10768700018525124,
+          "prediction_seconds": 0.0011297999881207943,
+          "aggregation_seconds": 3.879982978105545e-05,
+          "total_seconds": 0.2662502001039684,
+          "rss_before_bytes": 258957312,
+          "rss_after_bytes": 258961408,
+          "rss_peak_bytes": 395395072,
+          "rss_peak_increase_bytes": 136437760,
+          "real_time_factor": 0.0022187516675330698,
+          "audio_seconds_per_processing_second": 450.70388661920646
+        },
+        {
+          "ai_score": 0.9763889692813458,
+          "predicted_label": 1,
+          "predicted_class": "ai_generated",
+          "n_fragments": 12,
+          "wall_clock_seconds": 0.3036003999877721,
+          "decode_seconds": 0.049096700036898255,
+          "segmentation_seconds": 0.014650299912318587,
+          "preprocessing_seconds": 0.10882339999079704,
+          "mfcc_seconds": 0.12455409998074174,
+          "prediction_seconds": 0.0010327000636607409,
+          "aggregation_seconds": 4.069996066391468e-05,
+          "total_seconds": 0.29823790001682937,
+          "rss_before_bytes": 258961408,
+          "rss_after_bytes": 254873600,
+          "rss_peak_bytes": 387379200,
+          "rss_peak_increase_bytes": 128417792,
+          "real_time_factor": 0.002485315833473578,
+          "audio_seconds_per_processing_second": 402.3633481634242
+        }
+      ],
+      "summary": {
+        "wall_clock_seconds": {
+          "mean": 0.28174283998087046,
+          "median": 0.2765742000192404,
+          "min": 0.2701630999799818,
+          "max": 0.3036003999877721,
+          "std": 0.012610799120505159
+        },
+        "total_seconds": {
+          "mean": 0.2769017199520022,
+          "median": 0.272124599898234,
+          "min": 0.2655556998215616,
+          "max": 0.29823790001682937,
+          "std": 0.012245959072251077
+        },
+        "decode_seconds": {
+          "mean": 0.05367483999580145,
+          "median": 0.05026739998720586,
+          "min": 0.049096700036898255,
+          "max": 0.06699820002540946,
+          "std": 0.006778868582321794
+        },
+        "preprocessing_seconds": {
+          "mean": 0.095991799980402,
+          "median": 0.09372800006531179,
+          "min": 0.09130199998617172,
+          "max": 0.10882339999079704,
+          "std": 0.006486875323151258
+        },
+        "mfcc_seconds": {
+          "mean": 0.11127117997966707,
+          "median": 0.10846689995378256,
+          "min": 0.10679659992456436,
+          "max": 0.12455409998074174,
+          "std": 0.006678682227945368
+        },
+        "prediction_seconds": {
+          "mean": 0.0010565399657934903,
+          "median": 0.0010327000636607409,
+          "min": 0.000983299920335412,
+          "max": 0.0011297999881207943,
+          "std": 5.802812390645708e-05
+        },
+        "real_time_factor": {
+          "mean": 0.0023075143329333516,
+          "median": 0.00226770499915195,
+          "min": 0.00221296416517968,
+          "max": 0.002485315833473578,
+          "std": 0.00010204965893542562
+        },
+        "rss_peak_bytes": {
+          "mean": 384599654.4,
+          "median": 387379200.0,
+          "min": 368046080.0,
+          "max": 400633856.0,
+          "std": 12851706.516717685
+        }
+      },
+      "determinism": {
+        "is_deterministic": true,
+        "same_fragment_count": true,
+        "same_predicted_label": true,
+        "same_ai_score_within_tolerance": true,
+        "score_tolerance": 1e-09,
+        "values": {
+          "n_fragments": [
+            12,
+            12,
+            12,
+            12,
+            12
+          ],
+          "predicted_label": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "ai_score": [
+            0.9763889692813458,
+            0.9763889692813458,
+            0.9763889692813458,
+            0.9763889692813458,
+            0.9763889692813458
+          ]
+        }
+      }
+    },
+    {
+      "audio": {
+        "path": "data/audio/aime_acceptance_raw/mtg-jamendo_06001.wav",
+        "name": "mtg-jamendo_06001.wav",
+        "extension": ".wav",
+        "size_bytes": 49177158,
+        "duration_seconds": 256.130625,
+        "sample_rate": 48000,
+        "channels": 2,
+        "expected_fragments": 26
+      },
+      "repetitions": [
+        {
+          "ai_score": -0.002259749741736549,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 26,
+          "wall_clock_seconds": 0.6421250998973846,
+          "decode_seconds": 0.15014729998074472,
+          "segmentation_seconds": 0.029769500019028783,
+          "preprocessing_seconds": 0.20494439988397062,
+          "mfcc_seconds": 0.244296699995175,
+          "prediction_seconds": 0.0014190999791026115,
+          "aggregation_seconds": 4.1400082409381866e-05,
+          "total_seconds": 0.6306823000777513,
+          "rss_before_bytes": 254857216,
+          "rss_after_bytes": 254898176,
+          "rss_peak_bytes": 539672576,
+          "rss_peak_increase_bytes": 284815360,
+          "real_time_factor": 0.002462346312854042,
+          "audio_seconds_per_processing_second": 406.11671671842373
+        },
+        {
+          "ai_score": -0.002259749741736549,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 26,
+          "wall_clock_seconds": 0.5837227001320571,
+          "decode_seconds": 0.10550940013490617,
+          "segmentation_seconds": 0.03158269985578954,
+          "preprocessing_seconds": 0.1979012000374496,
+          "mfcc_seconds": 0.23649340006522834,
+          "prediction_seconds": 0.001421900000423193,
+          "aggregation_seconds": 4.120008088648319e-05,
+          "total_seconds": 0.5730150998570025,
+          "rss_before_bytes": 254898176,
+          "rss_after_bytes": 255528960,
+          "rss_peak_bytes": 541663232,
+          "rss_peak_increase_bytes": 286765056,
+          "real_time_factor": 0.002237198694443519,
+          "audio_seconds_per_processing_second": 446.98756640779294
+        },
+        {
+          "ai_score": -0.002259749741736549,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 26,
+          "wall_clock_seconds": 0.5859413999132812,
+          "decode_seconds": 0.10669599985703826,
+          "segmentation_seconds": 0.03091870015487075,
+          "preprocessing_seconds": 0.2003927999176085,
+          "mfcc_seconds": 0.2359581000637263,
+          "prediction_seconds": 0.0013788000214844942,
+          "aggregation_seconds": 4.0400074794888496e-05,
+          "total_seconds": 0.5754459998570383,
+          "rss_before_bytes": 255528960,
+          "rss_after_bytes": 259403776,
+          "rss_peak_bytes": 544051200,
+          "rss_peak_increase_bytes": 288522240,
+          "real_time_factor": 0.0022466895548200775,
+          "audio_seconds_per_processing_second": 445.0993230705091
+        },
+        {
+          "ai_score": -0.002259749741736549,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 26,
+          "wall_clock_seconds": 0.5898827998898923,
+          "decode_seconds": 0.10719159990549088,
+          "segmentation_seconds": 0.03150640008971095,
+          "preprocessing_seconds": 0.2001319001428783,
+          "mfcc_seconds": 0.23733579996041954,
+          "prediction_seconds": 0.001427600160241127,
+          "aggregation_seconds": 5.319993942975998e-05,
+          "total_seconds": 0.5777120999991894,
+          "rss_before_bytes": 259403776,
+          "rss_after_bytes": 256176128,
+          "rss_peak_bytes": 560316416,
+          "rss_peak_increase_bytes": 300912640,
+          "real_time_factor": 0.002255536994059923,
+          "audio_seconds_per_processing_second": 443.3534021537015
+        },
+        {
+          "ai_score": -0.002259749741736549,
+          "predicted_label": 0,
+          "predicted_class": "human",
+          "n_fragments": 26,
+          "wall_clock_seconds": 0.5837802002206445,
+          "decode_seconds": 0.1104997000657022,
+          "segmentation_seconds": 0.030672499909996986,
+          "preprocessing_seconds": 0.1987549001350999,
+          "mfcc_seconds": 0.23234910005703568,
+          "prediction_seconds": 0.0014239000156521797,
+          "aggregation_seconds": 4.260009154677391e-05,
+          "total_seconds": 0.5738048001658171,
+          "rss_before_bytes": 256176128,
+          "rss_after_bytes": 256831488,
+          "rss_peak_bytes": 564772864,
+          "rss_peak_increase_bytes": 308596736,
+          "real_time_factor": 0.0022402818880632377,
+          "audio_seconds_per_processing_second": 446.3723986379755
+        }
+      ],
+      "summary": {
+        "wall_clock_seconds": {
+          "mean": 0.5970904400106519,
+          "median": 0.5859413999132812,
+          "min": 0.5837227001320571,
+          "max": 0.6421250998973846,
+          "std": 0.02262843660108285
+        },
+        "total_seconds": {
+          "mean": 0.5861320599913598,
+          "median": 0.5754459998570383,
+          "min": 0.5730150998570025,
+          "max": 0.6306823000777513,
+          "std": 0.02233305835389307
+        },
+        "decode_seconds": {
+          "mean": 0.11600879998877645,
+          "median": 0.10719159990549088,
+          "min": 0.10550940013490617,
+          "max": 0.15014729998074472,
+          "std": 0.017149320829454907
+        },
+        "preprocessing_seconds": {
+          "mean": 0.2004250400234014,
+          "median": 0.2001319001428783,
+          "min": 0.1979012000374496,
+          "max": 0.20494439988397062,
+          "std": 0.002436009831034507
+        },
+        "mfcc_seconds": {
+          "mean": 0.23728662002831696,
+          "median": 0.23649340006522834,
+          "min": 0.23234910005703568,
+          "max": 0.244296699995175,
+          "std": 0.00389658585124018
+        },
+        "prediction_seconds": {
+          "mean": 0.001414260035380721,
+          "median": 0.001421900000423193,
+          "min": 0.0013788000214844942,
+          "max": 0.001427600160241127,
+          "std": 1.7944887057472357e-05
+        },
+        "real_time_factor": {
+          "mean": 0.0022884106888481598,
+          "median": 0.0022466895548200775,
+          "min": 0.002237198694443519,
+          "max": 0.002462346312854042,
+          "std": 8.719401810655435e-05
+        },
+        "rss_peak_bytes": {
+          "mean": 550095257.6,
+          "median": 544051200.0,
+          "min": 539672576.0,
+          "max": 564772864.0,
+          "std": 10355348.264518805
+        }
+      },
+      "determinism": {
+        "is_deterministic": true,
+        "same_fragment_count": true,
+        "same_predicted_label": true,
+        "same_ai_score_within_tolerance": true,
+        "score_tolerance": 1e-09,
+        "values": {
+          "n_fragments": [
+            26,
+            26,
+            26,
+            26,
+            26
+          ],
+          "predicted_label": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "ai_score": [
+            -0.002259749741736549,
+            -0.002259749741736549,
+            -0.002259749741736549,
+            -0.002259749741736549,
+            -0.002259749741736549
+          ]
+        }
+      }
+    }
+  ],
+  "benchmark": {
+    "repetitions": 5,
+    "first_inference_excluded_from_hot_statistics": true,
+    "single_service_instance": true,
+    "score_tolerance": 1e-09
+  }
+}
