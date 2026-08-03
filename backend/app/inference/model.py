@@ -7,7 +7,8 @@ from typing import Any
 import joblib
 import numpy as np
 
-from app.inference.config import InferenceConfig
+from app.inference.aggregation import AGGREGATION_STRATEGY
+from app.inference.config import AI_GENERATED_LABEL, HUMAN_LABEL, InferenceConfig
 from app.inference.errors import ModelArtifactError, PredictionError
 from app.inference.features import feature_columns
 from app.inference.schemas import ModelMetadata
@@ -49,7 +50,7 @@ class MfccSvmModel:
             n_mfcc=config.n_mfcc,
             n_features=len(feature_columns(config)),
             decision_threshold=config.decision_threshold,
-            aggregation_strategy=config.aggregation_strategy,
+            aggregation_strategy=AGGREGATION_STRATEGY,
             score_is_calibrated_probability=False,
         )
 
@@ -121,7 +122,7 @@ def predict_labels_from_scores(
         raise PredictionError(f"Expected a 1D score vector, found shape {values.shape}")
     if not np.isfinite(values).all():
         raise PredictionError("Scores contain NaN or infinite values")
-    return np.where(values >= threshold, 1, 0).astype(int)
+    return np.where(values >= threshold, AI_GENERATED_LABEL, HUMAN_LABEL).astype(int)
 
 
 def _validate_artifact(artifact: Any, config: InferenceConfig) -> None:

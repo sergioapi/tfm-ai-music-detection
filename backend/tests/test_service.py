@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from app.inference.config import InferenceConfig
+from app.inference.aggregation import AGGREGATION_STRATEGY
 from app.inference.errors import ModelArtifactError
 from app.inference.service import AudioInferenceService
 
@@ -99,13 +99,18 @@ def test_predict_multiple_fragments_returns_ordered_results(artifact_factory, wa
     assert result.fragments[-1].was_padded is True
 
 
-def test_global_score_is_mean_of_fragment_scores(artifact_factory, wav_factory) -> None:
+def test_global_score_is_duration_weighted_mean_of_fragment_scores(
+    artifact_factory,
+    wav_factory,
+) -> None:
     service = AudioInferenceService(model_path=artifact_factory())
     path = wav_factory(sine(21.0), 16_000)
 
     result = service.predict_file(path)
 
-    expected = np.mean([fragment.ai_score for fragment in result.fragments])
+    scores = np.array([fragment.ai_score for fragment in result.fragments])
+    durations = np.array([fragment.duration_seconds for fragment in result.fragments])
+    expected = np.sum(scores * durations) / np.sum(durations)
     assert result.ai_score == pytest.approx(expected)
 
 
@@ -117,7 +122,8 @@ def test_global_label_and_class_follow_threshold(artifact_factory, wav_factory) 
 
     expected_label = 1 if result.ai_score >= 0.0 else 0
     assert result.predicted_label == expected_label
-    assert result.predicted_class == service.config.class_names[expected_label]
+    expected_class = "ai_generated" if expected_label == 1 else "human"
+    assert result.predicted_class == expected_class
 
 
 def test_result_contains_metadata_warning_timings_and_original_audio_info(
@@ -130,6 +136,7 @@ def test_result_contains_metadata_warning_timings_and_original_audio_info(
     result = service.predict_file(path)
 
     assert result.model.model_id == "mfcc-svm-baseline"
+    assert result.model.aggregation_strategy == AGGREGATION_STRATEGY
     assert result.model.score_is_calibrated_probability is False
     assert "no es una probabilidad calibrada" in result.usage_warning
     assert "no constituye un veredicto forense" in result.usage_warning
@@ -149,3 +156,18 @@ def test_fragment_results_are_chronological(artifact_factory, wav_factory) -> No
     assert [fragment.start_seconds for fragment in result.fragments] == pytest.approx(
         [0.0, 10.0, 20.0, 30.0]
     )
+
+
+def test_weighted_aggregation_does_not_change_individual_scores(
+    artifact_factory,
+    wav_factory,
+) -> None:
+    service = AudioInferenceService(model_path=artifact_factory())
+    path = wav_factory(sine(21.0), 16_000)
+
+    result = service.predict_file(path)
+    fragment_scores = np.array([fragment.ai_score for fragment in result.fragments])
+    labels_from_scores = np.where(fragment_scores >= result.decision_threshold, 1, 0)
+
+    assert [fragment.predicted_label for fragment in result.fragments] == labels_from_scores.tolist()
+    assert result.fragments[-1].duration_seconds == pytest.approx(1.0)

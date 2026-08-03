@@ -6,8 +6,9 @@ from pathlib import Path
 
 import numpy as np
 
+from app.inference.aggregation import aggregate_duration_weighted_scores
 from app.inference.audio import decode_audio_file, preprocess_fragment, segment_audio
-from app.inference.config import InferenceConfig
+from app.inference.config import InferenceConfig, class_name_for_label
 from app.inference.errors import ModelArtifactError, PredictionError
 from app.inference.features import extract_mfcc_features
 from app.inference.model import MfccSvmModel, predict_labels_from_scores
@@ -68,9 +69,14 @@ class AudioInferenceService:
         prediction_seconds = _elapsed(prediction_start)
 
         aggregation_start = time.perf_counter()
-        if fragment_scores.size == 0:
-            raise PredictionError("Cannot aggregate zero fragment scores")
-        global_score = float(np.mean(fragment_scores, dtype=np.float64))
+        fragment_durations = np.asarray(
+            [fragment.duration_seconds for fragment in fragments],
+            dtype=np.float64,
+        )
+        global_score = aggregate_duration_weighted_scores(
+            fragment_scores,
+            fragment_durations,
+        )
         global_label = int(
             predict_labels_from_scores(
                 np.asarray([global_score], dtype=np.float64),
@@ -87,7 +93,7 @@ class AudioInferenceService:
                 duration_seconds=fragment.duration_seconds,
                 ai_score=float(score),
                 predicted_label=int(label),
-                predicted_class=self.config.class_names[int(label)],
+                predicted_class=class_name_for_label(int(label)),
                 was_padded=fragment.is_incomplete,
             )
             for fragment, score, label in zip(fragments, fragment_scores, fragment_labels)
@@ -107,7 +113,7 @@ class AudioInferenceService:
 
         return PredictionResult(
             predicted_label=global_label,
-            predicted_class=self.config.class_names[global_label],
+            predicted_class=class_name_for_label(global_label),
             ai_score=global_score,
             decision_threshold=self.config.decision_threshold,
             audio_duration_seconds=audio_duration_seconds,

@@ -1,6 +1,21 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+from app.inference.errors import PredictionError
+
+
+HUMAN_LABEL = 0
+AI_GENERATED_LABEL = 1
+CLASS_NAMES = ("human", "ai_generated")
+
+
+def class_name_for_label(label: int) -> str:
+    if label == HUMAN_LABEL:
+        return CLASS_NAMES[HUMAN_LABEL]
+    if label == AI_GENERATED_LABEL:
+        return CLASS_NAMES[AI_GENERATED_LABEL]
+    raise PredictionError(f"Unknown class label: {label}")
 
 
 @dataclass(frozen=True)
@@ -8,16 +23,11 @@ class InferenceConfig:
     target_sample_rate: int = 16_000
     fragment_duration_seconds: float = 10.0
     n_mfcc: int = 20
-    positive_label: int = 1
+    positive_label: int = AI_GENERATED_LABEL
     decision_threshold: float = 0.0
-    class_names: dict[int, str] = field(
-        default_factory=lambda: {0: "human", 1: "ai_generated"}
-    )
     model_id: str = "mfcc-svm-baseline"
-    aggregation_strategy: str = "mean_decision_score"
-    final_fragment_policy: str = "pad"
     usage_warning: str = (
-        "La salida es una estimacion; el score no es una probabilidad calibrada "
+        "La salida es una estimación; el score no es una probabilidad calibrada "
         "y el resultado no constituye un veredicto forense."
     )
 
