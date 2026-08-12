@@ -25,12 +25,15 @@ def test_api_settings_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.temp_dir is None
 
 
-def test_api_settings_reads_environment_overrides(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_api_settings_reads_environment_overrides(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     monkeypatch.setenv("MAX_UPLOAD_SIZE_BYTES", "12345")
     monkeypatch.setenv("MAX_AUDIO_DURATION_SECONDS", "12.5")
     monkeypatch.setenv("ALLOWED_AUDIO_EXTENSIONS", "wav, .aiff")
     monkeypatch.setenv("ALLOWED_AUDIO_MIME_TYPES", "audio/wav, audio/x-aiff")
-    monkeypatch.setenv("TEMP_DIR", "tmp/api")
+    monkeypatch.setenv("TEMP_DIR", str(tmp_path))
 
     settings = ApiSettings.from_env()
 
@@ -38,7 +41,7 @@ def test_api_settings_reads_environment_overrides(monkeypatch: pytest.MonkeyPatc
     assert settings.max_audio_duration_seconds == pytest.approx(12.5)
     assert settings.allowed_audio_extensions == (".wav", ".aiff")
     assert settings.allowed_audio_mime_types == ("audio/wav", "audio/x-aiff")
-    assert settings.temp_dir == Path("tmp/api")
+    assert settings.temp_dir == tmp_path
 
 
 @pytest.mark.parametrize(
@@ -48,6 +51,8 @@ def test_api_settings_reads_environment_overrides(monkeypatch: pytest.MonkeyPatc
         ("MAX_UPLOAD_SIZE_BYTES", "0", "greater than zero"),
         ("MAX_AUDIO_DURATION_SECONDS", "abc", "number"),
         ("MAX_AUDIO_DURATION_SECONDS", "-1", "greater than zero"),
+        ("MAX_AUDIO_DURATION_SECONDS", "nan", "greater than zero"),
+        ("MAX_AUDIO_DURATION_SECONDS", "inf", "greater than zero"),
     ],
 )
 def test_api_settings_rejects_invalid_numeric_values(
@@ -71,6 +76,42 @@ def test_api_settings_rejects_empty_extension_after_normalization(
 
     with pytest.raises(ValueError, match="invalid extension"):
         ApiSettings.from_env()
+
+
+@pytest.mark.parametrize(
+    ("kwargs", "message"),
+    [
+        ({"max_upload_size_bytes": 0}, "greater than zero"),
+        ({"max_audio_duration_seconds": float("nan")}, "finite"),
+        ({"max_audio_duration_seconds": float("inf")}, "finite"),
+        ({"max_audio_duration_seconds": float("-inf")}, "finite"),
+        ({"allowed_audio_extensions": ()}, "at least one"),
+        ({"allowed_audio_extensions": (".",)}, "invalid extension"),
+        ({"allowed_audio_extensions": ("audio/wav",)}, "invalid extension"),
+        ({"allowed_audio_mime_types": ()}, "at least one"),
+    ],
+)
+def test_api_settings_direct_construction_validates_invariants(
+    kwargs: dict[str, object],
+    message: str,
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        ApiSettings(**kwargs)
+
+
+def test_api_settings_direct_construction_normalizes_values() -> None:
+    settings = ApiSettings(
+        allowed_audio_extensions=("WAV", " .AIFF "),
+        allowed_audio_mime_types=(" Audio/WAV ",),
+    )
+
+    assert settings.allowed_audio_extensions == (".wav", ".aiff")
+    assert settings.allowed_audio_mime_types == ("audio/wav",)
+
+
+def test_api_settings_rejects_missing_temp_dir() -> None:
+    with pytest.raises(ValueError, match="temp_dir must exist"):
+        ApiSettings(temp_dir=Path("missing-temp-dir"))
 
 
 def _clear_api_env(monkeypatch: pytest.MonkeyPatch) -> None:

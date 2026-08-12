@@ -16,6 +16,7 @@ class FakeMetadata:
     loaded_path: Path = Path("C:/private/model.joblib")
     classes: tuple[int, ...] = (0, 1)
     positive_label: int = 1
+    score_type: str = "fake_decision_score"
     target_sample_rate: int = 16_000
     fragment_duration_seconds: float = 10.0
     n_mfcc: int = 20
@@ -37,6 +38,14 @@ class FakeService:
     model = FakeModel()
     config = FakeConfig()
 
+    @property
+    def metadata(self) -> FakeMetadata:
+        return self.model.metadata
+
+    @property
+    def usage_warning(self) -> str:
+        return self.config.usage_warning
+
     def predict_file(self, path):  # pragma: no cover - must not be called by /api/v1/model.
         raise AssertionError("/api/v1/model must not run inference")
 
@@ -53,7 +62,7 @@ def test_model_info_reports_loaded_model_metadata() -> None:
         "sha256": "abc123",
         "classes": [0, 1],
         "positive_label": 1,
-        "score_type": "decision_function",
+        "score_type": "fake_decision_score",
         "score_is_calibrated_probability": False,
         "decision_threshold": 0.0,
         "target_sample_rate": 16_000,
@@ -99,7 +108,7 @@ def test_model_info_does_not_call_predict_file() -> None:
         response = client.get("/api/v1/model")
 
     assert response.status_code == 200
-    assert response.json()["score_type"] == "decision_function"
+    assert response.json()["score_type"] == "fake_decision_score"
 
 
 def test_service_factory_is_called_once_for_health_and_model_info() -> None:

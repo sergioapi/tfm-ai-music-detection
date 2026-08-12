@@ -8,7 +8,12 @@ import joblib
 import numpy as np
 
 from app.inference.aggregation import AGGREGATION_STRATEGY
-from app.inference.config import AI_GENERATED_LABEL, HUMAN_LABEL, InferenceConfig
+from app.inference.config import (
+    AI_GENERATED_LABEL,
+    HUMAN_LABEL,
+    SCORE_TYPE_DECISION_FUNCTION,
+    InferenceConfig,
+)
 from app.inference.errors import ModelArtifactError, PredictionError
 from app.inference.features import feature_columns
 from app.inference.schemas import ModelMetadata
@@ -45,6 +50,7 @@ class MfccSvmModel:
             loaded_path=path,
             classes=self.classes,
             positive_label=config.positive_label,
+            score_type=SCORE_TYPE_DECISION_FUNCTION,
             target_sample_rate=config.target_sample_rate,
             fragment_duration_seconds=config.fragment_duration_seconds,
             n_mfcc=config.n_mfcc,

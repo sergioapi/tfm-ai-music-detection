@@ -25,6 +25,14 @@ class AudioInferenceService:
         resolved_model_path = self._resolve_model_path(model_path)
         self.model = MfccSvmModel.load(resolved_model_path, self.config)
 
+    @property
+    def metadata(self):
+        return self.model.metadata
+
+    @property
+    def usage_warning(self) -> str:
+        return self.config.usage_warning
+
     def predict_file(self, path: str | Path) -> PredictionResult:
         total_start = time.perf_counter()
 

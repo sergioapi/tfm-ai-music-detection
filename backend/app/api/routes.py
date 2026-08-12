@@ -1,11 +1,19 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException, Request, Response, status
+import logging
 
-from app.api.schemas import HealthResponse, ModelInfoResponse
+from fastapi import APIRouter, File, HTTPException, Request, Response, UploadFile, status
+
+from app.api.mappers import analyze_response, model_info_response
+from app.api.schemas import AnalyzeResponse, HealthResponse, ModelInfoResponse
+from app.api.uploads import uploaded_audio_path
+from app.config import ApiSettings
+from app.inference.errors import AudioDecodingError, AudioValidationError, PredictionError
+from app.inference.interfaces import InferenceService
 
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.get("/health", response_model=HealthResponse)
@@ -25,22 +33,54 @@ def model_info(request: Request) -> ModelInfoResponse:
     if not model_ready or service is None:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Model is not available",
+            detail={"code": "model_unavailable", "message": "Model is not available"},
         )
 
-    metadata = service.model.metadata
-    return ModelInfoResponse(
-        model_id=metadata.model_id,
-        sha256=metadata.sha256,
-        classes=metadata.classes,
-        positive_label=metadata.positive_label,
-        score_type="decision_function",
-        score_is_calibrated_probability=metadata.score_is_calibrated_probability,
-        decision_threshold=metadata.decision_threshold,
-        target_sample_rate=metadata.target_sample_rate,
-        fragment_duration_seconds=metadata.fragment_duration_seconds,
-        n_mfcc=metadata.n_mfcc,
-        n_features=metadata.n_features,
-        aggregation_strategy=metadata.aggregation_strategy,
-        usage_warning=service.config.usage_warning,
-    )
+    return model_info_response(service.metadata, service.usage_warning)
+
+
+@router.post("/api/v1/analyze", response_model=AnalyzeResponse)
+def analyze(request: Request, file: UploadFile = File(...)) -> AnalyzeResponse:
+    try:
+        service = _ready_service(request)
+        settings = _api_settings(request)
+        with uploaded_audio_path(file, settings) as path:
+            prediction = service.predict_file(path)
+        return analyze_response(prediction)
+    except HTTPException:
+        raise
+    except (AudioDecodingError, AudioValidationError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail={
+                "code": "invalid_audio",
+                "message": "Audio file could not be processed",
+            },
+        ) from exc
+    except PredictionError as exc:
+        logger.error("Audio prediction failed: %s", exc)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"code": "prediction_failed", "message": "Prediction failed"},
+        ) from exc
+    except Exception as exc:
+        logger.exception("Unexpected API error while analyzing audio")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail={"code": "internal_error", "message": "Internal server error"},
+        ) from exc
+
+
+def _ready_service(request: Request) -> InferenceService:
+    service = getattr(request.app.state, "inference_service", None)
+    model_ready = bool(getattr(request.app.state, "model_ready", False))
+    if not model_ready or service is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={"code": "model_unavailable", "message": "Model is not available"},
+        )
+    return service
+
+
+def _api_settings(request: Request) -> ApiSettings:
+    return getattr(request.app.state, "settings")

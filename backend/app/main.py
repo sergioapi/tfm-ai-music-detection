@@ -3,18 +3,18 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
-from typing import Any
 
 from fastapi import FastAPI
 
 from app.api.routes import router
 from app.config import ApiSettings
 from app.inference.errors import ModelArtifactError
+from app.inference.interfaces import InferenceService
 from app.inference.service import AudioInferenceService
 
 
 logger = logging.getLogger(__name__)
-ServiceFactory = Callable[[], Any]
+ServiceFactory = Callable[[], InferenceService]
 
 
 def _default_service_factory() -> AudioInferenceService:
@@ -34,8 +34,11 @@ def create_app(
         application.state.model_ready = False
         try:
             service = factory()
-        except ModelArtifactError:
-            logger.exception("Inference service could not be loaded")
+        except ModelArtifactError as exc:
+            logger.error(
+                "Inference service could not be loaded; API starts degraded: %s",
+                exc,
+            )
         else:
             application.state.inference_service = service
             application.state.model_ready = True
