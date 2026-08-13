@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import os
 import math
+import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,8 +9,16 @@ from pathlib import Path
 
 DEFAULT_MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024
 DEFAULT_MAX_AUDIO_DURATION_SECONDS = 300.0
-DEFAULT_ALLOWED_AUDIO_EXTENSIONS = (".wav",)
-DEFAULT_ALLOWED_AUDIO_MIME_TYPES = ("audio/wav", "audio/wave", "audio/x-wav")
+SUPPORTED_AUDIO_FORMATS = {
+    ".wav": ("audio/wav", "audio/wave", "audio/x-wav"),
+    ".mp3": ("audio/mpeg",),
+}
+DEFAULT_ALLOWED_AUDIO_EXTENSIONS = tuple(SUPPORTED_AUDIO_FORMATS)
+DEFAULT_ALLOWED_AUDIO_MIME_TYPES = tuple(
+    mime_type
+    for mime_types in SUPPORTED_AUDIO_FORMATS.values()
+    for mime_type in mime_types
+)
 
 
 @dataclass(frozen=True)
@@ -32,12 +40,23 @@ class ApiSettings:
         object.__setattr__(
             self,
             "allowed_audio_extensions",
-            _normalize_extensions(self.allowed_audio_extensions, "allowed_audio_extensions"),
+            _validate_supported_extensions(
+                _normalize_extensions(
+                    self.allowed_audio_extensions,
+                    "allowed_audio_extensions",
+                )
+            ),
         )
         object.__setattr__(
             self,
             "allowed_audio_mime_types",
-            _normalize_values(self.allowed_audio_mime_types, "allowed_audio_mime_types"),
+            _validate_supported_mime_types(
+                _normalize_values(self.allowed_audio_mime_types, "allowed_audio_mime_types")
+            ),
+        )
+        _validate_compatible_audio_formats(
+            self.allowed_audio_extensions,
+            self.allowed_audio_mime_types,
         )
         object.__setattr__(self, "temp_dir", _validate_temp_dir(self.temp_dir))
 
@@ -137,6 +156,39 @@ def _normalize_values(values: tuple[str, ...], name: str) -> tuple[str, ...]:
     if not normalized:
         raise ValueError(f"{name} must contain at least one value")
     return normalized
+
+
+def _validate_supported_extensions(values: tuple[str, ...]) -> tuple[str, ...]:
+    unsupported = tuple(value for value in values if value not in SUPPORTED_AUDIO_FORMATS)
+    if unsupported:
+        raise ValueError(
+            f"allowed_audio_extensions contains unsupported extensions: {unsupported}"
+        )
+    return values
+
+
+def _validate_supported_mime_types(values: tuple[str, ...]) -> tuple[str, ...]:
+    supported = set(DEFAULT_ALLOWED_AUDIO_MIME_TYPES)
+    unsupported = tuple(value for value in values if value not in supported)
+    if unsupported:
+        raise ValueError(
+            f"allowed_audio_mime_types contains unsupported values: {unsupported}"
+        )
+    return values
+
+
+def _validate_compatible_audio_formats(
+    extensions: tuple[str, ...],
+    mime_types: tuple[str, ...],
+) -> None:
+    allowed_mime_types = set(mime_types)
+    compatible_extensions = tuple(
+        extension
+        for extension in extensions
+        if allowed_mime_types.intersection(SUPPORTED_AUDIO_FORMATS[extension])
+    )
+    if not compatible_extensions:
+        raise ValueError("allowed audio extensions and MIME types have no compatible format")
 
 
 def _validate_temp_dir(value: Path | str | None) -> Path | None:

@@ -9,7 +9,7 @@ from typing import Iterator
 
 from fastapi import HTTPException, UploadFile, status
 
-from app.config import ApiSettings
+from app.config import SUPPORTED_AUDIO_FORMATS, ApiSettings
 
 
 logger = logging.getLogger(__name__)
@@ -23,13 +23,14 @@ def uploaded_audio_path(
 ) -> Iterator[Path]:
     temp_path: Path | None = None
     try:
-        validate_upload_mime_type(
-            file.content_type,
-            settings.allowed_audio_mime_types,
-        )
         suffix = validate_upload_extension(
             file.filename,
             settings.allowed_audio_extensions,
+        )
+        validate_upload_mime_type(
+            file.content_type,
+            suffix,
+            settings.allowed_audio_mime_types,
         )
         temp_path = _copy_upload_to_temp(file, suffix, settings)
         yield temp_path
@@ -66,13 +67,15 @@ def validate_upload_extension(
 
 def validate_upload_mime_type(
     content_type: str | None,
+    extension: str,
     allowed_mime_types: tuple[str, ...],
 ) -> None:
     if content_type is None or content_type.strip() == "":
         return
 
     mime_type = content_type.split(";", maxsplit=1)[0].strip().lower()
-    if mime_type not in allowed_mime_types:
+    extension_mime_types = SUPPORTED_AUDIO_FORMATS[extension]
+    if mime_type not in extension_mime_types or mime_type not in allowed_mime_types:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail={

@@ -164,15 +164,32 @@ def test_upload_extension_validation_rejects_empty_filename(filename: str | None
     }
 
 
+def test_upload_extension_validation_recognizes_mp3() -> None:
+    settings = ApiSettings()
+
+    assert validate_upload_extension("sample.mp3", settings.allowed_audio_extensions) == ".mp3"
+
+
 def test_analyze_rejects_disallowed_extension() -> None:
     service = FakeService()
     application = create_app(service_factory=lambda: service)
 
     with TestClient(application) as client:
-        response = _post_file(client, "sample.mp3", b"audio")
+        response = _post_file(client, "sample.flac", b"audio", content_type="audio/flac")
 
     assert response.status_code == 415
     assert service.calls == 0
+
+
+def test_analyze_accepts_mp3_with_mpeg_mime_type() -> None:
+    service = FakeService()
+    application = create_app(service_factory=lambda: service)
+
+    with TestClient(application) as client:
+        response = _post_file(client, "sample.mp3", b"audio", content_type="audio/mpeg")
+
+    assert response.status_code == 200
+    assert service.calls == 1
 
 
 def test_analyze_rejects_disallowed_mime_type_without_prediction() -> None:
@@ -181,6 +198,31 @@ def test_analyze_rejects_disallowed_mime_type_without_prediction() -> None:
 
     with TestClient(application) as client:
         response = _post_file(client, "sample.wav", b"audio", content_type="text/plain")
+
+    assert response.status_code == 415
+    assert response.json()["detail"] == {
+        "code": "unsupported_media_type",
+        "message": "Unsupported audio media type",
+    }
+    assert service.calls == 0
+
+
+@pytest.mark.parametrize(
+    ("filename", "content_type"),
+    [
+        ("sample.wav", "audio/mpeg"),
+        ("sample.mp3", "audio/wav"),
+    ],
+)
+def test_analyze_rejects_mime_type_for_different_supported_extension(
+    filename: str,
+    content_type: str,
+) -> None:
+    service = FakeService()
+    application = create_app(service_factory=lambda: service)
+
+    with TestClient(application) as client:
+        response = _post_file(client, filename, b"audio", content_type=content_type)
 
     assert response.status_code == 415
     assert response.json()["detail"] == {
