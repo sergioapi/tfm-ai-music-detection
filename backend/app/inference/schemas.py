@@ -47,6 +47,7 @@ class ModelMetadata:
     loaded_path: Path
     classes: tuple[int, ...]
     positive_label: int
+    score_type: str
     target_sample_rate: int
     fragment_duration_seconds: float
     n_mfcc: int

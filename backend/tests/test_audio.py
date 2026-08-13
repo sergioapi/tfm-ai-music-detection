@@ -5,7 +5,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from app.inference.audio import decode_audio_file, preprocess_fragment, segment_audio
+from app.inference.audio import (
+    decode_audio_file,
+    get_audio_duration_seconds,
+    preprocess_fragment,
+    segment_audio,
+)
 from app.inference.errors import AudioDecodingError, AudioValidationError
 
 
@@ -49,6 +54,25 @@ def test_decode_accepts_stereo_audio(wav_factory) -> None:
     assert sample_rate == 16_000
     assert audio.ndim == 2
     assert audio.shape[1] == 2
+
+
+def test_audio_duration_uses_file_metadata(wav_factory) -> None:
+    path = wav_factory(sine(0.25), 16_000)
+
+    assert get_audio_duration_seconds(path) == pytest.approx(0.25)
+
+
+def test_audio_duration_rejects_invalid_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "empty.wav"
+    path.write_bytes(b"placeholder")
+    fake_info = type("FakeInfo", (), {"samplerate": 16_000, "frames": 0})()
+    monkeypatch.setattr("app.inference.audio.sf.info", lambda *args, **kwargs: fake_info)
+
+    with pytest.raises(AudioValidationError, match="empty"):
+        get_audio_duration_seconds(path)
 
 
 def test_decode_rejects_non_finite_values(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

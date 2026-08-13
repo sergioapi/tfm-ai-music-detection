@@ -8,6 +8,7 @@ from app.inference.errors import PredictionError
 HUMAN_LABEL = 0
 AI_GENERATED_LABEL = 1
 CLASS_NAMES = ("human", "ai_generated")
+SCORE_TYPE_DECISION_FUNCTION = "decision_function"
 
 
 def class_name_for_label(label: int) -> str:
