@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from pathlib import Path
 
 import librosa
@@ -9,6 +10,31 @@ import soundfile as sf
 from app.inference.config import InferenceConfig
 from app.inference.errors import AudioDecodingError, AudioValidationError
 from app.inference.schemas import AudioFragment
+
+
+def get_audio_duration_seconds(path: Path) -> float:
+    audio_path = Path(path).expanduser().resolve()
+    if not audio_path.exists():
+        raise AudioDecodingError(f"Audio file does not exist: {audio_path}")
+    if not audio_path.is_file():
+        raise AudioDecodingError(f"Audio path is not a file: {audio_path}")
+
+    try:
+        info = sf.info(audio_path)
+    except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
+        raise AudioDecodingError(f"Could not inspect audio file {audio_path}: {exc}") from exc
+
+    sample_rate = int(info.samplerate)
+    frames = int(info.frames)
+    if sample_rate <= 0:
+        raise AudioValidationError(f"Invalid sample rate: {sample_rate}")
+    if frames <= 0:
+        raise AudioValidationError("Audio signal is empty")
+
+    duration_seconds = frames / sample_rate
+    if duration_seconds <= 0.0 or not math.isfinite(duration_seconds):
+        raise AudioValidationError(f"Invalid audio duration: {duration_seconds!r}")
+    return float(duration_seconds)
 
 
 def decode_audio_file(path: Path) -> tuple[np.ndarray, int]:

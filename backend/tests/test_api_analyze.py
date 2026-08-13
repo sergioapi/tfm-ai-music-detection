@@ -78,6 +78,7 @@ class UnexpectedErrorService(FakeService):
 class BrokenUploadFile:
     def __init__(self, filename: str) -> None:
         self.filename = filename
+        self.content_type = "audio/wav"
         self.file = BrokenReadFile()
 
 
@@ -94,6 +95,11 @@ class BrokenReadFile:
 
     def close(self) -> None:
         self.closed = True
+
+
+@pytest.fixture(autouse=True)
+def stub_audio_duration(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr("app.api.routes.get_audio_duration_seconds", lambda path: 1.0)
 
 
 def test_analyze_valid_wav_returns_complete_schema() -> None:
@@ -169,6 +175,35 @@ def test_analyze_rejects_disallowed_extension() -> None:
     assert service.calls == 0
 
 
+def test_analyze_rejects_disallowed_mime_type_without_prediction() -> None:
+    service = FakeService()
+    application = create_app(service_factory=lambda: service)
+
+    with TestClient(application) as client:
+        response = _post_file(client, "sample.wav", b"audio", content_type="text/plain")
+
+    assert response.status_code == 415
+    assert response.json()["detail"] == {
+        "code": "unsupported_media_type",
+        "message": "Unsupported audio media type",
+    }
+    assert service.calls == 0
+
+
+@pytest.mark.parametrize("content_type", [None, ""])
+def test_analyze_allows_missing_mime_type_when_extension_is_valid(
+    content_type: str | None,
+) -> None:
+    service = FakeService()
+    application = create_app(service_factory=lambda: service)
+
+    with TestClient(application) as client:
+        response = _post_file(client, "sample.wav", b"audio", content_type=content_type)
+
+    assert response.status_code == 200
+    assert service.calls == 1
+
+
 def test_analyze_accepts_extension_case_insensitively() -> None:
     service = FakeService()
     application = create_app(service_factory=lambda: service)
@@ -224,6 +259,42 @@ def test_analyze_rejects_file_above_size_limit_without_prediction_or_temp_file(
     assert response.json()["detail"] == {
         "code": "file_too_large",
         "message": "Uploaded file is too large",
+    }
+    assert service.calls == 0
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_analyze_accepts_audio_at_duration_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    service = FakeService()
+    settings = ApiSettings(max_audio_duration_seconds=5.0)
+    application = create_app(service_factory=lambda: service, settings=settings)
+    monkeypatch.setattr("app.api.routes.get_audio_duration_seconds", lambda path: 5.0)
+
+    with TestClient(application) as client:
+        response = _post_file(client, "sample.wav", b"audio")
+
+    assert response.status_code == 200
+    assert service.calls == 1
+
+
+def test_analyze_rejects_audio_above_duration_limit_without_prediction_or_temp_file(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    service = FakeService()
+    settings = ApiSettings(max_audio_duration_seconds=5.0, temp_dir=tmp_path)
+    application = create_app(service_factory=lambda: service, settings=settings)
+    monkeypatch.setattr("app.api.routes.get_audio_duration_seconds", lambda path: 5.1)
+
+    with TestClient(application) as client:
+        response = _post_file(client, "sample.wav", b"audio")
+
+    assert response.status_code == 413
+    assert response.json()["detail"] == {
+        "code": "audio_too_long",
+        "message": "Audio duration exceeds the allowed limit",
     }
     assert service.calls == 0
     assert list(tmp_path.iterdir()) == []
@@ -358,10 +429,20 @@ def test_analyze_uses_configured_temp_dir_and_removes_file(tmp_path: Path) -> No
     assert not service.received_paths[0].exists()
 
 
-def _post_file(client: TestClient, filename: str, content: bytes):
+def _post_file(
+    client: TestClient,
+    filename: str,
+    content: bytes,
+    content_type: str | None = "audio/wav",
+):
+    if content_type is None:
+        return client.post(
+            "/api/v1/analyze",
+            files={"file": (filename, content)},
+        )
     return client.post(
         "/api/v1/analyze",
-        files={"file": (filename, content, "audio/wav")},
+        files={"file": (filename, content, content_type)},
     )
 
 

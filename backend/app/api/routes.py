@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, Request, Response, UploadFile, status
 
@@ -8,6 +9,7 @@ from app.api.mappers import analyze_response, model_info_response
 from app.api.schemas import AnalyzeResponse, HealthResponse, ModelInfoResponse
 from app.api.uploads import uploaded_audio_path
 from app.config import ApiSettings
+from app.inference.audio import get_audio_duration_seconds
 from app.inference.errors import AudioDecodingError, AudioValidationError, PredictionError
 from app.inference.interfaces import InferenceService
 
@@ -45,6 +47,7 @@ def analyze(request: Request, file: UploadFile = File(...)) -> AnalyzeResponse:
         service = _ready_service(request)
         settings = _api_settings(request)
         with uploaded_audio_path(file, settings) as path:
+            _ensure_audio_duration_allowed(path, settings)
             prediction = service.predict_file(path)
         return analyze_response(prediction)
     except HTTPException:
@@ -84,3 +87,15 @@ def _ready_service(request: Request) -> InferenceService:
 
 def _api_settings(request: Request) -> ApiSettings:
     return getattr(request.app.state, "settings")
+
+
+def _ensure_audio_duration_allowed(path: Path, settings: ApiSettings) -> None:
+    duration_seconds = get_audio_duration_seconds(path)
+    if duration_seconds > settings.max_audio_duration_seconds:
+        raise HTTPException(
+            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+            detail={
+                "code": "audio_too_long",
+                "message": "Audio duration exceeds the allowed limit",
+            },
+        )

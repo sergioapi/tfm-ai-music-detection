@@ -23,6 +23,10 @@ def uploaded_audio_path(
 ) -> Iterator[Path]:
     temp_path: Path | None = None
     try:
+        validate_upload_mime_type(
+            file.content_type,
+            settings.allowed_audio_mime_types,
+        )
         suffix = validate_upload_extension(
             file.filename,
             settings.allowed_audio_extensions,
@@ -58,6 +62,24 @@ def validate_upload_extension(
             },
         )
     return suffix
+
+
+def validate_upload_mime_type(
+    content_type: str | None,
+    allowed_mime_types: tuple[str, ...],
+) -> None:
+    if content_type is None or content_type.strip() == "":
+        return
+
+    mime_type = content_type.split(";", maxsplit=1)[0].strip().lower()
+    if mime_type not in allowed_mime_types:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail={
+                "code": "unsupported_media_type",
+                "message": "Unsupported audio media type",
+            },
+        )
 
 
 def _copy_upload_to_temp(
