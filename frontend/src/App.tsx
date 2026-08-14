@@ -6,6 +6,7 @@ import {
   type AnalyzeResponse,
   type ApiError,
 } from './api'
+import { AnalysisResult } from './components/AnalysisResult'
 import { AudioAnalysisForm } from './components/AudioAnalysisForm'
 
 type AnalysisState =
@@ -75,6 +76,9 @@ function App() {
           onFileCleared={() => setAnalysisState({ status: 'idle' })}
           onAnalyze={handleAnalyze}
         />
+        {analysisState.status === 'success' ? (
+          <AnalysisResult result={analysisState.result} />
+        ) : null}
       </section>
     </main>
   )
