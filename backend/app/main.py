@@ -5,6 +5,7 @@ from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
 from app.config import ApiSettings
@@ -50,6 +51,14 @@ def create_app(
         version="0.1.0",
         lifespan=lifespan,
     )
+    if api_settings.cors_allowed_origins:
+        application.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(api_settings.cors_allowed_origins),
+            allow_credentials=False,
+            allow_methods=["POST"],
+            allow_headers=[],
+        )
     application.state.settings = api_settings
     application.include_router(router)
     return application

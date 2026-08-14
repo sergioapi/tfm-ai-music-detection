@@ -5,6 +5,7 @@ import os
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 DEFAULT_MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024
@@ -19,6 +20,7 @@ DEFAULT_ALLOWED_AUDIO_MIME_TYPES = tuple(
     for mime_types in SUPPORTED_AUDIO_FORMATS.values()
     for mime_type in mime_types
 )
+DEFAULT_CORS_ALLOWED_ORIGINS: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -27,6 +29,7 @@ class ApiSettings:
     max_audio_duration_seconds: float = DEFAULT_MAX_AUDIO_DURATION_SECONDS
     allowed_audio_extensions: tuple[str, ...] = DEFAULT_ALLOWED_AUDIO_EXTENSIONS
     allowed_audio_mime_types: tuple[str, ...] = DEFAULT_ALLOWED_AUDIO_MIME_TYPES
+    cors_allowed_origins: tuple[str, ...] = DEFAULT_CORS_ALLOWED_ORIGINS
     temp_dir: Path | None = None
 
     def __post_init__(self) -> None:
@@ -58,6 +61,13 @@ class ApiSettings:
             self.allowed_audio_extensions,
             self.allowed_audio_mime_types,
         )
+        object.__setattr__(
+            self,
+            "cors_allowed_origins",
+            _validate_cors_allowed_origins(
+                _normalize_optional_values(self.cors_allowed_origins)
+            ),
+        )
         object.__setattr__(self, "temp_dir", _validate_temp_dir(self.temp_dir))
 
     @classmethod
@@ -78,6 +88,10 @@ class ApiSettings:
             allowed_audio_mime_types=_read_values(
                 "ALLOWED_AUDIO_MIME_TYPES",
                 DEFAULT_ALLOWED_AUDIO_MIME_TYPES,
+            ),
+            cors_allowed_origins=_read_optional_values(
+                "CORS_ALLOWED_ORIGINS",
+                DEFAULT_CORS_ALLOWED_ORIGINS,
             ),
             temp_dir=_read_optional_path("TEMP_DIR"),
         )
@@ -126,6 +140,18 @@ def _read_values(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
     )
 
 
+def _read_optional_values(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
+    raw_value = os.environ.get(name)
+    if raw_value is None or raw_value.strip() == "":
+        return default
+
+    return tuple(
+        item.strip()
+        for item in raw_value.split(",")
+        if item.strip()
+    )
+
+
 def _read_optional_path(name: str) -> Path | None:
     raw_value = os.environ.get(name)
     if raw_value is None or raw_value.strip() == "":
@@ -156,6 +182,10 @@ def _normalize_values(values: tuple[str, ...], name: str) -> tuple[str, ...]:
     if not normalized:
         raise ValueError(f"{name} must contain at least one value")
     return normalized
+
+
+def _normalize_optional_values(values: tuple[str, ...]) -> tuple[str, ...]:
+    return tuple(value.strip() for value in values if value.strip())
 
 
 def _validate_supported_extensions(values: tuple[str, ...]) -> tuple[str, ...]:
@@ -189,6 +219,27 @@ def _validate_compatible_audio_formats(
     )
     if not compatible_extensions:
         raise ValueError("allowed audio extensions and MIME types have no compatible format")
+
+
+def _validate_cors_allowed_origins(values: tuple[str, ...]) -> tuple[str, ...]:
+    for origin in values:
+        if origin == "*":
+            raise ValueError("cors_allowed_origins must not contain wildcard origins")
+
+        parsed = urlsplit(origin)
+        if (
+            parsed.scheme not in {"http", "https"}
+            or not parsed.netloc
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.path
+            or parsed.query
+            or parsed.fragment
+        ):
+            raise ValueError(
+                "cors_allowed_origins must contain absolute HTTP or HTTPS origins"
+            )
+    return values
 
 
 def _validate_temp_dir(value: Path | str | None) -> Path | None:
