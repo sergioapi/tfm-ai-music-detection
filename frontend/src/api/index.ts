@@ -1,4 +1,5 @@
 export { analyzeAudio } from './analyze'
+export { getApiErrorMessage } from './errorMessages'
 export type { ApiError, ApiErrorKind } from './errors'
 export { isApiError } from './errors'
 export type {

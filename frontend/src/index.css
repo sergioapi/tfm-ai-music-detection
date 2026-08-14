@@ -81,6 +81,109 @@ p {
   font-size: 1.125rem;
 }
 
+.analysis-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.field-group {
+  display: grid;
+  gap: 8px;
+}
+
+label {
+  color: #111827;
+  font-weight: 700;
+}
+
+input[type='file'] {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #f9fbfd;
+  color: var(--color-text);
+  font: inherit;
+}
+
+input[type='file']::file-selector-button {
+  margin-right: 14px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: #e2eef3;
+  color: #0f3f52;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+input[type='file']:disabled,
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.help-text,
+.selected-file,
+.feedback {
+  font-size: 0.95rem;
+}
+
+.selected-file {
+  padding: 12px 14px;
+  border: 1px solid #cfe0e8;
+  border-radius: 8px;
+  background: #f2f8fb;
+  color: #244251;
+}
+
+.selected-file strong {
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.primary-action {
+  width: fit-content;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-accent);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-action:not(:disabled):hover {
+  background: #12566d;
+}
+
+.feedback {
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+.feedback-status {
+  border: 1px solid #cfe0e8;
+  background: #f2f8fb;
+  color: #244251;
+}
+
+.feedback-success {
+  border: 1px solid #bfdfd2;
+  background: #effaf5;
+  color: #14533c;
+}
+
+.feedback-error {
+  border: 1px solid #f1b9b9;
+  background: #fff1f1;
+  color: #7f1d1d;
+}
+
 @media (max-width: 640px) {
   .app-shell {
     padding: 20px;
@@ -92,5 +195,9 @@ p {
 
   p {
     font-size: 1rem;
+  }
+
+  .primary-action {
+    width: 100%;
   }
 }
