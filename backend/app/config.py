@@ -8,7 +8,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 
-DEFAULT_MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024
+DEFAULT_MAX_UPLOAD_SIZE_BYTES = 64 * 1024 * 1024
 DEFAULT_MAX_AUDIO_DURATION_SECONDS = 300.0
 SUPPORTED_AUDIO_FORMATS = {
     ".wav": ("audio/wav", "audio/wave", "audio/x-wav"),

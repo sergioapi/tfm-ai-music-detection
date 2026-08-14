@@ -19,7 +19,8 @@ def test_api_settings_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
 
     settings = ApiSettings.from_env()
 
-    assert settings.max_upload_size_bytes == DEFAULT_MAX_UPLOAD_SIZE_BYTES
+    assert DEFAULT_MAX_UPLOAD_SIZE_BYTES == 64 * 1024 * 1024
+    assert settings.max_upload_size_bytes == 64 * 1024 * 1024
     assert settings.max_audio_duration_seconds == DEFAULT_MAX_AUDIO_DURATION_SECONDS
     assert settings.allowed_audio_extensions == DEFAULT_ALLOWED_AUDIO_EXTENSIONS
     assert settings.allowed_audio_mime_types == DEFAULT_ALLOWED_AUDIO_MIME_TYPES

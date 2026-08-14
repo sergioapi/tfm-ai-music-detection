@@ -49,7 +49,6 @@ function App() {
   return (
     <main className="app-shell">
       <section className="intro" aria-labelledby="app-title">
-        <p className="eyebrow">Análisis de audio</p>
         <h1 id="app-title">
           Analiza si una canción puede haber sido generada con IA
         </h1>
@@ -86,7 +85,7 @@ function App() {
 
 function getFeedback(
   analysisState: AnalysisState,
-): { kind: 'status' | 'success' | 'error'; message: string } | null {
+): { kind: 'status' | 'error'; message: string } | null {
   switch (analysisState.status) {
     case 'idle':
     case 'selected':
@@ -97,10 +96,7 @@ function getFeedback(
         message: 'Analizando el audio. Espera unos instantes.',
       }
     case 'success':
-      return {
-        kind: 'success',
-        message: 'Análisis completado.',
-      }
+      return null
     case 'error':
       return {
         kind: 'error',

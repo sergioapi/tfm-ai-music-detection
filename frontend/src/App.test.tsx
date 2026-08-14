@@ -29,9 +29,6 @@ describe('App', () => {
       target: { files: [file] },
     })
 
-    expect(screen.getByText(/Archivo seleccionado:/)).toBeInTheDocument()
-    expect(screen.getByText('song.wav')).toBeInTheDocument()
-
     fireEvent.click(screen.getByRole('button', { name: 'Analizar audio' }))
 
     expect(screen.getByRole('status')).toHaveTextContent(
@@ -42,7 +39,7 @@ describe('App', () => {
     expect(
       await screen.findByText('Posible generación con IA'),
     ).toBeInTheDocument()
-    expect(screen.getByText('Análisis completado.')).toBeInTheDocument()
+    expect(screen.queryByText('Análisis completado.')).not.toBeInTheDocument()
   })
 
   it('shows a user-facing error when analysis fails', async () => {

@@ -5,7 +5,7 @@ import {
 } from '../audio/formats'
 
 type Feedback = {
-  kind: 'status' | 'success' | 'error'
+  kind: 'status' | 'error'
   message: string
 }
 
@@ -72,12 +72,6 @@ export function AudioAnalysisForm({
           Formatos admitidos: {getSupportedAudioFormatsLabel()}.
         </p>
       </div>
-
-      {selectedFile ? (
-        <p className="selected-file">
-          Archivo seleccionado: <strong>{selectedFile.name}</strong>
-        </p>
-      ) : null}
 
       <button
         type="submit"
