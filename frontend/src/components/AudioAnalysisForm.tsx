@@ -1,0 +1,103 @@
+import {
+  AUDIO_FILE_ACCEPT,
+  getSupportedAudioFormatsLabel,
+  isSupportedAudioFile,
+} from '../audio/formats'
+
+type Feedback = {
+  kind: 'status' | 'success' | 'error'
+  message: string
+}
+
+type AudioAnalysisFormProps = {
+  selectedFile: File | null
+  isAnalyzing: boolean
+  feedback: Feedback | null
+  onFileAccepted: (file: File) => void
+  onFileRejected: () => void
+  onFileCleared: () => void
+  onAnalyze: () => void
+}
+
+export function AudioAnalysisForm({
+  selectedFile,
+  isAnalyzing,
+  feedback,
+  onFileAccepted,
+  onFileRejected,
+  onFileCleared,
+  onAnalyze,
+}: AudioAnalysisFormProps) {
+  const canAnalyze = selectedFile !== null && !isAnalyzing
+  const feedbackId = feedback ? 'analysis-feedback' : undefined
+
+  return (
+    <form
+      className="analysis-form"
+      aria-busy={isAnalyzing}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (canAnalyze) {
+          onAnalyze()
+        }
+      }}
+    >
+      <div className="field-group">
+        <label htmlFor="audio-file">Archivo de audio</label>
+        <input
+          id="audio-file"
+          name="audio-file"
+          type="file"
+          accept={AUDIO_FILE_ACCEPT}
+          disabled={isAnalyzing}
+          aria-describedby="audio-file-help"
+          onChange={(event) => {
+            const file = event.currentTarget.files?.[0] ?? null
+
+            if (!file) {
+              onFileCleared()
+              return
+            }
+
+            if (!isSupportedAudioFile(file)) {
+              event.currentTarget.value = ''
+              onFileRejected()
+              return
+            }
+
+            onFileAccepted(file)
+          }}
+        />
+        <p id="audio-file-help" className="help-text">
+          Formatos admitidos: {getSupportedAudioFormatsLabel()}.
+        </p>
+      </div>
+
+      {selectedFile ? (
+        <p className="selected-file">
+          Archivo seleccionado: <strong>{selectedFile.name}</strong>
+        </p>
+      ) : null}
+
+      <button
+        type="submit"
+        className="primary-action"
+        disabled={!canAnalyze}
+        aria-describedby={feedbackId}
+      >
+        {isAnalyzing ? 'Analizando...' : 'Analizar audio'}
+      </button>
+
+      {feedback ? (
+        <p
+          id="analysis-feedback"
+          className={`feedback feedback-${feedback.kind}`}
+          role={feedback.kind === 'error' ? 'alert' : 'status'}
+          aria-live={feedback.kind === 'error' ? 'assertive' : 'polite'}
+        >
+          {feedback.message}
+        </p>
+      ) : null}
+    </form>
+  )
+}
