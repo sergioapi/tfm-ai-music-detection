@@ -9,11 +9,13 @@ type AnalysisResultProps = {
 }
 
 export function AnalysisResult({ result }: AnalysisResultProps) {
+  const labelClassName = `result-label ${resultLabelModifier(result.predicted_class)}`
+
   return (
     <section className="result-card" aria-labelledby="result-title" role="status">
       <div className="result-main">
         <h2 id="result-title">Resultado</h2>
-        <p className="result-label">
+        <p className={labelClassName}>
           {getVisibleClassLabel(result.predicted_class)}
         </p>
         <p className="result-description">
@@ -22,4 +24,14 @@ export function AnalysisResult({ result }: AnalysisResultProps) {
       </div>
     </section>
   )
+}
+
+function resultLabelModifier(predictedClass: string): string {
+  if (predictedClass === 'ai_generated') {
+    return 'result-label-ai'
+  }
+  if (predictedClass === 'human') {
+    return 'result-label-human'
+  }
+  return 'result-label-unknown'
 }

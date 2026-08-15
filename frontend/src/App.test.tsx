@@ -14,15 +14,30 @@ vi.mock('./api', async () => {
 })
 
 const mockedAnalyzeAudio = vi.mocked(analyzeAudio)
+const scrollIntoViewMock = vi.fn()
 
 describe('App', () => {
   beforeEach(() => {
     mockedAnalyzeAudio.mockReset()
+    scrollIntoViewMock.mockReset()
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoViewMock,
+    })
   })
 
   it('runs the main analysis flow for a valid audio file', async () => {
     mockedAnalyzeAudio.mockResolvedValue(buildAnalyzeResponse())
     render(<App />)
+
+    expect(
+      screen.getByRole('heading', { name: 'Detector de música generada con IA' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Sube un archivo de audio y obtén una estimación sobre su posible origen.',
+      ),
+    ).toBeInTheDocument()
 
     const file = new File(['audio'], 'song.wav', { type: 'audio/wav' })
     fireEvent.change(screen.getByLabelText('Archivo de audio'), {
@@ -39,6 +54,12 @@ describe('App', () => {
     expect(
       await screen.findByText('Posible generación con IA'),
     ).toBeInTheDocument()
+    await waitFor(() => {
+      expect(scrollIntoViewMock).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
     expect(screen.queryByText('Análisis completado.')).not.toBeInTheDocument()
   })
 

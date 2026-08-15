@@ -9,7 +9,9 @@ describe('AnalysisResult', () => {
 
     expect(screen.getByRole('status')).toBeInTheDocument()
     expect(screen.getByText('Resultado')).toBeInTheDocument()
-    expect(screen.getByText('Posible generación con IA')).toBeInTheDocument()
+    expect(screen.getByText('Posible generación con IA')).toHaveClass(
+      'result-label-ai',
+    )
     expect(
       screen.getByText(
         'El modelo ha identificado patrones acústicos más compatibles con música generada mediante IA.',
@@ -27,7 +29,9 @@ describe('AnalysisResult', () => {
       />,
     )
 
-    expect(screen.getByText('Posible origen humano')).toBeInTheDocument()
+    expect(screen.getByText('Posible origen humano')).toHaveClass(
+      'result-label-human',
+    )
     expect(
       screen.getByText(
         'El modelo ha identificado patrones acústicos más compatibles con música de origen humano.',

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   analyzeAudio,
   getApiErrorMessage,
@@ -20,11 +20,21 @@ function App() {
   const [analysisState, setAnalysisState] = useState<AnalysisState>({
     status: 'idle',
   })
+  const resultRef = useRef<HTMLDivElement | null>(null)
 
   const selectedFile =
     analysisState.status === 'idle' ? null : analysisState.file
   const isAnalyzing = analysisState.status === 'analyzing'
   const feedback = getFeedback(analysisState)
+
+  useEffect(() => {
+    if (analysisState.status === 'success') {
+      resultRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }, [analysisState.status])
 
   async function handleAnalyze() {
     if (!selectedFile || isAnalyzing) {
@@ -49,34 +59,36 @@ function App() {
   return (
     <main className="app-shell">
       <section className="intro" aria-labelledby="app-title">
-        <h1 id="app-title">
-          Analiza si una canción puede haber sido generada con IA
-        </h1>
-        <p>
-          Sube un archivo de audio y obtén una estimación basada en sus
-          características sonoras.
-        </p>
-        <AudioAnalysisForm
-          selectedFile={selectedFile}
-          isAnalyzing={isAnalyzing}
-          feedback={feedback}
-          onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
-          onFileRejected={() =>
-            setAnalysisState({
-              status: 'error',
-              file: null,
-              message: getApiErrorMessage({
-                kind: 'validation',
-                code: 'unsupported_file_type',
-                message: 'Unsupported audio file type',
-              }),
-            })
-          }
-          onFileCleared={() => setAnalysisState({ status: 'idle' })}
-          onAnalyze={handleAnalyze}
-        />
+        <div className="analysis-card">
+          <h1 id="app-title">Detector de música generada con IA</h1>
+          <p>
+            Sube un archivo de audio y obtén una estimación sobre su posible
+            origen.
+          </p>
+          <AudioAnalysisForm
+            selectedFile={selectedFile}
+            isAnalyzing={isAnalyzing}
+            feedback={feedback}
+            onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
+            onFileRejected={() =>
+              setAnalysisState({
+                status: 'error',
+                file: null,
+                message: getApiErrorMessage({
+                  kind: 'validation',
+                  code: 'unsupported_file_type',
+                  message: 'Unsupported audio file type',
+                }),
+              })
+            }
+            onFileCleared={() => setAnalysisState({ status: 'idle' })}
+            onAnalyze={handleAnalyze}
+          />
+        </div>
         {analysisState.status === 'success' ? (
-          <AnalysisResult result={analysisState.result} />
+          <div ref={resultRef}>
+            <AnalysisResult result={analysisState.result} />
+          </div>
         ) : null}
       </section>
     </main>
