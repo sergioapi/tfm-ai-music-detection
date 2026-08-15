@@ -3,12 +3,16 @@ import { describe, expect, it } from 'vitest'
 import { buildAnalyzeResponse } from '../test/fixtures'
 import { AnalysisResult } from './AnalysisResult'
 
+const noop = () => undefined
+
 describe('AnalysisResult', () => {
   it('shows the AI-generated label and explanation for ai_generated results', () => {
-    render(<AnalysisResult result={buildAnalyzeResponse()} />)
+    render(<AnalysisResult result={buildAnalyzeResponse()} onReset={noop} />)
 
-    expect(screen.getByRole('status')).toBeInTheDocument()
-    expect(screen.getByText('Resultado')).toBeInTheDocument()
+    expect(screen.getByRole('status', { name: 'Resultado' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Analizar otra canción' }),
+    ).toBeInTheDocument()
     expect(screen.getByText('Posible generación con IA')).toHaveClass(
       'result-label-ai',
     )
@@ -26,6 +30,7 @@ describe('AnalysisResult', () => {
           predicted_class: 'human',
           predicted_label: 0,
         })}
+        onReset={noop}
       />,
     )
 
@@ -43,6 +48,7 @@ describe('AnalysisResult', () => {
     render(
       <AnalysisResult
         result={buildAnalyzeResponse({ predicted_class: 'unexpected' })}
+        onReset={noop}
       />,
     )
 

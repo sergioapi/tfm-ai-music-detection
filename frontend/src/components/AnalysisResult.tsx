@@ -6,15 +6,23 @@ import {
 
 type AnalysisResultProps = {
   result: AnalyzeResponse
+  onReset: () => void
 }
 
-export function AnalysisResult({ result }: AnalysisResultProps) {
+export function AnalysisResult({ result, onReset }: AnalysisResultProps) {
   const labelClassName = `result-label ${resultLabelModifier(result.predicted_class)}`
 
   return (
     <section className="result-card" aria-labelledby="result-title" role="status">
+      <div className="result-header">
+        <h2 id="result-title" className="visually-hidden">
+          Resultado
+        </h2>
+        <button type="button" className="secondary-action" onClick={onReset}>
+          Analizar otra canción
+        </button>
+      </div>
       <div className="result-main">
-        <h2 id="result-title">Resultado</h2>
         <p className={labelClassName}>
           {getVisibleClassLabel(result.predicted_class)}
         </p>

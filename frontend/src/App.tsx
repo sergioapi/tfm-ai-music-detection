@@ -56,40 +56,47 @@ function App() {
     }
   }
 
+  function handleReset() {
+    setAnalysisState({ status: 'idle' })
+  }
+
   return (
     <main className="app-shell">
       <section className="intro" aria-labelledby="app-title">
         <div className="analysis-card">
-          <h1 id="app-title">Detector de música generada con IA</h1>
-          <p>
-            Sube un archivo de audio y obtén una estimación sobre su posible
-            origen.
-          </p>
-          <AudioAnalysisForm
-            selectedFile={selectedFile}
-            isAnalyzing={isAnalyzing}
-            feedback={feedback}
-            onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
-            onFileRejected={() =>
-              setAnalysisState({
-                status: 'error',
-                file: null,
-                message: getApiErrorMessage({
-                  kind: 'validation',
-                  code: 'unsupported_file_type',
-                  message: 'Unsupported audio file type',
-                }),
-              })
-            }
-            onFileCleared={() => setAnalysisState({ status: 'idle' })}
-            onAnalyze={handleAnalyze}
-          />
+          <header className="analysis-header">
+            <h1 id="app-title">Detector de música generada con IA</h1>
+            <p>
+              Sube un archivo de audio y obtén una estimación sobre su posible
+              origen.
+            </p>
+          </header>
+          {analysisState.status === 'success' ? (
+            <div ref={resultRef}>
+              <AnalysisResult result={analysisState.result} onReset={handleReset} />
+            </div>
+          ) : (
+            <AudioAnalysisForm
+              selectedFile={selectedFile}
+              isAnalyzing={isAnalyzing}
+              feedback={feedback}
+              onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
+              onFileRejected={() =>
+                setAnalysisState({
+                  status: 'error',
+                  file: null,
+                  message: getApiErrorMessage({
+                    kind: 'validation',
+                    code: 'unsupported_file_type',
+                    message: 'Unsupported audio file type',
+                  }),
+                })
+              }
+              onFileCleared={() => setAnalysisState({ status: 'idle' })}
+              onAnalyze={handleAnalyze}
+            />
+          )}
         </div>
-        {analysisState.status === 'success' ? (
-          <div ref={resultRef}>
-            <AnalysisResult result={analysisState.result} />
-          </div>
-        ) : null}
       </section>
     </main>
   )

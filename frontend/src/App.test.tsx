@@ -60,6 +60,10 @@ describe('App', () => {
         block: 'start',
       })
     })
+    fireEvent.click(screen.getByRole('button', { name: 'Analizar otra canción' }))
+
+    expect(screen.getByLabelText('Archivo de audio')).toBeInTheDocument()
+    expect(screen.queryByText('Posible generación con IA')).not.toBeInTheDocument()
     expect(screen.queryByText('Análisis completado.')).not.toBeInTheDocument()
   })
 
