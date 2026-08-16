@@ -3,11 +3,19 @@ import { describe, expect, it } from 'vitest'
 import { SiteHeader } from './SiteHeader'
 
 describe('SiteHeader', () => {
-  it('shows the application brand with the decorative SVG logo', () => {
-    const { container } = render(<SiteHeader />)
+  it('links the application brand to the home page with the decorative SVG logo', () => {
+    render(<SiteHeader />)
 
+    const homeLink = screen.getByRole('link', {
+      name: 'Ir al inicio de VeriSon',
+    })
+    const logo = homeLink.querySelector('img')
+
+    expect(homeLink).toHaveClass('site-brand')
+    expect(homeLink).toHaveAttribute('href', '/')
+    expect(homeLink).toContainElement(screen.getByText('VeriSon'))
     expect(screen.getByText('VeriSon')).toBeInTheDocument()
-    expect(container.querySelector('img')).toHaveAttribute('src', '/logo.svg')
-    expect(container.querySelector('img')).toHaveAttribute('alt', '')
+    expect(logo).toHaveAttribute('src', '/logo.svg')
+    expect(logo).toHaveAttribute('alt', '')
   })
 })
