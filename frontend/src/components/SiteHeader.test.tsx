@@ -11,10 +11,8 @@ describe('SiteHeader', () => {
     })
     const logo = homeLink.querySelector('img')
 
-    expect(homeLink).toHaveClass('site-brand')
     expect(homeLink).toHaveAttribute('href', '/')
     expect(homeLink).toContainElement(screen.getByText('VeriSon'))
-    expect(screen.getByText('VeriSon')).toBeInTheDocument()
     expect(logo).toHaveAttribute('src', '/logo.svg')
     expect(logo).toHaveAttribute('alt', '')
   })

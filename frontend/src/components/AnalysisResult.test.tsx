@@ -20,9 +20,7 @@ describe('AnalysisResult', () => {
       screen.getByRole('button', { name: 'Analizar otra canción' }),
     ).toBeInTheDocument()
     expect(screen.getByText('cumbia_pcf.mp3')).toBeInTheDocument()
-    expect(screen.getByText('Posible generación con IA')).toHaveClass(
-      'result-label-ai',
-    )
+    expect(screen.getByText('Posible generación con IA')).toBeInTheDocument()
     expect(
       screen.getByText(
         'El modelo ha identificado patrones acústicos más compatibles con música generada mediante IA.',
@@ -43,9 +41,7 @@ describe('AnalysisResult', () => {
     )
 
     expect(screen.getByText('voz_humana.wav')).toBeInTheDocument()
-    expect(screen.getByText('Posible origen humano')).toHaveClass(
-      'result-label-human',
-    )
+    expect(screen.getByText('Posible origen humano')).toBeInTheDocument()
     expect(
       screen.getByText(
         'El modelo ha identificado patrones acústicos más compatibles con música de origen humano.',

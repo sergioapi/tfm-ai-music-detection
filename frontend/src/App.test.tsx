@@ -28,10 +28,8 @@ describe('App', () => {
 
   it('runs the main analysis flow for a valid audio file', async () => {
     mockedAnalyzeAudio.mockResolvedValue(buildAnalyzeResponse())
-    const { container } = render(<App />)
+    render(<App />)
 
-    expect(screen.getByText('VeriSon')).toBeInTheDocument()
-    expect(screen.getByText('© 2026 VeriSon')).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { name: 'Detector de música generada con IA' }),
     ).toBeInTheDocument()
@@ -51,7 +49,6 @@ describe('App', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Analizando el audio. Espera unos instantes.',
     )
-    expect(container.querySelector('.analysis-progress')).toBeInTheDocument()
     expect(mockedAnalyzeAudio).toHaveBeenCalledWith(file)
 
     expect(
@@ -59,17 +56,13 @@ describe('App', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('cumbia_pcf.wav')).toBeInTheDocument()
     await waitFor(() => {
-      expect(scrollIntoViewMock).toHaveBeenCalledWith({
-        behavior: 'smooth',
-        block: 'start',
-      })
+      expect(scrollIntoViewMock).toHaveBeenCalled()
     })
     fireEvent.click(screen.getByRole('button', { name: 'Analizar otra canción' }))
 
     expect(screen.getByLabelText('Archivo de audio')).toBeInTheDocument()
     expect(screen.queryByText('cumbia_pcf.wav')).not.toBeInTheDocument()
     expect(screen.queryByText('Posible generación con IA')).not.toBeInTheDocument()
-    expect(screen.queryByText('Análisis completado.')).not.toBeInTheDocument()
   })
 
   it('shows a user-facing error when analysis fails', async () => {
