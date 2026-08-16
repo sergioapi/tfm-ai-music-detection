@@ -82,12 +82,28 @@ export function AudioAnalysisForm({
         {isAnalyzing ? 'Analizando...' : 'Analizar audio'}
       </button>
 
-      {feedback ? (
+      {feedback?.kind === 'status' ? (
+        <>
+          <div className="analysis-progress" aria-hidden="true">
+            <span className="analysis-progress-indicator" />
+          </div>
+          <p
+            id="analysis-feedback"
+            className="visually-hidden"
+            role="status"
+            aria-live="polite"
+          >
+            {feedback.message}
+          </p>
+        </>
+      ) : null}
+
+      {feedback?.kind === 'error' ? (
         <p
           id="analysis-feedback"
-          className={`feedback feedback-${feedback.kind}`}
-          role={feedback.kind === 'error' ? 'alert' : 'status'}
-          aria-live={feedback.kind === 'error' ? 'assertive' : 'polite'}
+          className="feedback feedback-error"
+          role="alert"
+          aria-live="assertive"
         >
           {feedback.message}
         </p>

@@ -28,7 +28,7 @@ describe('App', () => {
 
   it('runs the main analysis flow for a valid audio file', async () => {
     mockedAnalyzeAudio.mockResolvedValue(buildAnalyzeResponse())
-    render(<App />)
+    const { container } = render(<App />)
 
     expect(
       screen.getByRole('heading', { name: 'Detector de música generada con IA' }),
@@ -49,6 +49,7 @@ describe('App', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Analizando el audio. Espera unos instantes.',
     )
+    expect(container.querySelector('.analysis-progress')).toBeInTheDocument()
     expect(mockedAnalyzeAudio).toHaveBeenCalledWith(file)
 
     expect(

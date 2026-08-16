@@ -79,7 +79,7 @@ body {
 
 .analysis-header {
   display: grid;
-  gap: 6px;
+  gap: 10px;
   text-align: left;
 }
 
@@ -183,16 +183,44 @@ button:disabled {
   border-radius: 10px;
 }
 
-.feedback-status {
-  border: 1px solid rgb(30 215 96 / 30%);
-  background: rgb(30 215 96 / 10%);
-  color: #b7f7cf;
-}
-
 .feedback-error {
   border: 1px solid rgb(248 113 113 / 35%);
   background: rgb(127 29 29 / 22%);
   color: #fecaca;
+}
+
+.analysis-progress {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #181818;
+}
+
+.analysis-progress-indicator {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+  animation: analysis-progress-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes analysis-progress-slide {
+  from {
+    transform: translateX(-110%);
+  }
+
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .analysis-progress-indicator {
+    width: 100%;
+    animation: none;
+  }
 }
 
 .result-card {
@@ -217,15 +245,12 @@ button:disabled {
 }
 
 .result-main {
-  grid-column: 1;
-  grid-row: 1;
-  display: grid;
-  justify-items: start;
-  gap: 12px;
-  text-align: left;
+  display: contents;
 }
 
 .result-label {
+  grid-column: 1;
+  grid-row: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -262,8 +287,9 @@ button:disabled {
 }
 
 .result-description {
+  grid-column: 1 / -1;
+  grid-row: 2;
   justify-self: start;
-  max-width: 52ch;
   color: #e6e6e6;
   font-size: 1rem;
   text-align: left;
@@ -273,18 +299,19 @@ button:disabled {
   width: fit-content;
   min-height: 42px;
   padding: 10px 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: transparent;
-  color: var(--color-text);
+  background: #f5f5f5;
+  color: #000000;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
 }
 
 .secondary-action:hover {
-  border-color: rgb(30 215 96 / 55%);
-  color: var(--color-accent);
+  border-color: transparent;
+  background: #e6e6e6;
+  color: #000000;
 }
 
 @media (max-width: 640px) {
@@ -307,8 +334,17 @@ button:disabled {
   }
 
   .result-main {
+    display: contents;
+  }
+
+  .result-label {
     grid-column: 1;
     grid-row: 2;
+  }
+
+  .result-description {
+    grid-column: 1;
+    grid-row: 3;
   }
 
   p {
