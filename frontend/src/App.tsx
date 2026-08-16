@@ -77,7 +77,11 @@ function App() {
             </header>
             {analysisState.status === 'success' ? (
               <div ref={resultRef}>
-                <AnalysisResult result={analysisState.result} onReset={handleReset} />
+                <AnalysisResult
+                  result={analysisState.result}
+                  fileName={analysisState.file.name}
+                  onReset={handleReset}
+                />
               </div>
             ) : (
               <AudioAnalysisForm

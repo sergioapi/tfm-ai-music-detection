@@ -41,7 +41,7 @@ describe('App', () => {
       ),
     ).toBeInTheDocument()
 
-    const file = new File(['audio'], 'song.wav', { type: 'audio/wav' })
+    const file = new File(['audio'], 'cumbia_pcf.wav', { type: 'audio/wav' })
     fireEvent.change(screen.getByLabelText('Archivo de audio'), {
       target: { files: [file] },
     })
@@ -57,6 +57,7 @@ describe('App', () => {
     expect(
       await screen.findByText('Posible generación con IA'),
     ).toBeInTheDocument()
+    expect(screen.getByText('cumbia_pcf.wav')).toBeInTheDocument()
     await waitFor(() => {
       expect(scrollIntoViewMock).toHaveBeenCalledWith({
         behavior: 'smooth',
@@ -66,6 +67,7 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Analizar otra canción' }))
 
     expect(screen.getByLabelText('Archivo de audio')).toBeInTheDocument()
+    expect(screen.queryByText('cumbia_pcf.wav')).not.toBeInTheDocument()
     expect(screen.queryByText('Posible generación con IA')).not.toBeInTheDocument()
     expect(screen.queryByText('Análisis completado.')).not.toBeInTheDocument()
   })

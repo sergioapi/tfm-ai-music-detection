@@ -7,12 +7,19 @@ const noop = () => undefined
 
 describe('AnalysisResult', () => {
   it('shows the AI-generated label and explanation for ai_generated results', () => {
-    render(<AnalysisResult result={buildAnalyzeResponse()} onReset={noop} />)
+    render(
+      <AnalysisResult
+        result={buildAnalyzeResponse()}
+        fileName="cumbia_pcf.mp3"
+        onReset={noop}
+      />,
+    )
 
     expect(screen.getByRole('status', { name: 'Resultado' })).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: 'Analizar otra canción' }),
     ).toBeInTheDocument()
+    expect(screen.getByText('cumbia_pcf.mp3')).toBeInTheDocument()
     expect(screen.getByText('Posible generación con IA')).toHaveClass(
       'result-label-ai',
     )
@@ -30,10 +37,12 @@ describe('AnalysisResult', () => {
           predicted_class: 'human',
           predicted_label: 0,
         })}
+        fileName="voz_humana.wav"
         onReset={noop}
       />,
     )
 
+    expect(screen.getByText('voz_humana.wav')).toBeInTheDocument()
     expect(screen.getByText('Posible origen humano')).toHaveClass(
       'result-label-human',
     )
@@ -48,6 +57,7 @@ describe('AnalysisResult', () => {
     render(
       <AnalysisResult
         result={buildAnalyzeResponse({ predicted_class: 'unexpected' })}
+        fileName="resultado_desconocido.wav"
         onReset={noop}
       />,
     )
