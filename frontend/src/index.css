@@ -55,12 +55,64 @@ body {
   border: 0;
 }
 
+.site-header {
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 14px 24px;
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.site-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.site-name {
+  color: var(--color-text);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
 .app-shell {
   display: grid;
   align-items: start;
-  min-height: 100vh;
+  flex: 1;
   justify-items: center;
   padding: 32px 24px;
+}
+
+.site-footer {
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  padding: 14px 24px;
+}
+
+.site-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(100%, 900px);
+  margin: 0 auto;
+  color: var(--color-muted);
+  font-size: 0.875rem;
 }
 
 .intro {
@@ -315,6 +367,29 @@ button:disabled {
 }
 
 @media (max-width: 640px) {
+  .site-header {
+    padding: 12px 16px;
+  }
+
+  .site-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-name {
+    font-size: 1.05rem;
+  }
+
+  .site-footer {
+    padding: 12px 16px;
+  }
+
+  .site-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
   .app-shell {
     padding: 16px;
   }

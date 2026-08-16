@@ -30,6 +30,8 @@ describe('App', () => {
     mockedAnalyzeAudio.mockResolvedValue(buildAnalyzeResponse())
     const { container } = render(<App />)
 
+    expect(screen.getByText('VeriSon')).toBeInTheDocument()
+    expect(screen.getByText('© 2026 VeriSon')).toBeInTheDocument()
     expect(
       screen.getByRole('heading', { name: 'Detector de música generada con IA' }),
     ).toBeInTheDocument()
