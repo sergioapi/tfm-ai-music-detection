@@ -1,145 +1,133 @@
-# TFM — Detección de música generada mediante IA
+# TFM - Detección de música generada mediante IA
 
-Trabajo Fin de Máster orientado a comparar un baseline MFCC + SVM con un modelo de audio preentrenado y desarrollar una prueba de concepto web.
+Este repositorio contiene el desarrollo de un Trabajo Fin de Máster centrado en la detección de canciones generadas mediante inteligencia artificial.
 
-## Tecnologías previstas
+El proyecto se divide en dos partes. La primera compara dos enfoques de clasificación: un modelo clásico basado en MFCC + StandardScaler + SVM RBF y un modelo profundo basado en MERT-v1-95M congelado + SVM lineal. Tras la comparación, se seleccionó MFCC + SVM como modelo para la aplicación web.
 
-- Python y scikit-learn
-- JupyterLab
-- React y Vite
-- FastAPI
-- Hugging Face
+La segunda parte corresponde al desarrollo de VeriSon, una aplicación web que permite subir archivos de audio y obtener una estimación de clasificación entre música de posible origen humano y música generada mediante IA. La aplicación utiliza FastAPI para el backend de inferencia y React + Vite + TypeScript para el frontend.
 
-## Entorno Python
+## Estructura del repositorio
 
-Activar el entorno virtual en PowerShell:
+```text
+backend/    API FastAPI, inferencia del MVP y tests del backend
+frontend/   Interfaz web VeriSon
+configs/    Configuracion experimental
+data/       Datos, particiones experimentales y artefactos generados
+docs/       Evidencia tecnica, decisiones y resultados experimentales
+memoria/    Memoria academica del TFM
+notebooks/  Exploracion y pruebas iniciales
+scripts/    Pipeline experimental y generacion de artefactos
+tests/      Tests de experimentacion y pipeline
+```
+
+`backend/tests/` cubre el backend y la inferencia del MVP. `tests/` en la raiz
+cubre principalmente scripts y flujo experimental.
+
+## Preparacion del entorno Python
+
+Desde la raiz del repositorio, crear y activar el entorno virtual local en
+PowerShell:
 
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-## Baseline clasico MFCC + SVM
+Para reproducir los experimentos deben utilizarse las particiones definidas en `data/aime_splits.csv`, que corresponden al protocolo experimental empleado en el proyecto.
 
-El manifiesto experimental versionado es `data/aime_splits.csv`. No se regenera para entrenar el baseline.
+## Reproduccion experimental
 
-Extraer caracteristicas MFCC:
+Flujo principal del baseline MFCC + SVM:
 
 ```powershell
 python scripts/extract_aime_mfcc.py
+python scripts/train_mfcc_svm.py
 ```
 
-Si los audios ya estan descargados localmente, se puede evitar la descarga desde Hugging Face indicando una carpeta ignorada por Git:
+Si los audios de AIME ya estan descargados localmente, la extraccion MFCC puede
+usar una carpeta ignorada por Git:
 
 ```powershell
 python scripts/extract_aime_mfcc.py --audio-dir data/audio/aime_raw
 ```
 
-Entrenar, seleccionar hiperparametros con validacion y evaluar una unica vez en test:
-
-```powershell
-python scripts/train_mfcc_svm.py
-```
-
-Artefactos principales:
-
-- `data/processed/aime_mfcc_features.parquet`
-- `data/processed/aime_mfcc_failures.csv`
-- `data/processed/aime_mfcc_extraction_summary.json`
-- `data/models/mfcc_svm_baseline.joblib`
-- `data/models/mfcc_svm_metrics.json`
-- `data/models/mfcc_svm_predictions.csv`
-- `data/models/mfcc_svm_confusion_matrix.png`
-- `docs/mfcc_svm_baseline_summary.md`
-
-## Modelo profundo preentrenado
-
-La decision inicial selecciona `m-a-p/MERT-v1-95M` como encoder profundo principal congelado. La trazabilidad esta en `docs/decisions/seleccion-modelo-profundo-mert.md` y la configuracion inicial en `configs/mert_frozen_embeddings.yaml`.
-
-Smoke test rapido de MERT en CPU con una pareja train:
-
-```powershell
-python scripts/smoke_test_mert.py --device cpu --max-pairs 1
-```
-
-Smoke test completo con las doce muestras train:
+Flujo principal de MERT congelado + SVM:
 
 ```powershell
 python scripts/smoke_test_mert.py --device cpu
-```
-
-Si hay CUDA disponible:
-
-```powershell
-python scripts/smoke_test_mert.py --device cuda
-```
-
-Si los audios ya estan descargados localmente:
-
-```powershell
-python scripts/smoke_test_mert.py --device cpu --audio-dir data/audio/aime_raw
-```
-
-Resumen tecnico del smoke test:
-
-- `docs/mert_smoke_test_summary.md`
-
-Resultado estructurado generado localmente:
-
-- `data/processed/mert_smoke_test_result.json`
-
-Extraer embeddings MERT para los 1000 ejemplos del manifiesto, en CPU y con reanudacion si ya existe un CSV parcial:
-
-```powershell
 python scripts/extract_mert_embeddings.py --device cpu
-```
-
-Artefactos locales generados por la extraccion:
-
-- `data/processed/aime_mert_embeddings.csv`
-- `data/processed/aime_mert_embeddings.parquet`
-- `data/processed/aime_mert_embedding_extraction_summary.json`
-- `data/processed/aime_mert_embedding_failures.csv`, solo si se registran fallos
-
-Resumen tecnico de la extraccion:
-
-- `docs/mert_embedding_extraction_summary.md`
-
-Entrenar y seleccionar el clasificador SVM sobre los embeddings MERT, manteniendo test bloqueado:
-
-```powershell
 python scripts/train_mert_svm_classifier.py --config configs/mert_svm_classifier.yaml
-```
-
-Artefactos locales generados por la seleccion:
-
-- `data/models/mert_svm_selection_model.joblib`
-- `data/models/mert_svm_selection_results.json`
-- `data/models/mert_svm_validation_predictions.csv`
-- `data/models/mert_svm_validation_confusion_matrix.png`
-
-Resumen tecnico de la seleccion:
-
-- `docs/mert_svm_selection_summary.md`
-
-Evaluar una unica vez en test el clasificador MERT + SVM ya seleccionado, sin reentrenar:
-
-```powershell
 python scripts/evaluate_mert_svm_test.py --config configs/mert_svm_classifier.yaml
 ```
 
-Artefactos locales generados por la evaluacion final:
+Comparacion de modelos y seleccion del modelo de despliegue:
 
-- `data/models/mert_svm_test_metrics.json`
-- `data/models/mert_svm_test_predictions.csv`
-- `data/models/mert_svm_test_confusion_matrix.png`
+```powershell
+python scripts/build_model_comparison.py
+```
 
-Resumen tecnico de la evaluacion final:
+La evidencia detallada esta en `docs/`, especialmente:
 
-- `docs/mert_svm_test_summary.md`
+- `docs/aime_audit_summary.md`
+- `docs/mfcc_svm_baseline_summary.md`
+- `docs/model_comparison_summary.md`
+- `docs/decisions/seleccion-modelo-despliegue.md`
 
-Ejecutar tests:
+## Backend
+
+El backend local se arranca desde la raiz con:
+
+```powershell
+.\backend\run-dev.ps1
+```
+
+El script usa el Python de `.venv`, configura el entorno necesario para
+desarrollo local y ejecuta Uvicorn en `127.0.0.1:8000`.
+
+Para quedar funcional, el backend necesita el artefacto local:
+
+```text
+data/models/mfcc_svm_baseline.joblib
+```
+
+Ese fichero esta ignorado por Git. Puede generarse con el flujo experimental
+MFCC, en particular con `python scripts/train_mfcc_svm.py` una vez disponibles
+las caracteristicas necesarias.
+
+## Frontend
+
+Preparar y arrancar la interfaz desde `frontend/`:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+El frontend requiere configuracion local de entorno para localizar la API.
+Tomar `frontend/.env.example` como referencia y crear el archivo local
+correspondiente sin versionarlo.
+
+## Tests
+
+Ejecutar toda la suite Python desde la raiz:
 
 ```powershell
 pytest
 ```
+
+Ejecutar solo los tests del backend:
+
+```powershell
+pytest backend/tests
+```
+
+Validar el frontend:
+
+```powershell
+cd frontend
+npm run check
+```
+
+`npm run check` ejecuta lint, build y tests del frontend.
