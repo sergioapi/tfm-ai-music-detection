@@ -128,6 +128,40 @@ def test_analyze_valid_wav_returns_complete_schema() -> None:
     assert "decision_threshold" not in payload["model"]
 
 
+def test_analyze_allows_configured_cors_origin() -> None:
+    service = FakeService()
+    settings = ApiSettings(cors_allowed_origins=("http://localhost:5173",))
+    application = create_app(service_factory=lambda: service, settings=settings)
+
+    with TestClient(application) as client:
+        response = _post_file(
+            client,
+            "sample.wav",
+            b"audio",
+            headers={"Origin": "http://localhost:5173"},
+        )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_analyze_does_not_allow_unconfigured_cors_origin() -> None:
+    service = FakeService()
+    settings = ApiSettings(cors_allowed_origins=("http://localhost:5173",))
+    application = create_app(service_factory=lambda: service, settings=settings)
+
+    with TestClient(application) as client:
+        response = _post_file(
+            client,
+            "sample.wav",
+            b"audio",
+            headers={"Origin": "http://127.0.0.1:5173"},
+        )
+
+    assert response.status_code == 200
+    assert "access-control-allow-origin" not in response.headers
+
+
 def test_analyze_missing_file_returns_422() -> None:
     application = create_app(service_factory=FakeService)
 
@@ -476,15 +510,18 @@ def _post_file(
     filename: str,
     content: bytes,
     content_type: str | None = "audio/wav",
+    headers: dict[str, str] | None = None,
 ):
     if content_type is None:
         return client.post(
             "/api/v1/analyze",
             files={"file": (filename, content)},
+            headers=headers,
         )
     return client.post(
         "/api/v1/analyze",
         files={"file": (filename, content, content_type)},
+        headers=headers,
     )
 
 

@@ -7,6 +7,7 @@ import pytest
 from app.config import (
     DEFAULT_ALLOWED_AUDIO_EXTENSIONS,
     DEFAULT_ALLOWED_AUDIO_MIME_TYPES,
+    DEFAULT_CORS_ALLOWED_ORIGINS,
     DEFAULT_MAX_AUDIO_DURATION_SECONDS,
     DEFAULT_MAX_UPLOAD_SIZE_BYTES,
     ApiSettings,
@@ -18,10 +19,12 @@ def test_api_settings_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
 
     settings = ApiSettings.from_env()
 
-    assert settings.max_upload_size_bytes == DEFAULT_MAX_UPLOAD_SIZE_BYTES
+    assert DEFAULT_MAX_UPLOAD_SIZE_BYTES == 64 * 1024 * 1024
+    assert settings.max_upload_size_bytes == 64 * 1024 * 1024
     assert settings.max_audio_duration_seconds == DEFAULT_MAX_AUDIO_DURATION_SECONDS
     assert settings.allowed_audio_extensions == DEFAULT_ALLOWED_AUDIO_EXTENSIONS
     assert settings.allowed_audio_mime_types == DEFAULT_ALLOWED_AUDIO_MIME_TYPES
+    assert settings.cors_allowed_origins == DEFAULT_CORS_ALLOWED_ORIGINS
     assert settings.temp_dir is None
 
 
@@ -33,6 +36,10 @@ def test_api_settings_reads_environment_overrides(
     monkeypatch.setenv("MAX_AUDIO_DURATION_SECONDS", "12.5")
     monkeypatch.setenv("ALLOWED_AUDIO_EXTENSIONS", "wav, .mp3")
     monkeypatch.setenv("ALLOWED_AUDIO_MIME_TYPES", "audio/wav, audio/mpeg")
+    monkeypatch.setenv(
+        "CORS_ALLOWED_ORIGINS",
+        " http://localhost:5173, ,https://example.com ",
+    )
     monkeypatch.setenv("TEMP_DIR", str(tmp_path))
 
     settings = ApiSettings.from_env()
@@ -41,6 +48,10 @@ def test_api_settings_reads_environment_overrides(
     assert settings.max_audio_duration_seconds == pytest.approx(12.5)
     assert settings.allowed_audio_extensions == (".wav", ".mp3")
     assert settings.allowed_audio_mime_types == ("audio/wav", "audio/mpeg")
+    assert settings.cors_allowed_origins == (
+        "http://localhost:5173",
+        "https://example.com",
+    )
     assert settings.temp_dir == tmp_path
 
 
@@ -91,6 +102,12 @@ def test_api_settings_rejects_empty_extension_after_normalization(
         ({"allowed_audio_extensions": (".flac",)}, "unsupported extensions"),
         ({"allowed_audio_mime_types": ()}, "at least one"),
         ({"allowed_audio_mime_types": ("audio/flac",)}, "unsupported values"),
+        ({"cors_allowed_origins": ("*",)}, "wildcard"),
+        ({"cors_allowed_origins": ("localhost:5173",)}, "absolute HTTP or HTTPS"),
+        (
+            {"cors_allowed_origins": ("http://localhost:5173/path",)},
+            "absolute HTTP or HTTPS",
+        ),
         (
             {"allowed_audio_extensions": (".wav",), "allowed_audio_mime_types": ("audio/mpeg",)},
             "no compatible format",
@@ -126,6 +143,7 @@ def _clear_api_env(monkeypatch: pytest.MonkeyPatch) -> None:
         "MAX_AUDIO_DURATION_SECONDS",
         "ALLOWED_AUDIO_EXTENSIONS",
         "ALLOWED_AUDIO_MIME_TYPES",
+        "CORS_ALLOWED_ORIGINS",
         "TEMP_DIR",
     ):
         monkeypatch.delenv(name, raising=False)

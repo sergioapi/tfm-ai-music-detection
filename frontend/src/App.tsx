@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   analyzeAudio,
   getApiErrorMessage,
@@ -8,6 +8,8 @@ import {
 } from './api'
 import { AnalysisResult } from './components/AnalysisResult'
 import { AudioAnalysisForm } from './components/AudioAnalysisForm'
+import { SiteFooter } from './components/SiteFooter'
+import { SiteHeader } from './components/SiteHeader'
 
 type AnalysisState =
   | { status: 'idle' }
@@ -20,11 +22,21 @@ function App() {
   const [analysisState, setAnalysisState] = useState<AnalysisState>({
     status: 'idle',
   })
+  const resultRef = useRef<HTMLDivElement | null>(null)
 
   const selectedFile =
     analysisState.status === 'idle' ? null : analysisState.file
   const isAnalyzing = analysisState.status === 'analyzing'
   const feedback = getFeedback(analysisState)
+
+  useEffect(() => {
+    if (analysisState.status === 'success') {
+      resultRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }, [analysisState.status])
 
   async function handleAnalyze() {
     if (!selectedFile || isAnalyzing) {
@@ -46,47 +58,63 @@ function App() {
     }
   }
 
+  function handleReset() {
+    setAnalysisState({ status: 'idle' })
+  }
+
   return (
-    <main className="app-shell">
-      <section className="intro" aria-labelledby="app-title">
-        <p className="eyebrow">Análisis de audio</p>
-        <h1 id="app-title">
-          Analiza si una canción puede haber sido generada con IA
-        </h1>
-        <p>
-          Sube un archivo de audio y obtén una estimación basada en sus
-          características sonoras.
-        </p>
-        <AudioAnalysisForm
-          selectedFile={selectedFile}
-          isAnalyzing={isAnalyzing}
-          feedback={feedback}
-          onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
-          onFileRejected={() =>
-            setAnalysisState({
-              status: 'error',
-              file: null,
-              message: getApiErrorMessage({
-                kind: 'validation',
-                code: 'unsupported_file_type',
-                message: 'Unsupported audio file type',
-              }),
-            })
-          }
-          onFileCleared={() => setAnalysisState({ status: 'idle' })}
-          onAnalyze={handleAnalyze}
-        />
-        {analysisState.status === 'success' ? (
-          <AnalysisResult result={analysisState.result} />
-        ) : null}
-      </section>
-    </main>
+    <div className="app-layout">
+      <SiteHeader />
+      <main className="app-shell">
+        <section className="intro" aria-labelledby="app-title">
+          <div className="analysis-card">
+            <header className="analysis-header">
+              <h1 id="app-title">Detector de música generada con IA</h1>
+              <p>
+                Sube un archivo de audio y obtén una estimación sobre su posible
+                origen.
+              </p>
+            </header>
+            {analysisState.status === 'success' ? (
+              <div ref={resultRef}>
+                <AnalysisResult
+                  result={analysisState.result}
+                  fileName={analysisState.file.name}
+                  onReset={handleReset}
+                />
+              </div>
+            ) : (
+              <AudioAnalysisForm
+                selectedFile={selectedFile}
+                isAnalyzing={isAnalyzing}
+                feedback={feedback}
+                onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
+                onFileRejected={() =>
+                  setAnalysisState({
+                    status: 'error',
+                    file: null,
+                    message: getApiErrorMessage({
+                      kind: 'validation',
+                      code: 'unsupported_file_type',
+                      message: 'Unsupported audio file type',
+                    }),
+                  })
+                }
+                onFileCleared={() => setAnalysisState({ status: 'idle' })}
+                onAnalyze={handleAnalyze}
+              />
+            )}
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
   )
 }
 
 function getFeedback(
   analysisState: AnalysisState,
-): { kind: 'status' | 'success' | 'error'; message: string } | null {
+): { kind: 'status' | 'error'; message: string } | null {
   switch (analysisState.status) {
     case 'idle':
     case 'selected':
@@ -97,10 +125,7 @@ function getFeedback(
         message: 'Analizando el audio. Espera unos instantes.',
       }
     case 'success':
-      return {
-        kind: 'success',
-        message: 'Análisis completado.',
-      }
+      return null
     case 'error':
       return {
         kind: 'error',

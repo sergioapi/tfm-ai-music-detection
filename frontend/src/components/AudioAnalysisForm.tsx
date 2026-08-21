@@ -5,7 +5,7 @@ import {
 } from '../audio/formats'
 
 type Feedback = {
-  kind: 'status' | 'success' | 'error'
+  kind: 'status' | 'error'
   message: string
 }
 
@@ -73,12 +73,6 @@ export function AudioAnalysisForm({
         </p>
       </div>
 
-      {selectedFile ? (
-        <p className="selected-file">
-          Archivo seleccionado: <strong>{selectedFile.name}</strong>
-        </p>
-      ) : null}
-
       <button
         type="submit"
         className="primary-action"
@@ -88,12 +82,28 @@ export function AudioAnalysisForm({
         {isAnalyzing ? 'Analizando...' : 'Analizar audio'}
       </button>
 
-      {feedback ? (
+      {feedback?.kind === 'status' ? (
+        <>
+          <div className="analysis-progress" aria-hidden="true">
+            <span className="analysis-progress-indicator" />
+          </div>
+          <p
+            id="analysis-feedback"
+            className="visually-hidden"
+            role="status"
+            aria-live="polite"
+          >
+            {feedback.message}
+          </p>
+        </>
+      ) : null}
+
+      {feedback?.kind === 'error' ? (
         <p
           id="analysis-feedback"
-          className={`feedback feedback-${feedback.kind}`}
-          role={feedback.kind === 'error' ? 'alert' : 'status'}
-          aria-live={feedback.kind === 'error' ? 'assertive' : 'polite'}
+          className="feedback feedback-error"
+          role="alert"
+          aria-live="assertive"
         >
           {feedback.message}
         </p>

@@ -1,68 +1,67 @@
 import type { AnalyzeResponse } from '../api'
-import { getVisibleClassLabel } from '../results/classLabels'
 import {
-  formatAnalysisTime,
-  formatCount,
-  formatDuration,
-  formatScore,
-} from '../results/format'
-
-const LIMITATIONS_TEXT =
-  'Este resultado es una estimación orientativa y no constituye una verificación definitiva de la autenticidad del audio.'
+  getVisibleClassDescription,
+  getVisibleClassLabel,
+} from '../results/classLabels'
 
 type AnalysisResultProps = {
   result: AnalyzeResponse
+  fileName: string
+  onReset: () => void
 }
 
-export function AnalysisResult({ result }: AnalysisResultProps) {
-  const shouldShowProbabilityNote =
-    !result.model.score_is_calibrated_probability
+export function AnalysisResult({
+  result,
+  fileName,
+  onReset,
+}: AnalysisResultProps) {
+  const labelClassName = `result-label ${resultLabelModifier(result.predicted_class)}`
 
   return (
-    <section className="result-card" aria-labelledby="result-title">
+    <section className="result-card" aria-labelledby="result-title" role="status">
+      <div className="result-header">
+        <h2 id="result-title" className="visually-hidden">
+          Resultado
+        </h2>
+        <button type="button" className="secondary-action" onClick={onReset}>
+          Analizar otra canción
+        </button>
+      </div>
       <div className="result-main">
-        <p className="eyebrow">Resultado del análisis</p>
-        <h2 id="result-title">Estimación</h2>
-        <p className="result-label">
+        <p className="result-file">
+          <svg
+            className="result-file-icon"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+          <span className="result-file-name">{fileName}</span>
+        </p>
+        <p className={labelClassName}>
           {getVisibleClassLabel(result.predicted_class)}
         </p>
-      </div>
-
-      <div className="score-panel">
-        <div>
-          <p className="metric-label">Puntuación del análisis</p>
-          <p className="score-value">{formatScore(result.ai_score)}</p>
-        </div>
-        {shouldShowProbabilityNote ? (
-          <p className="score-note">
-            Esta puntuación no representa una probabilidad.
-          </p>
-        ) : null}
-      </div>
-
-      <dl className="result-metrics" aria-label="Datos del análisis">
-        <div>
-          <dt>Duración</dt>
-          <dd>{formatDuration(result.audio_duration_seconds)}</dd>
-        </div>
-        <div>
-          <dt>Fragmentos analizados</dt>
-          <dd>{formatCount(result.n_fragments)}</dd>
-        </div>
-        <div>
-          <dt>Tiempo de análisis</dt>
-          <dd>{formatAnalysisTime(result.timings.total_seconds)}</dd>
-        </div>
-        <div>
-          <dt>Umbral de decisión</dt>
-          <dd>{formatScore(result.decision_threshold)}</dd>
-        </div>
-      </dl>
-
-      <div className="limitations">
-        <h3>Cómo interpretar este resultado</h3>
-        <p>{LIMITATIONS_TEXT}</p>
+        <p className="result-description">
+          {getVisibleClassDescription(result.predicted_class)}
+        </p>
       </div>
     </section>
   )
+}
+
+function resultLabelModifier(predictedClass: string): string {
+  if (predictedClass === 'ai_generated') {
+    return 'result-label-ai'
+  }
+  if (predictedClass === 'human') {
+    return 'result-label-human'
+  }
+  return 'result-label-unknown'
 }

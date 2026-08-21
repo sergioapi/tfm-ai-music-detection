@@ -14,23 +14,35 @@ vi.mock('./api', async () => {
 })
 
 const mockedAnalyzeAudio = vi.mocked(analyzeAudio)
+const scrollIntoViewMock = vi.fn()
 
 describe('App', () => {
   beforeEach(() => {
     mockedAnalyzeAudio.mockReset()
+    scrollIntoViewMock.mockReset()
+    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoViewMock,
+    })
   })
 
   it('runs the main analysis flow for a valid audio file', async () => {
     mockedAnalyzeAudio.mockResolvedValue(buildAnalyzeResponse())
     render(<App />)
 
-    const file = new File(['audio'], 'song.wav', { type: 'audio/wav' })
+    expect(
+      screen.getByRole('heading', { name: 'Detector de música generada con IA' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Sube un archivo de audio y obtén una estimación sobre su posible origen.',
+      ),
+    ).toBeInTheDocument()
+
+    const file = new File(['audio'], 'cumbia_pcf.wav', { type: 'audio/wav' })
     fireEvent.change(screen.getByLabelText('Archivo de audio'), {
       target: { files: [file] },
     })
-
-    expect(screen.getByText(/Archivo seleccionado:/)).toBeInTheDocument()
-    expect(screen.getByText('song.wav')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Analizar audio' }))
 
@@ -42,7 +54,15 @@ describe('App', () => {
     expect(
       await screen.findByText('Posible generación con IA'),
     ).toBeInTheDocument()
-    expect(screen.getByText('Análisis completado.')).toBeInTheDocument()
+    expect(screen.getByText('cumbia_pcf.wav')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(scrollIntoViewMock).toHaveBeenCalled()
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Analizar otra canción' }))
+
+    expect(screen.getByLabelText('Archivo de audio')).toBeInTheDocument()
+    expect(screen.queryByText('cumbia_pcf.wav')).not.toBeInTheDocument()
+    expect(screen.queryByText('Posible generación con IA')).not.toBeInTheDocument()
   })
 
   it('shows a user-facing error when analysis fails', async () => {
