@@ -40,3 +40,4 @@ data/checkpoints/
 *.tmp
 *.temp
 *.log
+manual-validation/
