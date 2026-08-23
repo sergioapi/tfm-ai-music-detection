@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import math
+from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
+from collections.abc import Iterator
 
 import librosa
 import numpy as np
@@ -11,6 +14,16 @@ from app.inference.config import InferenceConfig
 from app.inference.errors import AudioDecodingError, AudioValidationError
 from app.inference.memory import MemoryProfiler
 from app.inference.schemas import AudioFragment
+
+
+@dataclass(frozen=True)
+class AudioFileInfo:
+    sample_rate: int
+    frames: int
+
+    @property
+    def duration_seconds(self) -> float:
+        return self.frames / self.sample_rate
 
 
 def get_audio_duration_seconds(path: Path) -> float:
@@ -25,17 +38,40 @@ def get_audio_duration_seconds(path: Path) -> float:
     except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
         raise AudioDecodingError(f"Could not inspect audio file {audio_path}: {exc}") from exc
 
-    sample_rate = int(info.samplerate)
-    frames = int(info.frames)
-    if sample_rate <= 0:
-        raise AudioValidationError(f"Invalid sample rate: {sample_rate}")
-    if frames <= 0:
-        raise AudioValidationError("Audio signal is empty")
-
-    duration_seconds = frames / sample_rate
+    audio_info = _validate_audio_info(int(info.samplerate), int(info.frames))
+    duration_seconds = audio_info.duration_seconds
     if duration_seconds <= 0.0 or not math.isfinite(duration_seconds):
         raise AudioValidationError(f"Invalid audio duration: {duration_seconds!r}")
     return float(duration_seconds)
+
+
+@contextmanager
+def open_audio_fragments(
+    path: Path,
+    fragment_duration_seconds: float,
+) -> Iterator[tuple[AudioFileInfo, Iterator[AudioFragment]]]:
+    """Open an audio file once and expose consecutive decoded fragments."""
+    audio_path = Path(path).expanduser().resolve()
+    if not audio_path.exists():
+        raise AudioDecodingError(f"Audio file does not exist: {audio_path}")
+    if not audio_path.is_file():
+        raise AudioDecodingError(f"Audio path is not a file: {audio_path}")
+    if fragment_duration_seconds <= 0:
+        raise AudioValidationError(
+            f"Invalid fragment duration: {fragment_duration_seconds}"
+        )
+
+    try:
+        with sf.SoundFile(audio_path) as source:
+            audio_info = _validate_audio_info(int(source.samplerate), int(source.frames))
+            fragment_samples = int(round(audio_info.sample_rate * fragment_duration_seconds))
+            if fragment_samples <= 0:
+                raise AudioValidationError(f"Invalid fragment length: {fragment_samples}")
+            yield audio_info, _read_audio_fragments(source, audio_info, fragment_samples)
+    except (AudioDecodingError, AudioValidationError):
+        raise
+    except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
+        raise AudioDecodingError(f"Could not decode audio file {audio_path}: {exc}") from exc
 
 
 def decode_audio_file(
@@ -73,6 +109,55 @@ def validate_decoded_audio(audio: np.ndarray, sample_rate: int) -> tuple[np.ndar
         raise AudioValidationError("Audio signal is empty")
     _validate_finite(signal, "decoded audio")
     return signal, sample_rate
+
+
+def _read_audio_fragments(
+    source: sf.SoundFile,
+    audio_info: AudioFileInfo,
+    fragment_samples: int,
+) -> Iterator[AudioFragment]:
+    index = 0
+    decoded_frames = 0
+    while True:
+        try:
+            audio = source.read(
+                frames=fragment_samples,
+                dtype="float64",
+                always_2d=False,
+            )
+        except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
+            raise AudioDecodingError(f"Could not decode audio fragment: {exc}") from exc
+
+        if np.asarray(audio).shape[0] == 0:
+            if decoded_frames == 0:
+                raise AudioValidationError("Audio signal is empty")
+            break
+        signal, sample_rate = validate_decoded_audio(audio, audio_info.sample_rate)
+        frames_read = signal.shape[0]
+        start = decoded_frames
+        end = decoded_frames + frames_read
+        yield AudioFragment(
+            index=index,
+            start_seconds=start / sample_rate,
+            end_seconds=end / sample_rate,
+            duration_seconds=frames_read / sample_rate,
+            signal=signal,
+            sample_rate=sample_rate,
+            is_incomplete=frames_read < fragment_samples,
+        )
+        index += 1
+        decoded_frames = end
+
+
+def _validate_audio_info(sample_rate: int, frames: int) -> AudioFileInfo:
+    if sample_rate <= 0:
+        raise AudioValidationError(f"Invalid sample rate: {sample_rate}")
+    if frames <= 0:
+        raise AudioValidationError("Audio signal is empty")
+    duration_seconds = frames / sample_rate
+    if duration_seconds <= 0.0 or not math.isfinite(duration_seconds):
+        raise AudioValidationError(f"Invalid audio duration: {duration_seconds!r}")
+    return AudioFileInfo(sample_rate=sample_rate, frames=frames)
 
 
 def segment_audio(

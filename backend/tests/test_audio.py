@@ -8,6 +8,7 @@ import pytest
 from app.inference.audio import (
     decode_audio_file,
     get_audio_duration_seconds,
+    open_audio_fragments,
     preprocess_fragment,
     segment_audio,
 )
@@ -85,6 +86,74 @@ def test_decode_rejects_non_finite_values(monkeypatch: pytest.MonkeyPatch, tmp_p
 
     with pytest.raises(AudioValidationError, match="NaN or infinite"):
         decode_audio_file(path)
+
+
+def test_streaming_decoder_rejects_initial_empty_read(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    class EmptyDecoderSource:
+        samplerate = 16_000
+        frames = 160_000
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback) -> None:
+            return None
+
+        def read(self, *, frames: int, dtype: str, always_2d: bool) -> np.ndarray:
+            return np.array([], dtype=np.float64)
+
+    path = tmp_path / "empty-decoder.wav"
+    path.write_bytes(b"placeholder")
+    monkeypatch.setattr(
+        "app.inference.audio.sf.SoundFile",
+        lambda _: EmptyDecoderSource(),
+    )
+
+    with open_audio_fragments(path, 10.0) as (_, fragments):
+        with pytest.raises(AudioValidationError, match="Audio signal is empty"):
+            tuple(fragments)
+
+
+@pytest.mark.parametrize(
+    ("seconds", "sample_rate", "stereo"),
+    [
+        (3.0, 16_000, False),
+        (10.0, 16_000, True),
+        (21.0, 44_100, False),
+        (21.0, 44_100, True),
+        (21.0, 48_000, False),
+        (21.0, 48_000, True),
+    ],
+)
+def test_sequential_soundfile_blocks_match_full_decode_and_segmentation(
+    wav_factory,
+    seconds: float,
+    sample_rate: int,
+    stereo: bool,
+) -> None:
+    signal = sine(seconds, sample_rate)
+    if stereo:
+        signal = np.column_stack([signal, signal * 0.5])
+    path = wav_factory(signal, sample_rate)
+
+    full_audio, full_sample_rate = decode_audio_file(path)
+    expected = segment_audio(full_audio, full_sample_rate, 10.0)
+    with open_audio_fragments(path, 10.0) as (audio_info, fragment_iterator):
+        actual = tuple(fragment_iterator)
+
+    assert audio_info.sample_rate == full_sample_rate
+    assert audio_info.duration_seconds == pytest.approx(seconds, abs=1e-3)
+    assert len(actual) == len(expected)
+    for observed, reference in zip(actual, expected):
+        assert observed.index == reference.index
+        assert observed.start_seconds == pytest.approx(reference.start_seconds)
+        assert observed.end_seconds == pytest.approx(reference.end_seconds)
+        assert observed.duration_seconds == pytest.approx(reference.duration_seconds)
+        assert observed.is_incomplete is reference.is_incomplete
+        np.testing.assert_array_equal(observed.signal, reference.signal)
 
 
 def test_segment_audio_short_audio_produces_one_incomplete_fragment() -> None:

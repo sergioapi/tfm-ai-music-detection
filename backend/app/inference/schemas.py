@@ -18,6 +18,15 @@ class AudioFragment:
 
 
 @dataclass(frozen=True)
+class AudioFragmentMetadata:
+    index: int
+    start_seconds: float
+    end_seconds: float
+    duration_seconds: float
+    is_incomplete: bool
+
+
+@dataclass(frozen=True)
 class FragmentPrediction:
     index: int
     start_seconds: float
