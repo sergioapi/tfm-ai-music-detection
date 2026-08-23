@@ -7,11 +7,17 @@ from pathlib import Path
 import numpy as np
 
 from app.inference.aggregation import aggregate_duration_weighted_scores
-from app.inference.audio import decode_audio_file, preprocess_fragment, segment_audio
+from app.inference.audio import (
+    decode_audio_file,
+    get_audio_duration_seconds,
+    preprocess_fragment,
+    segment_audio,
+)
 from app.inference.config import InferenceConfig, class_name_for_label
 from app.inference.errors import ModelArtifactError, PredictionError
 from app.inference.features import extract_mfcc_features
 from app.inference.model import MfccSvmModel, predict_labels_from_scores
+from app.inference.memory import MemoryProfiler
 from app.inference.schemas import FragmentPrediction, InferenceTimings, PredictionResult
 
 
@@ -20,8 +26,10 @@ class AudioInferenceService:
         self,
         model_path: Path | None = None,
         config: InferenceConfig | None = None,
+        memory_profiler: MemoryProfiler | None = None,
     ) -> None:
         self.config = config or InferenceConfig()
+        self.memory_profiler = memory_profiler or MemoryProfiler(enabled=False)
         resolved_model_path = self._resolve_model_path(model_path)
         self.model = MfccSvmModel.load(resolved_model_path, self.config)
 
@@ -35,9 +43,23 @@ class AudioInferenceService:
 
     def predict_file(self, path: str | Path) -> PredictionResult:
         total_start = time.perf_counter()
+        audio_path = Path(path)
+        profiling_request_id = self.memory_profiler.new_request_id()
+        self.memory_profiler.measure(profiling_request_id, "start")
+        if profiling_request_id is not None:
+            profiled_duration_seconds = get_audio_duration_seconds(audio_path)
+            self.memory_profiler.measure(
+                profiling_request_id,
+                "after_audio_info",
+                audio_duration_seconds=profiled_duration_seconds,
+            )
 
         decode_start = time.perf_counter()
-        audio, sample_rate = decode_audio_file(Path(path))
+        audio, sample_rate = decode_audio_file(
+            audio_path,
+            memory_profiler=self.memory_profiler,
+            profiling_request_id=profiling_request_id,
+        )
         decode_seconds = _elapsed(decode_start)
         audio_duration_seconds = audio.shape[0] / sample_rate
 
@@ -48,6 +70,13 @@ class AudioInferenceService:
             self.config.fragment_duration_seconds,
         )
         segmentation_seconds = _elapsed(segmentation_start)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "after_segment",
+            audio_duration_seconds=audio_duration_seconds,
+            original_sample_rate=sample_rate,
+            n_fragments=len(fragments),
+        )
 
         preprocessing_start = time.perf_counter()
         preprocessed = tuple(
@@ -55,18 +84,38 @@ class AudioInferenceService:
             for fragment in fragments
         )
         preprocessing_seconds = _elapsed(preprocessing_start)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "after_preprocess",
+            audio_duration_seconds=audio_duration_seconds,
+            original_sample_rate=sample_rate,
+            n_fragments=len(fragments),
+        )
 
         mfcc_start = time.perf_counter()
-        feature_rows = tuple(
-            extract_mfcc_features(
+        feature_rows_list = []
+        fragment_count = len(preprocessed)
+        for index, signal in enumerate(preprocessed):
+            feature_rows_list.append(extract_mfcc_features(
                 signal,
                 self.config.target_sample_rate,
                 self.config,
-            )
-            for signal in preprocessed
-        )
+            ))
+            if index == 0 or (index + 1) % 5 == 0 or index == fragment_count - 1:
+                self.memory_profiler.measure(
+                    profiling_request_id,
+                    "after_mfcc_fragment",
+                    fragment_index=index + 1,
+                    n_fragments=fragment_count,
+                )
+        feature_rows = tuple(feature_rows_list)
         features = np.vstack(feature_rows).astype(np.float32, copy=False)
         mfcc_seconds = _elapsed(mfcc_start)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "after_feature_matrix",
+            n_fragments=fragment_count,
+        )
 
         prediction_start = time.perf_counter()
         fragment_scores = self.model.predict_scores(features)
@@ -75,6 +124,11 @@ class AudioInferenceService:
             threshold=self.config.decision_threshold,
         )
         prediction_seconds = _elapsed(prediction_start)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "after_decision_function",
+            n_fragments=fragment_count,
+        )
 
         aggregation_start = time.perf_counter()
         fragment_durations = np.asarray(
@@ -92,6 +146,11 @@ class AudioInferenceService:
             )[0]
         )
         aggregation_seconds = _elapsed(aggregation_start)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "after_aggregation",
+            n_fragments=fragment_count,
+        )
 
         fragment_predictions = tuple(
             FragmentPrediction(
@@ -118,6 +177,11 @@ class AudioInferenceService:
             total_seconds=total_seconds,
         )
         _validate_timings(timings)
+        self.memory_profiler.measure(
+            profiling_request_id,
+            "before_return",
+            n_fragments=fragment_count,
+        )
 
         return PredictionResult(
             predicted_label=global_label,

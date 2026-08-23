@@ -11,6 +11,7 @@ from app.api.routes import router
 from app.config import ApiSettings
 from app.inference.errors import ModelArtifactError
 from app.inference.interfaces import InferenceService
+from app.inference.memory import MemoryProfiler
 from app.inference.service import AudioInferenceService
 
 
@@ -18,16 +19,20 @@ logger = logging.getLogger(__name__)
 ServiceFactory = Callable[[], InferenceService]
 
 
-def _default_service_factory() -> AudioInferenceService:
-    return AudioInferenceService()
+def _default_service_factory(memory_profiling_enabled: bool) -> AudioInferenceService:
+    return AudioInferenceService(
+        memory_profiler=MemoryProfiler(enabled=memory_profiling_enabled),
+    )
 
 
 def create_app(
     service_factory: ServiceFactory | None = None,
     settings: ApiSettings | None = None,
 ) -> FastAPI:
-    factory = service_factory or _default_service_factory
     api_settings = settings or ApiSettings.from_env()
+    factory = service_factory or (
+        lambda: _default_service_factory(api_settings.memory_profiling_enabled)
+    )
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:

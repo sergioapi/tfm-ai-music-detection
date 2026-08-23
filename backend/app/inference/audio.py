@@ -9,6 +9,7 @@ import soundfile as sf
 
 from app.inference.config import InferenceConfig
 from app.inference.errors import AudioDecodingError, AudioValidationError
+from app.inference.memory import MemoryProfiler
 from app.inference.schemas import AudioFragment
 
 
@@ -37,7 +38,11 @@ def get_audio_duration_seconds(path: Path) -> float:
     return float(duration_seconds)
 
 
-def decode_audio_file(path: Path) -> tuple[np.ndarray, int]:
+def decode_audio_file(
+    path: Path,
+    memory_profiler: MemoryProfiler | None = None,
+    profiling_request_id: str | None = None,
+) -> tuple[np.ndarray, int]:
     audio_path = Path(path).expanduser().resolve()
     if not audio_path.exists():
         raise AudioDecodingError(f"Audio file does not exist: {audio_path}")
@@ -49,7 +54,12 @@ def decode_audio_file(path: Path) -> tuple[np.ndarray, int]:
     except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
         raise AudioDecodingError(f"Could not decode audio file {audio_path}: {exc}") from exc
 
-    return validate_decoded_audio(audio, int(sample_rate))
+    if memory_profiler is not None:
+        memory_profiler.measure(profiling_request_id, "after_decode")
+    decoded = validate_decoded_audio(audio, int(sample_rate))
+    if memory_profiler is not None:
+        memory_profiler.measure(profiling_request_id, "after_validate_audio")
+    return decoded
 
 
 def validate_decoded_audio(audio: np.ndarray, sample_rate: int) -> tuple[np.ndarray, int]:
