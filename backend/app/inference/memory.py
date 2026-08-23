@@ -9,7 +9,7 @@ from typing import Callable
 import psutil
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("uvicorn.error")
 
 
 @dataclass(frozen=True)

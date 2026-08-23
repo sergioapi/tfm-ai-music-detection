@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from app.inference.memory import MemoryProfiler
+from app.inference.memory import MemoryProfiler, logger
 from app.inference.service import AudioInferenceService
 
 
@@ -36,6 +36,7 @@ def test_disabled_memory_profiler_does_not_query_or_log(caplog) -> None:
 
 
 def test_enabled_memory_profiler_logs_phase_and_rss(caplog) -> None:
+    assert logger.name == "uvicorn.error"
     profiler = MemoryProfiler(enabled=True, process_factory=FakeProcess)
     with caplog.at_level(logging.INFO):
         measurement = profiler.measure("A1B2C3D4", "after_decode", n_fragments=3)
