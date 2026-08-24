@@ -22,6 +22,7 @@ DEFAULT_ALLOWED_AUDIO_MIME_TYPES = tuple(
 )
 DEFAULT_CORS_ALLOWED_ORIGINS: tuple[str, ...] = ()
 DEFAULT_MEMORY_PROFILING_ENABLED = False
+DEFAULT_RESAMPLE_WARMUP_ENABLED = False
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,7 @@ class ApiSettings:
     allowed_audio_mime_types: tuple[str, ...] = DEFAULT_ALLOWED_AUDIO_MIME_TYPES
     cors_allowed_origins: tuple[str, ...] = DEFAULT_CORS_ALLOWED_ORIGINS
     memory_profiling_enabled: bool = DEFAULT_MEMORY_PROFILING_ENABLED
+    resample_warmup_enabled: bool = DEFAULT_RESAMPLE_WARMUP_ENABLED
     temp_dir: Path | None = None
 
     def __post_init__(self) -> None:
@@ -43,6 +45,8 @@ class ApiSettings:
             raise ValueError("max_audio_duration_seconds must be a finite value greater than zero")
         if not isinstance(self.memory_profiling_enabled, bool):
             raise ValueError("memory_profiling_enabled must be a boolean")
+        if not isinstance(self.resample_warmup_enabled, bool):
+            raise ValueError("resample_warmup_enabled must be a boolean")
 
         object.__setattr__(
             self,
@@ -100,6 +104,10 @@ class ApiSettings:
             memory_profiling_enabled=_read_bool(
                 "MEMORY_PROFILING_ENABLED",
                 DEFAULT_MEMORY_PROFILING_ENABLED,
+            ),
+            resample_warmup_enabled=_read_bool(
+                "RESAMPLE_WARMUP_ENABLED",
+                DEFAULT_RESAMPLE_WARMUP_ENABLED,
             ),
             temp_dir=_read_optional_path("TEMP_DIR"),
         )

@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import logging
+import threading
+
 from fastapi.testclient import TestClient
 
+from app.config import ApiSettings
+from app.inference.audio import warm_up_resampling
 from app.inference.errors import ModelArtifactError
 from app.main import create_app
 
@@ -52,3 +57,67 @@ def test_health_does_not_call_predict_file() -> None:
 
     assert response.status_code == 200
     assert response.json()["model_ready"] is True
+
+
+def test_resample_warmup_is_not_scheduled_when_disabled(monkeypatch) -> None:
+    calls = {"count": 0}
+
+    def warmup(*args) -> None:
+        calls["count"] += 1
+
+    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    application = create_app(
+        service_factory=FakeService,
+        settings=ApiSettings(resample_warmup_enabled=False),
+    )
+
+    with TestClient(application) as client:
+        assert client.get("/health").status_code == 200
+
+    assert calls["count"] == 0
+
+
+def test_resample_warmup_runs_once_in_background_when_enabled(monkeypatch) -> None:
+    calls = {"count": 0}
+    completed = threading.Event()
+
+    def warmup(*args) -> None:
+        calls["count"] += 1
+        completed.set()
+
+    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    application = create_app(
+        service_factory=FakeService,
+        settings=ApiSettings(resample_warmup_enabled=True),
+    )
+
+    with TestClient(application) as client:
+        assert client.get("/health").status_code == 200
+        assert completed.wait(timeout=1)
+
+    assert calls["count"] == 1
+
+
+def test_resample_warmup_failure_does_not_degrade_health(monkeypatch, caplog) -> None:
+    completed = threading.Event()
+
+    def fail_resample(*args, **kwargs):
+        raise RuntimeError("warm-up failed")
+
+    def warmup(profiler) -> None:
+        warm_up_resampling(profiler)
+        completed.set()
+
+    monkeypatch.setattr("app.inference.audio.librosa.resample", fail_resample)
+    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    application = create_app(
+        service_factory=FakeService,
+        settings=ApiSettings(resample_warmup_enabled=True),
+    )
+
+    with caplog.at_level(logging.WARNING):
+        with TestClient(application) as client:
+            assert client.get("/health").status_code == 200
+            assert completed.wait(timeout=1)
+
+    assert "resample_warmup status=failed error_type=RuntimeError" in caplog.text

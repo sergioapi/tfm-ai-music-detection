@@ -11,6 +11,7 @@ from app.config import (
     DEFAULT_MAX_AUDIO_DURATION_SECONDS,
     DEFAULT_MAX_UPLOAD_SIZE_BYTES,
     DEFAULT_MEMORY_PROFILING_ENABLED,
+    DEFAULT_RESAMPLE_WARMUP_ENABLED,
     ApiSettings,
 )
 
@@ -27,6 +28,7 @@ def test_api_settings_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.allowed_audio_mime_types == DEFAULT_ALLOWED_AUDIO_MIME_TYPES
     assert settings.cors_allowed_origins == DEFAULT_CORS_ALLOWED_ORIGINS
     assert settings.memory_profiling_enabled is DEFAULT_MEMORY_PROFILING_ENABLED
+    assert settings.resample_warmup_enabled is DEFAULT_RESAMPLE_WARMUP_ENABLED
     assert settings.temp_dir is None
 
 
@@ -44,6 +46,7 @@ def test_api_settings_reads_environment_overrides(
     )
     monkeypatch.setenv("TEMP_DIR", str(tmp_path))
     monkeypatch.setenv("MEMORY_PROFILING_ENABLED", "true")
+    monkeypatch.setenv("RESAMPLE_WARMUP_ENABLED", "true")
 
     settings = ApiSettings.from_env()
 
@@ -57,6 +60,7 @@ def test_api_settings_reads_environment_overrides(
     )
     assert settings.temp_dir == tmp_path
     assert settings.memory_profiling_enabled is True
+    assert settings.resample_warmup_enabled is True
 
 
 @pytest.mark.parametrize(
@@ -69,6 +73,7 @@ def test_api_settings_reads_environment_overrides(
         ("MAX_AUDIO_DURATION_SECONDS", "nan", "greater than zero"),
         ("MAX_AUDIO_DURATION_SECONDS", "inf", "greater than zero"),
         ("MEMORY_PROFILING_ENABLED", "maybe", "boolean"),
+        ("RESAMPLE_WARMUP_ENABLED", "maybe", "boolean"),
     ],
 )
 def test_api_settings_rejects_invalid_numeric_values(
@@ -150,6 +155,7 @@ def _clear_api_env(monkeypatch: pytest.MonkeyPatch) -> None:
         "ALLOWED_AUDIO_MIME_TYPES",
         "CORS_ALLOWED_ORIGINS",
         "MEMORY_PROFILING_ENABLED",
+        "RESAMPLE_WARMUP_ENABLED",
         "TEMP_DIR",
     ):
         monkeypatch.delenv(name, raising=False)

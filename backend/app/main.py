@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
@@ -9,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
 from app.config import ApiSettings
+from app.inference.audio import warm_up_resampling
 from app.inference.errors import ModelArtifactError
 from app.inference.interfaces import InferenceService
 from app.inference.memory import MemoryProfiler
@@ -38,6 +40,7 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
+        warmup_task: asyncio.Task[None] | None = None
         application.state.inference_service = None
         application.state.model_ready = False
         try:
@@ -50,8 +53,19 @@ def create_app(
         else:
             application.state.inference_service = service
             application.state.model_ready = True
+            if api_settings.resample_warmup_enabled:
+                warmup_profiler = MemoryProfiler(
+                    enabled=api_settings.memory_profiling_enabled
+                )
+                warmup_task = asyncio.create_task(
+                    asyncio.to_thread(warm_up_resampling, warmup_profiler)
+                )
 
-        yield
+        try:
+            yield
+        finally:
+            if warmup_task is not None and not warmup_task.done():
+                warmup_task.cancel()
 
     application = FastAPI(
         title="AI Music Detection API",
