@@ -3,7 +3,10 @@ from __future__ import annotations
 import logging
 import os
 import secrets
+import sys
+from threading import Lock
 from dataclasses import dataclass
+from importlib.metadata import PackageNotFoundError, version
 from typing import Callable
 
 import psutil
@@ -31,11 +34,43 @@ class MemoryProfiler:
         self.enabled = enabled
         self._process_factory = process_factory
         self._process: psutil.Process | None = None
+        self._preprocess_profile_claimed = False
+        self._preprocess_profile_lock = Lock()
 
     def new_request_id(self) -> str | None:
         if not self.enabled:
             return None
         return secrets.token_hex(4).upper()
+
+    def log_runtime_versions(self) -> None:
+        """Log effective runtime versions once when diagnostic profiling is enabled."""
+        if not self.enabled:
+            return
+        package_versions = {
+            package: _package_version(package)
+            for package in ("librosa", "numpy", "scipy", "soxr", "numba", "llvmlite")
+        }
+        logger.info(
+            "runtime_profile python=%s librosa=%s numpy=%s scipy=%s soxr=%s "
+            "numba=%s llvmlite=%s",
+            sys.version.split()[0],
+            package_versions["librosa"],
+            package_versions["numpy"],
+            package_versions["scipy"],
+            package_versions["soxr"],
+            package_versions["numba"],
+            package_versions["llvmlite"],
+        )
+
+    def claim_preprocess_profile(self, request_id: str | None) -> bool:
+        """Allow the first profiled resample in this process to emit phase timings."""
+        if not self.enabled or request_id is None:
+            return False
+        with self._preprocess_profile_lock:
+            if self._preprocess_profile_claimed:
+                return False
+            self._preprocess_profile_claimed = True
+            return True
 
     def measure(
         self,
@@ -96,3 +131,12 @@ class MemoryProfiler:
             )
         except Exception:  # noqa: BLE001 - diagnostic logging must not break inference.
             return
+
+
+def _package_version(package: str) -> str:
+    try:
+        return version(package)
+    except PackageNotFoundError:
+        return "not-installed"
+    except Exception:  # noqa: BLE001 - diagnostics must not affect startup.
+        return "unavailable"

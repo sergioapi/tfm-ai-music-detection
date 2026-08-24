@@ -20,8 +20,10 @@ ServiceFactory = Callable[[], InferenceService]
 
 
 def _default_service_factory(memory_profiling_enabled: bool) -> AudioInferenceService:
+    memory_profiler = MemoryProfiler(enabled=memory_profiling_enabled)
+    memory_profiler.log_runtime_versions()
     return AudioInferenceService(
-        memory_profiler=MemoryProfiler(enabled=memory_profiling_enabled),
+        memory_profiler=memory_profiler,
     )
 
 

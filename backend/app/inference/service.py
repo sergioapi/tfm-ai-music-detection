@@ -105,7 +105,11 @@ class AudioInferenceService:
                 segmentation_seconds += _elapsed(segmentation_start)
 
                 preprocess_timing_callback = None
-                if profiling_request_id is not None and fragment_number == 1:
+                if (
+                    fragment_number == 1
+                    and fragment.sample_rate != self.config.target_sample_rate
+                    and self.memory_profiler.claim_preprocess_profile(profiling_request_id)
+                ):
                     preprocess_timing_callback = _preprocess_timing_callback(
                         self.memory_profiler,
                         profiling_request_id,

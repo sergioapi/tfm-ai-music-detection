@@ -234,12 +234,15 @@ def preprocess_fragment(
 
     if sample_rate != config.target_sample_rate:
         phase_start = _timing_start(timing_callback)
-        signal = librosa.resample(
+        resample_fn = librosa.resample
+        _record_timing(timing_callback, "resample_resolve", phase_start)
+        phase_start = _timing_start(timing_callback)
+        signal = resample_fn(
             signal,
             orig_sr=sample_rate,
             target_sr=config.target_sample_rate,
         ).astype(np.float32, copy=False)
-        _record_timing(timing_callback, "resample", phase_start)
+        _record_timing(timing_callback, "resample_execute", phase_start)
 
     phase_start = _timing_start(timing_callback)
     signal = _fix_length(signal, config.target_samples)
