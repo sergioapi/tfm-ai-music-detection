@@ -21,21 +21,25 @@ def test_disabled_memory_profiler_does_not_query_or_log(caplog) -> None:
     profiler = MemoryProfiler(enabled=False, process_factory=fail_process_factory)
     with caplog.at_level(logging.INFO):
         measurement = profiler.measure("A1B2C3D4", "start")
+        profiler.log_duration("preprocess_profile", "A1B2C3D4", 1, "total", 0.1)
 
     assert measurement is None
     assert "memory_profile" not in caplog.text
+    assert "preprocess_profile" not in caplog.text
 
 
 def test_enabled_memory_profiler_logs_phase_and_rss(caplog) -> None:
     profiler = MemoryProfiler(enabled=True, process_factory=FakeProcess)
     with caplog.at_level(logging.INFO):
         measurement = profiler.measure("A1B2C3D4", "after_decode", n_fragments=3)
+        profiler.log_duration("preprocess_profile", "A1B2C3D4", 1, "total", 0.1)
 
     assert measurement is not None
     assert measurement.phase == "after_decode"
     assert measurement.rss_mib == 32.0
     assert "memory_profile request=A1B2C3D4 phase=after_decode" in caplog.text
     assert "rss_mib=32.0" in caplog.text
+    assert "preprocess_profile request=A1B2C3D4 fragment_index=1 phase=total seconds=0.1000" in caplog.text
 
 
 def test_memory_profiler_failure_does_not_raise(caplog) -> None:

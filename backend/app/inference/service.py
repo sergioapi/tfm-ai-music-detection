@@ -104,11 +104,19 @@ class AudioInferenceService:
                 )
                 segmentation_seconds += _elapsed(segmentation_start)
 
+                preprocess_timing_callback = None
+                if profiling_request_id is not None and fragment_number == 1:
+                    preprocess_timing_callback = _preprocess_timing_callback(
+                        self.memory_profiler,
+                        profiling_request_id,
+                        fragment_number,
+                    )
                 preprocessing_start = time.perf_counter()
                 preprocessed = preprocess_fragment(
                     fragment.signal,
                     fragment.sample_rate,
                     self.config,
+                    timing_callback=preprocess_timing_callback,
                 )
                 preprocessing_seconds += _elapsed(preprocessing_start)
                 if _is_profile_fragment(fragment_number, fragment_count):
@@ -128,6 +136,14 @@ class AudioInferenceService:
                     )
                 )
                 mfcc_seconds += _elapsed(mfcc_start)
+                if profiling_request_id is not None and fragment_number == 1:
+                    self.memory_profiler.log_duration(
+                        "mfcc_profile",
+                        profiling_request_id,
+                        fragment_number,
+                        "total",
+                        _elapsed(mfcc_start),
+                    )
                 if _is_profile_fragment(fragment_number, fragment_count):
                     self.memory_profiler.measure(
                         profiling_request_id,
@@ -264,3 +280,20 @@ def _validate_timings(timings: InferenceTimings) -> None:
 
 def _is_profile_fragment(fragment_number: int, fragment_count: int) -> bool:
     return fragment_number == 1 or fragment_number % 5 == 0 or fragment_number == fragment_count
+
+
+def _preprocess_timing_callback(
+    profiler: MemoryProfiler,
+    request_id: str,
+    fragment_index: int,
+):
+    def _callback(phase: str, seconds: float) -> None:
+        profiler.log_duration(
+            "preprocess_profile",
+            request_id,
+            fragment_index,
+            phase,
+            seconds,
+        )
+
+    return _callback

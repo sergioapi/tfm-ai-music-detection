@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import math
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from collections.abc import Iterator
+from typing import Callable
 
 import librosa
 import numpy as np
@@ -204,13 +206,20 @@ def preprocess_fragment(
     audio: np.ndarray,
     sample_rate: int,
     config: InferenceConfig,
+    *,
+    timing_callback: Callable[[str, float], None] | None = None,
 ) -> np.ndarray:
+    total_start = _timing_start(timing_callback)
     if sample_rate <= 0:
         raise AudioValidationError(f"Invalid sample rate: {sample_rate}")
 
+    phase_start = _timing_start(timing_callback)
     signal = np.asarray(audio, dtype=np.float32)
+    _record_timing(timing_callback, "float32", phase_start)
     if signal.ndim == 2:
+        phase_start = _timing_start(timing_callback)
         signal = signal.mean(axis=1, dtype=np.float32)
+        _record_timing(timing_callback, "mono", phase_start)
     elif signal.ndim != 1:
         raise AudioValidationError(f"Expected mono or stereo fragment, found shape {signal.shape}")
 
@@ -219,18 +228,28 @@ def preprocess_fragment(
     _validate_finite(signal, "audio fragment")
 
     source_window_samples = int(round(sample_rate * config.fragment_duration_seconds))
+    phase_start = _timing_start(timing_callback)
     signal = _select_or_pad_window(signal, source_window_samples)
+    _record_timing(timing_callback, "select_or_pad", phase_start)
 
     if sample_rate != config.target_sample_rate:
+        phase_start = _timing_start(timing_callback)
         signal = librosa.resample(
             signal,
             orig_sr=sample_rate,
             target_sr=config.target_sample_rate,
         ).astype(np.float32, copy=False)
+        _record_timing(timing_callback, "resample", phase_start)
 
+    phase_start = _timing_start(timing_callback)
     signal = _fix_length(signal, config.target_samples)
+    _record_timing(timing_callback, "fix_length", phase_start)
+    phase_start = _timing_start(timing_callback)
     _validate_finite(signal, "preprocessed audio")
-    return signal.astype(np.float32, copy=False)
+    result = signal.astype(np.float32, copy=False)
+    _record_timing(timing_callback, "finalize", phase_start)
+    _record_timing(timing_callback, "total", total_start)
+    return result
 
 
 def _select_or_pad_window(signal: np.ndarray, window_samples: int) -> np.ndarray:
@@ -261,3 +280,22 @@ def _fix_length(signal: np.ndarray, target_samples: int) -> np.ndarray:
 def _validate_finite(values: np.ndarray, name: str) -> None:
     if not np.isfinite(values).all():
         raise AudioValidationError(f"{name} contains NaN or infinite values")
+
+
+def _record_timing(
+    timing_callback: Callable[[str, float], None] | None,
+    phase: str,
+    start: float | None,
+) -> None:
+    if timing_callback is None or start is None:
+        return
+    try:
+        timing_callback(phase, max(0.0, float(time.perf_counter() - start)))
+    except Exception:  # noqa: BLE001 - diagnostics must not break preprocessing.
+        return
+
+
+def _timing_start(timing_callback: Callable[[str, float], None] | None) -> float | None:
+    if timing_callback is None:
+        return None
+    return time.perf_counter()

@@ -74,3 +74,25 @@ class MemoryProfiler:
             f" {fields}" if fields else "",
         )
         return measurement
+
+    def log_duration(
+        self,
+        profile: str,
+        request_id: str | None,
+        fragment_index: int,
+        phase: str,
+        seconds: float,
+    ) -> None:
+        if not self.enabled or request_id is None:
+            return
+        try:
+            logger.info(
+                "%s request=%s fragment_index=%s phase=%s seconds=%.4f",
+                profile,
+                request_id,
+                fragment_index,
+                phase,
+                seconds,
+            )
+        except Exception:  # noqa: BLE001 - diagnostic logging must not break inference.
+            return
