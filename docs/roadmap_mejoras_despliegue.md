@@ -28,12 +28,12 @@ VeriSon es una prueba de concepto web desarrollada para un TFM sobre detección 
 ### Arquitectura y despliegue
 
 - **Frontend:** React, Vite y TypeScript, desplegado en Vercel en `https://verison-app.vercel.app`.
-- **Backend:** FastAPI sobre Python 3.11.9, desplegado actualmente en Render Free en `https://verison-api.onrender.com`.
+- **Backend:** FastAPI sobre Python 3.11.9, desplegado en Northflank Developer Sandbox (`Europe - West (London)`) en `https://api--verison-api--xb7vy98gqd48.code.run`.
 - **API pública:** `GET /health`, `GET /api/v1/model` y `POST /api/v1/analyze`.
 - **Configuración frontend:** `VITE_API_BASE_URL` determina el backend. La capa actual concatena esa base con `/api/v1/analyze`.
 - **Configuración backend:** variables como `MODEL_PATH`, `CORS_ALLOWED_ORIGINS`, `MAX_UPLOAD_SIZE_BYTES`, `MAX_AUDIO_DURATION_SECONDS`, `MEMORY_PROFILING_ENABLED`, `RESAMPLE_WARMUP_ENABLED` y `TEMP_DIR`.
 - **Artefacto:** `data/models/mfcc_svm_baseline.joblib` está versionado y el backend valida su estructura y calcula su SHA-256 al cargarlo.
-- **Despliegue como código:** no se encontraron `render.yaml`, `vercel.json`, `Dockerfile`, `Procfile` ni un runbook vigente del despliegue público. La configuración efectiva vive al menos parcialmente fuera del repositorio.
+- **Despliegue como código:** `deploy/backend/Dockerfile` y `deploy/backend/Dockerfile.dockerignore` empaquetan el backend de forma agnóstica al proveedor; el contrato operativo vigente se resume en `docs/despliegue_backend.md`. No se usan archivos específicos de proveedor.
 
 ### Modelo e inferencia
 
@@ -62,13 +62,13 @@ VeriSon es una prueba de concepto web desarrollada para un TFM sobre detección 
 
 ### Memoria y rendimiento
 
-El OOM principal se considera mitigado para el MVP gracias al streaming secuencial. Las pruebas públicas largas aportadas muestran que el procesamiento se completó con audios de aproximadamente 120, 225 y 256 s, incluida una canción de más de cuatro minutos. En Render Free se observaron picos RSS aproximados de 400–440 MiB, sin reproducir el OOM anterior.
+El OOM principal se considera mitigado para el MVP gracias al streaming secuencial. La evidencia histórica de Render Free registró picos RSS aproximados de 400–440 MiB sin reproducir el OOM anterior. En el entorno final Northflank (`0.2 vCPU`, `512 MiB`), un WAV de `256.130625 s` y 26 fragmentos completó con `200`, pico RSS `436.2 MiB`, sin OOM ni reinicio.
 
-En proceso caliente, se han observado aproximadamente 10 s para canciones de 120 s y 18–30 s para canciones de 225–256 s, según el estado del servicio. En frío, Render Free añade spin-up, inicialización de dependencias y costes extraordinarios de primera ejecución. La primera resolución y ejecución del resampling suma aproximadamente 129–130 s si el proceso no está calentado; la primera MFCC añade aproximadamente 12–14,5 s.
+Las mediciones de Render se conservan como referencia histórica y no se extrapolan. En Northflank, el mismo audio largo caliente tardó aproximadamente `5.75 s`; una petición fría observada tardó aproximadamente `101.27 s` (`90.25 s` de preprocessing y `10.32 s` de MFCC). Esta evidencia abre T03, pero no decide todavía warm-up, MFCC ni readiness.
 
 ### Tests y documentación inspeccionados
 
-El backend posee tests unitarios y de integración para configuración, salud, uploads, formatos, límites, temporales, carga de modelo, score, agregación, streaming, equivalencia con la lectura completa, MFCC y profiling. El frontend posee tests de componente y flujo principal. No existe una prueba E2E automatizada Vercel → backend público ni una prueba formal de concurrencia. `README.md` documenta el desarrollo local, pero no las URLs ni el contrato de producción actual. `docs/memoria_actualizacion.md`, documentos de selección y un benchmark local aún mencionan Hugging Face Spaces como destino previsto; deben alinearse una vez cerrado DG01.
+El backend posee tests unitarios y de integración para configuración, salud, uploads, formatos, límites, temporales, carga de modelo, score, agregación, streaming, equivalencia con la lectura completa, MFCC y profiling. El frontend posee tests de componente y flujo principal. No existe una prueba E2E automatizada Vercel → backend público ni una prueba formal de concurrencia. La prueba manual Vercel → Northflank realizada en T02 no sustituye la validación E2E final de T12.
 
 ## 3. Decisiones cerradas
 
@@ -89,7 +89,7 @@ Las siguientes decisiones no deben reabrirse durante esta fase salvo petición e
 
 ## 4. Evidencia experimental de despliegue
 
-La evidencia de este apartado combina lo comprobable en el repositorio con mediciones operacionales aportadas del entorno Render. No debe presentarse como un benchmark universal ni extrapolarse automáticamente a otro hosting. Estas pruebas demuestran procesamiento técnico, respuestas HTTP y comportamiento de memoria/latencia; no validan que la etiqueta predicha para una canción individual sea semánticamente verdadera.
+La evidencia de este apartado combina lo comprobable en el repositorio con mediciones operacionales de Render (históricas) y Northflank (hosting seleccionado). No constituye un benchmark universal ni permite extrapolar automáticamente entre proveedores. Estas pruebas demuestran procesamiento técnico, respuestas HTTP y comportamiento de memoria/latencia; no validan que la etiqueta predicha para una canción individual sea semánticamente verdadera.
 
 ### 4.1 Streaming y memoria
 
@@ -170,31 +170,40 @@ ejemplo mfcc_profile = 12.2967 s
 
 Las siguientes extracciones son mucho más rápidas. La causa interna no se ha diagnosticado. Su estudio solo se activa en el hosting elegido si la latencia fría resultante incumple el objetivo operativo acordado; no justifica cambiar `n_mfcc`, el algoritmo ni las 40 features.
 
+### 4.5 Validación inicial en Northflank
+
+El 27 de agosto de 2026 se validó `verison-api` en Northflank Developer Sandbox, región `Europe - West (London)`, plan `nf-compute-20` (`0.2 vCPU shared`, `512 MiB RAM`, una instancia y `1 GiB` efímero). La imagen Docker se construye desde la raíz con `deploy/backend/Dockerfile`; Python es `3.11.9` y las dependencias críticas están fijadas en `backend/requirements.txt`.
+
+- `GET /health` y `GET /api/v1/model` devolvieron `200`;
+- el SHA-256 del artefacto fue `ee4359aa9f9942a1179184a28834c5a1b6d901253ac82bce90a32472451a0336`;
+- WAV y MP3 cortos devolvieron `200`; CORS permitió `https://verison-app.vercel.app` y rechazó `https://example.com`;
+- el flujo manual Vercel → Northflank procesó un MP3 de aproximadamente 120 s y devolvió `200`; no equivale a T12;
+- el proceso `pid=3` siguió vivo y caliente tras aproximadamente 7 h 39 min sin inferencias; un MP3 posterior respondió en aproximadamente 0.76 s;
+- la facturación mostrada durante esta prueba fue “No usage / You have not accrued any costs yet”; es una observación puntual, no una garantía futura.
+
+Render permanece disponible temporalmente como rollback. La prueba fría y la decisión sobre sus aproximadamente `101.27 s` se tratan exclusivamente en T03.
+
 ## 5. Problemas pendientes conocidos
 
-1. No existe una decisión final sobre Render Free frente a otro hosting.
-2. Render Free puede perder el primer `POST /analyze` que despierta una instancia dormida; el frontend queda indefinidamente en “Analizando”.
-3. El frontend no aplica timeout/cancelación al POST ni recupera la UI ante una espera infinita; además, no comprueba disponibilidad antes del POST cuando el hosting necesita despertar, responsabilidad distinta y condicional.
+1. El frontend no aplica timeout/cancelación al POST ni recupera la UI ante una espera infinita; además, no comprueba disponibilidad antes del POST cuando el hosting necesita despertar, responsabilidad distinta y condicional.
 4. El warm-up validado tarda unos 130 s y su idoneidad operacional no está decidida.
 5. `/health` mezcla liveness y disponibilidad del modelo, pero no informa de warm-up en curso, completado o fallido.
-6. La primera MFCC cuesta 12–14,5 s en proceso frío y no está diagnosticada.
-7. Varias dependencias directas y críticas de ejecución no están fijadas; existe evidencia previa de `InconsistentVersionWarning` al cargar un artefacto creado con scikit-learn 1.8.0 desde 1.9.0.
-8. No hay un contrato de despliegue público reproducible y la documentación conserva referencias ya obsoletas a Hugging Face Spaces.
-9. No se ha medido el comportamiento con dos análisis simultáneos; con 512 MiB y picos de 400–440 MiB, el riesgo es concreto.
-10. La instrumentación temporal de memoria, runtime, preprocessing y MFCC continúa en el código y mantiene `psutil` como dependencia.
-11. No existe una validación E2E final del frontend público contra el backend final.
+4. La primera petición fría en Northflank registró aproximadamente 90.25 s de preprocessing y 10.32 s de MFCC; T03 debe separar y cerrar la estrategia operacional antes de decidir cambios.
+5. No se ha medido el comportamiento con dos análisis simultáneos; con 512 MiB y un pico observado de 436.2 MiB, el riesgo es concreto.
+6. La instrumentación temporal de memoria, runtime, preprocessing y MFCC continúa en el código y mantiene `psutil` como dependencia.
+7. No existe una validación E2E final del frontend público contra el backend final.
 
 ## 6. Inventario de mejoras
 
 | ID | Mejora | Clasificación | Prioridad | Estado | Dependencia principal |
 | -- | ------ | ------------- | --------- | ------ | --------------------- |
-| T01 | Evaluar y cerrar el hosting del backend | obligatoria | crítica | pendiente | ninguna |
-| T02 | Migrar y verificar el backend en el hosting elegido | condicional | alta | bloqueada | DG01 = cambiar hosting; fase inicial de T07 |
-| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | bloqueada | T07 cerrada; T02 si se activa |
+| T01 | Evaluar y cerrar el hosting del backend | obligatoria | crítica | completada | DG01 resuelta: Northflank seleccionado |
+| T02 | Migrar y verificar el backend en el hosting elegido | condicional | alta | completada | Northflank validado; Render retenido como rollback |
+| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | pendiente | T07 cerrada; siguiente tarea |
 | T04 | Acotar esperas del frontend y, si aplica, preparar el backend | obligatoria | crítica | bloqueada | T03 para presupuestos; T05 solo para preflight |
 | T05 | Separar liveness y readiness de forma mínima | condicional | alta | bloqueada | DG02/DG03; warm-up en background |
 | T06 | Diagnosticar y decidir la primera MFCC | condicional | media | condicional | DG03 tras T03 |
-| T07 | Fijar el contrato reproducible de runtime y despliegue | obligatoria | alta | bloqueada | T01; T02 para cerrarla si se migra |
+| T07 | Fijar el contrato reproducible de runtime y despliegue | obligatoria | alta | completada | Runtime y contrato Northflank verificados |
 | T08 | Medir concurrencia mínima en el entorno final | recomendable | media | bloqueada | T03, T04 y condicionales críticas activas |
 | T09 | Evaluar lectura directa `float32` | opcional | baja | condicional | DG05; evidencia de memoria/copia |
 | T10 | Evaluar un resampler alternativo | condicional | media | condicional | DG06; T03 |
@@ -236,18 +245,11 @@ El OOM principal ya está resuelto. Leer `float32` directamente podría reducir 
 
 ## 11. Decision gates
 
-### DG01 — Render Free frente a otro hosting
+### DG01 — Resuelta: Northflank seleccionado
 
-**Debe resolverse antes de implementar mitigaciones específicas de Render.**
+**Resuelta el 27 de agosto de 2026.** Northflank Developer Sandbox es el hosting seleccionado para el backend de la demo académica. La decisión se apoyó en la compatibilidad con el contenedor provider-agnostic, el plan `nf-compute-20` (`0.2 vCPU shared`, `512 MiB RAM`, una instancia y `1 GiB` efímero), la región `Europe - West (London)`, el servicio always-on observado y la validación funcional registrada en la sección 4.5. Render se conserva temporalmente como rollback.
 
-Evaluar con una matriz breve y evidencia vigente: CPU, RAM, free tier, coste, billing/tarjeta, scale-to-zero, cold start, timeout máximo de request, posibilidad/coste de mantener una instancia caliente, facilidad de despliegue, compatibilidad FastAPI, transporte del artefacto, complejidad y adecuación académica. Google Cloud Run puede evaluarse, pero no es la decisión predeterminada.
-
-Salidas válidas:
-
-- **Mantener Render Free:** T07 puede iniciarse y cerrarse sobre Render; se evalúa el preflight de T04 y DG02 usa sus tiempos reales.
-- **Cambiar hosting:** se inicia T07 con el runtime científico crítico, se activa T02 y después se cierra T07 con el contrato verificado del nuevo proveedor. T03 se mide de nuevo en destino antes de decidir warm-up, MFCC o readiness.
-
-DG01 solo condiciona el preflight de T04. El núcleo general que impide esperas infinitas no depende de la decisión de hosting.
+T02 verificó el contrato operativo en el destino. T03 debe volver a medir y decidir el comportamiento frío en Northflank; las mediciones de Render permanecen históricas. DG01 solo condiciona el preflight de T04: el núcleo general que impide esperas infinitas no depende de esta decisión.
 
 ### DG02 — Estrategia definitiva de warm-up/resampling
 
@@ -365,11 +367,11 @@ Reglas de dependencia:
 
 ### T01 — Evaluar y cerrar el hosting del backend
 
-**Estado:** pendiente\
+**Estado:** completada\
 **Clasificación:** obligatoria\
 **Prioridad:** crítica
 
-**Problema:** Render Free duerme la instancia, puede perder el primer POST y ejecuta el warm-up de resampling en unos 130 s con CPU/RAM muy limitadas. Desarrollar mitigaciones específicas antes de decidir infraestructura puede generar trabajo desechable.
+**Resultado:** DG01 seleccionó Northflank Developer Sandbox para `verison-api`; Render sigue disponible temporalmente como rollback. La evidencia y el contrato operativo se registran en la sección 4.5 y en `docs/despliegue_backend.md`.
 
 **Objetivo:** producir una decisión explícita y trazable: mantener Render Free o seleccionar otro hosting concreto para la demo académica.
 
@@ -403,11 +405,11 @@ Reglas de dependencia:
 
 ### T02 — Migrar y verificar el backend en el hosting elegido
 
-**Estado:** bloqueada\
+**Estado:** completada\
 **Clasificación:** condicional\
 **Prioridad:** alta
 
-**Problema:** si DG01 descarta Render, el backend debe existir en el destino antes de extraer conclusiones de cold start.
+**Resultado:** el mismo FastAPI, artefacto y contrato API se validaron en Northflank. Health, modelo/SHA-256, WAV, MP3, CORS permitido/rechazado, audio de 256.130625 s, permanencia caliente y flujo manual Vercel → Northflank funcionaron sin OOM ni reinicio. Los valores observados se conservan en la sección 4.5; no sustituyen T03 ni T12.
 
 **Objetivo:** desplegar el mismo FastAPI, modelo y contrato API en el hosting aprobado, con el menor cambio operativo posible.
 
@@ -441,7 +443,7 @@ Reglas de dependencia:
 
 ### T03 — Cerrar la estrategia operacional de cold start y resampling
 
-**Estado:** bloqueada\
+**Estado:** pendiente\
 **Clasificación:** obligatoria\
 **Prioridad:** alta
 
@@ -593,11 +595,11 @@ Reglas de dependencia:
 
 ### T07 — Fijar el contrato reproducible de runtime y despliegue
 
-**Estado:** bloqueada\
+**Estado:** completada\
 **Clasificación:** obligatoria\
 **Prioridad:** alta
 
-**Problema:** salvo scikit-learn, `backend/requirements.txt` no fija versiones. El joblib fue creado con 1.8.0 y ya existe evidencia de warning al abrirlo con 1.9.0. Tampoco se versiona el contrato efectivo de Render/Vercel y la documentación mantiene hosting previsto obsoleto. El runtime científico puede definirse antes de migrar, pero el contrato operativo solo puede verificarse en el proveedor real.
+**Resultado:** Python 3.11.9, las dependencias directas críticas, el Dockerfile, el artefacto, el SHA-256 y el contrato operativo de Northflank quedaron verificados y documentados en `docs/despliegue_backend.md`. `psutil` se mantiene temporalmente por profiling y su retirada corresponde a T11.
 
 **Objetivo:** ejecutar T07 en dos etapas cuando sea necesario: primero definir/fijar el runtime científico crítico y después verificar/documentar el contrato operativo del hosting definitivo, sin fijar indiscriminadamente todas las transitivas.
 
@@ -913,10 +915,10 @@ T12 debe preparar antes de ejecutar una matriz con: ID de caso, precondición, a
 
 Este es el backlog operativo. Las ramas “si se activa” no se implementan automáticamente.
 
-1. **T01 — Evaluar y cerrar el hosting del backend.**
-2. **Iniciar T07 — Definir/fijar el runtime científico crítico.** No marcarla completada todavía si DG01 exige migración.
-3. **Resolver la rama de infraestructura:** si se mantiene Render, cerrar T07 verificando su contrato real; si se cambia de hosting, ejecutar **T02 — Migrar y verificar el backend** y después cerrar T07 con la evidencia del nuevo proveedor.
-4. **T03 — Cerrar la estrategia operacional de cold start y resampling** en el hosting definitivo.
+1. **T01 — completada: Northflank seleccionado.**
+2. **T07 — completada: runtime y contrato operativo fijados.**
+3. **T02 — completada: backend validado en Northflank.**
+4. **T03 — Cerrar la estrategia operacional de cold start y resampling** en Northflank.
 5. **T10 — Evaluar un resampler alternativo**, solo si DG06 se activa; después volver a cerrar T03.
 6. **T06 — Diagnosticar y decidir la primera MFCC**, solo si DG03 se activa.
 7. **T05 — Separar liveness y readiness**, solo si permanece warm-up en background y DG04 lo exige.
@@ -930,9 +932,9 @@ Este es el backlog operativo. Las ramas “si se activa” no se implementan aut
 
 La próxima tarea debe ser:
 
-> **T01 — Evaluar y cerrar el hosting del backend**
+> **T03 — Cerrar la estrategia operacional de cold start y resampling en Northflank**
 
-Es la única tarea que evita trabajo potencialmente desechable. Hasta resolverla no conviene implementar el preflight de Render, readiness, warm-up de MFCC, cambio de resampler ni optimización `float32`. El siguiente chat debe limitarse a T01: recabar información vigente, comparar pocas alternativas plausibles, registrar una decisión y actualizar el estado del roadmap; no debe migrar.
+Debe partir de la evidencia fría y caliente ya recogida en Northflank, sin extrapolar las mediciones históricas de Render. T03 decidirá explícitamente la estrategia de `RESAMPLE_WARMUP_ENABLED` y, solo si procede, activará gates posteriores; no debe cambiar el modelo ni el preprocessing.
 
 ## 21. Qué NO merece la pena implementar ahora
 
@@ -982,13 +984,13 @@ Actualizar esta tabla solo con evidencia real. Una decisión documental puede re
 | ID | Estado | Fecha | Evidencia/commit | Notas |
 | -- | ------ | ----- | ---------------- | ----- |
 | ROADMAP | completada | 2026-08-25 | `docs/roadmap_mejoras_despliegue.md` | Inspección inicial; 12 tareas y seis decision gates definidos. |
-| T01 | pendiente | 2026-08-25 | — | Próxima tarea recomendada. |
-| T02 | bloqueada | 2026-08-25 | — | Solo DG01 = cambiar hosting; requiere la fase inicial de T07. |
-| T03 | bloqueada | 2026-08-25 | — | Espera hosting/runtime definitivos. |
+| T01 | completada | 2026-08-27 | DG01: Northflank Developer Sandbox seleccionado | Render queda temporalmente como rollback. |
+| T02 | completada | 2026-08-27 | Validación Northflank: health/model/SHA, WAV, MP3, CORS, largo y flujo Vercel | Sin OOM ni reinicio; no equivale a T12. |
+| T03 | pendiente | 2026-08-27 | Evidencia fría/caliente Northflank en sección 4.5 | Siguiente tarea; decide warm-up/resampling. |
 | T04 | bloqueada | 2026-08-25 | — | Núcleo general obligatorio tras T03; preflight condicional al hosting. |
 | T05 | bloqueada | 2026-08-25 | — | Condicional a warm-up en background. |
 | T06 | condicional | 2026-08-25 | — | Espera DG03. |
-| T07 | bloqueada | 2026-08-25 | — | Empieza tras T01; si se migra, solo se cierra después de T02. |
+| T07 | completada | 2026-08-27 | `backend/requirements.txt`, `deploy/backend/`, `docs/despliegue_backend.md` y validación Northflank | Contrato reproducible cerrado; `psutil` queda para T11. |
 | T08 | bloqueada | 2026-08-25 | — | Recomendable tras estabilizar entorno. |
 | T09 | condicional | 2026-08-25 | — | Espera DG05. |
 | T10 | condicional | 2026-08-25 | — | Espera DG06. |

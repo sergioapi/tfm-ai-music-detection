@@ -91,9 +91,20 @@ Para quedar funcional, el backend necesita el artefacto local:
 data/models/mfcc_svm_baseline.joblib
 ```
 
-Ese fichero esta ignorado por Git. Puede generarse con el flujo experimental
-MFCC, en particular con `python scripts/train_mfcc_svm.py` una vez disponibles
-las caracteristicas necesarias.
+El artefacto canónico está versionado en el repositorio. Puede regenerarse con
+el flujo experimental MFCC solo cuando una tarea lo autorice.
+
+## Despliegue actual
+
+El backend público se ejecuta en Northflank y el frontend en Vercel:
+
+- Backend: `https://api--verison-api--xb7vy98gqd48.code.run`
+- Frontend: `https://verison-app.vercel.app`
+
+El contrato reproducible de construcción, runtime, variables, health check,
+artefacto y rollback está en `docs/despliegue_backend.md`. El empaquetado usa
+`deploy/backend/Dockerfile` con contexto en la raíz del repositorio; no hay
+configuración específica de proveedor versionada.
 
 ## Frontend
 

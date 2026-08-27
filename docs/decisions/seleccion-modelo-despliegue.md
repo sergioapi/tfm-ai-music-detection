@@ -38,7 +38,7 @@ Se selecciona `MFCC + StandardScaler + SVM RBF` como modelo inicial para el MVP 
 
 ## Justificacion
 
-MFCC + SVM se selecciona porque obtiene mejores resultados en la mayoria de las metricas finales de test, logra dos aciertos mas, produce menos falsos positivos, presenta un artefacto mucho mas pequeno, tiene menos dependencias, evita cargar un encoder profundo y reduce el riesgo de cold start, memoria y despliegue. Para la integracion inicial con FastAPI y Hugging Face Spaces, MERT no aporta una mejora predictiva global que compense su mayor coste operacional.
+MFCC + SVM se selecciona porque obtiene mejores resultados en la mayoria de las metricas finales de test, logra dos aciertos mas, produce menos falsos positivos, presenta un artefacto mucho mas pequeno, tiene menos dependencias, evita cargar un encoder profundo y reduce el riesgo de cold start, memoria y despliegue. Hugging Face Spaces fue el destino previsto durante esta decisión inicial; el MVP se desplegó finalmente con FastAPI en Northflank, sin que ello reabra la comparación de modelos.
 
 Esta decision no afirma que MFCC generalice mejor. Los datos solo permiten afirmar que rindio ligeramente mejor dentro del test de AIME utilizado en el protocolo experimental.
 
@@ -72,7 +72,7 @@ Esta decision no afirma que MFCC generalice mejor. Los datos solo permiten afirm
 - Timeout aceptable para la experiencia web.
 - Numero de fragmentos por cancion.
 - Estrategia de agregacion por cancion.
-- Validacion operacional real en Hugging Face Spaces.
+- Validación operacional real del backend seleccionado (completada en Northflank; véase `docs/despliegue_backend.md`).
 
 ## Condiciones para revisar la decision
 
