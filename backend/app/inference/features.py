@@ -11,7 +11,7 @@ from app.inference.errors import PredictionError
 from app.inference.schemas import WarmupResult
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("uvicorn.error")
 
 
 def extract_mfcc_features(
