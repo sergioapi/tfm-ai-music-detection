@@ -6,12 +6,18 @@ from pathlib import Path
 from fastapi import APIRouter, File, HTTPException, Request, Response, UploadFile, status
 
 from app.api.mappers import analyze_response, model_info_response
-from app.api.schemas import AnalyzeResponse, HealthResponse, ModelInfoResponse
+from app.api.schemas import (
+    AnalyzeResponse,
+    HealthResponse,
+    ModelInfoResponse,
+    ReadinessResponse,
+)
 from app.api.uploads import uploaded_audio_path
 from app.config import ApiSettings
 from app.inference.audio import get_audio_duration_seconds
 from app.inference.errors import AudioDecodingError, AudioValidationError, PredictionError
 from app.inference.interfaces import InferenceService
+from app.readiness import StartupReadiness
 
 
 router = APIRouter()
@@ -26,6 +32,20 @@ def health(request: Request, response: Response) -> HealthResponse:
 
     response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
     return HealthResponse(status="degraded", model_ready=False)
+
+
+@router.get("/ready", response_model=ReadinessResponse)
+def ready(request: Request, response: Response) -> ReadinessResponse:
+    if not bool(getattr(request.app.state, "model_ready", False)):
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return ReadinessResponse(status="unavailable")
+
+    readiness = getattr(request.app.state, "startup_readiness", StartupReadiness.FAILED)
+    if readiness is StartupReadiness.READY:
+        return ReadinessResponse(status=readiness.value)
+
+    response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    return ReadinessResponse(status=readiness.value)
 
 
 @router.get("/api/v1/model", response_model=ModelInfoResponse)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections.abc import AsyncIterator, Callable
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,6 +16,7 @@ from app.inference.interfaces import InferenceService
 from app.inference.memory import MemoryProfiler
 from app.inference.service import AudioInferenceService
 from app.inference.warmups import run_startup_warmups
+from app.readiness import StartupReadiness, readiness_from_warmup_result
 
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ def create_app(
         application.state.inference_service = None
         application.state.model_ready = False
         application.state.startup_warmup_result = None
+        application.state.startup_readiness = None
         try:
             service = factory()
         except ModelArtifactError as exc:
@@ -56,6 +58,7 @@ def create_app(
             application.state.inference_service = service
             application.state.model_ready = True
             if api_settings.resample_warmup_enabled:
+                application.state.startup_readiness = StartupReadiness.PENDING
                 warmup_profiler = MemoryProfiler(
                     enabled=api_settings.memory_profiling_enabled
                 )
@@ -66,12 +69,16 @@ def create_app(
                         warmup_profiler,
                     )
                 )
+            else:
+                application.state.startup_readiness = StartupReadiness.READY
 
         try:
             yield
         finally:
             if warmup_task is not None and not warmup_task.done():
                 warmup_task.cancel()
+                with suppress(asyncio.CancelledError):
+                    await warmup_task
 
     application = FastAPI(
         title="AI Music Detection API",
@@ -83,7 +90,7 @@ def create_app(
             CORSMiddleware,
             allow_origins=list(api_settings.cors_allowed_origins),
             allow_credentials=False,
-            allow_methods=["POST"],
+            allow_methods=["GET", "POST"],
             allow_headers=[],
         )
     application.state.settings = api_settings
@@ -99,8 +106,16 @@ async def _run_startup_warmups(
     config: InferenceConfig,
     memory_profiler: MemoryProfiler,
 ) -> None:
-    application.state.startup_warmup_result = await asyncio.to_thread(
-        run_startup_warmups,
-        config,
-        memory_profiler,
-    )
+    try:
+        result = await asyncio.to_thread(
+            run_startup_warmups,
+            config,
+            memory_profiler,
+        )
+    except Exception:
+        logger.exception("Startup warm-ups failed unexpectedly")
+        application.state.startup_readiness = StartupReadiness.FAILED
+        return
+
+    application.state.startup_warmup_result = result
+    application.state.startup_readiness = readiness_from_warmup_result(result)
