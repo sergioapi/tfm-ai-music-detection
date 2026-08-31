@@ -48,7 +48,7 @@ VeriSon es una prueba de concepto web desarrollada para un TFM sobre detección 
 
 ### Flujo frontend actual
 
-`App.tsx` mantiene estados `idle`, `selected`, `analyzing`, `success` y `error`. Al pulsar “Analizar audio”, llama directamente a `analyzeAudio(file)`. La petición `fetch` al `POST /api/v1/analyze` no tiene timeout ni cancelación, una carencia de robustez general que puede dejar la UI esperando indefinidamente con cualquier proveedor. Tampoco existe un preflight de salud, mitigación distinta y condicionada a que el hosting final necesite despertar o comprobar el backend antes del envío. El frontend no reintenta el POST, muestra errores de red y API mediante mensajes controlados y permite analizar otra canción mediante reset. Los tests cubren el flujo feliz, error de red, formatos y presentación del resultado, pero no las esperas infinitas, el despertar del backend ni una transición separada “iniciando servicio” → “analizando”.
+`App.tsx` mantiene estados `idle`, `selected`, `analyzing`, `success` y `error`. Al pulsar “Analizar audio”, llama directamente a `analyzeAudio(file)`. La petición `fetch` al `POST /api/v1/analyze` no tiene timeout ni cancelación, una carencia de robustez general que puede dejar la UI esperando indefinidamente. Tampoco existe aún el preflight de readiness que, tras un deploy/restart, debe esperar al warm-up antes del envío. El frontend no reintenta el POST, muestra errores de red y API mediante mensajes controlados y permite analizar otra canción mediante reset. Los tests cubren el flujo feliz, error de red, formatos y presentación del resultado, pero no las esperas finitas ni la transición separada “Preparando el servicio” → “Analizando”.
 
 ### Flujo backend actual
 
@@ -185,10 +185,10 @@ Render permanece disponible temporalmente como rollback. La prueba fría y la de
 
 ## 5. Problemas pendientes conocidos
 
-1. El frontend no aplica timeout/cancelación al POST ni recupera la UI ante una espera infinita; además, no comprueba disponibilidad antes del POST cuando el hosting necesita despertar, responsabilidad distinta y condicional.
-4. El warm-up validado tarda unos 130 s y su idoneidad operacional no está decidida.
-5. `/health` mezcla liveness y disponibilidad del modelo, pero no informa de warm-up en curso, completado o fallido.
-4. La primera petición fría en Northflank registró aproximadamente 90.25 s de preprocessing y 10.32 s de MFCC; T03 debe separar y cerrar la estrategia operacional antes de decidir cambios.
+1. El frontend no aplica timeout/cancelación al POST ni recupera la UI ante una espera infinita; además, aún no consulta readiness antes del POST para esperar a que termine el warm-up después de un deploy/restart.
+2. La decisión de alcance es consolidar el warm-up; T03 debe validarlo y medir su presupuesto real en Northflank.
+3. `/health` mezcla liveness y disponibilidad del modelo, pero no informa de warm-up en curso, completado o fallido.
+4. La primera petición fría en Northflank registró aproximadamente 90.25 s de preprocessing y 10.32 s de MFCC; el coste residual de MFCC se acepta para el MVP salvo nueva evidencia bloqueante.
 5. No se ha medido el comportamiento con dos análisis simultáneos; con 512 MiB y un pico observado de 436.2 MiB, el riesgo es concreto.
 6. La instrumentación temporal de memoria, runtime, preprocessing y MFCC continúa en el código y mantiene `psutil` como dependencia.
 7. No existe una validación E2E final del frontend público contra el backend final.
@@ -199,14 +199,14 @@ Render permanece disponible temporalmente como rollback. La prueba fría y la de
 | -- | ------ | ------------- | --------- | ------ | --------------------- |
 | T01 | Evaluar y cerrar el hosting del backend | obligatoria | crítica | completada | DG01 resuelta: Northflank seleccionado |
 | T02 | Migrar y verificar el backend en el hosting elegido | condicional | alta | completada | Northflank validado; Render retenido como rollback |
-| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | pendiente | T07 cerrada; siguiente tarea |
-| T04 | Acotar esperas del frontend y, si aplica, preparar el backend | obligatoria | crítica | bloqueada | T03 para presupuestos; T05 solo para preflight |
-| T05 | Separar liveness y readiness de forma mínima | condicional | alta | bloqueada | DG02/DG03; warm-up en background |
-| T06 | Diagnosticar y decidir la primera MFCC | condicional | media | condicional | DG03 tras T03 |
+| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | pendiente | Consolidar warm-up de resampling en Northflank |
+| T04 | Acotar esperas del frontend y, si aplica, preparar el backend | obligatoria | crítica | bloqueada | T03/T05 para presupuestos y preflight de readiness |
+| T05 | Separar liveness y readiness de forma mínima | condicional | alta | pendiente | Activada: warm-up en background confirmado |
+| T06 | Diagnosticar y decidir la primera MFCC | condicional | media | descartada | Omitida para el MVP; no hay evidencia bloqueante |
 | T07 | Fijar el contrato reproducible de runtime y despliegue | obligatoria | alta | completada | Runtime y contrato Northflank verificados |
 | T08 | Medir concurrencia mínima en el entorno final | recomendable | media | bloqueada | T03, T04 y condicionales críticas activas |
 | T09 | Evaluar lectura directa `float32` | opcional | baja | condicional | DG05; evidencia de memoria/copia |
-| T10 | Evaluar un resampler alternativo | condicional | media | condicional | DG06; T03 |
+| T10 | Evaluar un resampler alternativo | condicional | media | descartada | Se mantiene `soxr_hq`; no hay evidencia bloqueante |
 | T11 | Retirar instrumentación temporal y cerrar observabilidad mínima | obligatoria | alta | bloqueada | investigaciones y mediciones terminadas |
 | T12 | Ejecutar y documentar la validación E2E final | obligatoria | crítica | bloqueada | T01, T03, T04, T07, T11; condicionales activas; T08 según decisión |
 
@@ -215,13 +215,13 @@ Distribución revisada: **12 tareas: 6 obligatorias, 1 recomendable, 1 opcional 
 ## 7. Mejoras obligatorias
 
 - **T01 — Hosting:** sin un entorno definitivo no puede cerrarse el despliegue ni decidirse qué mitigaciones de cold start tienen sentido.
-- **T03 — Cold start/resampling:** el warm-up funciona, pero falta escoger explícitamente entre no usarlo, mantenerlo o activar la evaluación acotada de otra ruta. El MVP no debe quedar con comportamiento frío ambiguo.
+- **T03 — Cold start/resampling:** consolidar el warm-up sintético de la ruta actual tras deploy/restart y medirlo en Northflank; no se evalúa otro resampler.
 - **T04 — Espera finita del frontend:** cualquier petición de análisis debe terminar en éxito técnico o error controlado, sin dejar la UI indefinidamente en “Analizando”. Este núcleo de timeout, cancelación y recuperación es independiente de Render. El preflight para despertar el backend no forma parte obligatoria de todas las ramas.
 - **T07 — Reproducibilidad:** el entorno científico y el contrato de despliegue deben ser repetibles para evitar cambios silenciosos e incompatibilidad del joblib.
 - **T11 — Limpieza:** los hooks diagnósticos se introdujeron como temporales y no deben quedar indefinidamente en la versión final.
 - **T12 — E2E final:** es la evidencia de que el sistema público completo funciona en frío, en caliente, con límites, errores y formatos reales.
 
-T05 y la parte de preflight de T04 pueden ser imprescindibles para cerrar una rama concreta, pero siguen condicionadas al hosting y al warm-up. Un proveedor sin spin-down problemático puede hacer innecesario `ensureBackendReady()`, pero no elimina la obligación de acotar el POST y recuperar la UI ante una petición que no termina.
+T05 y el preflight de T04 están activados porque el warm-up permanecerá en background. No se usan para despertar Northflank: esperan a que el proceso recién creado termine el warm-up antes de enviar el único POST. El timeout/cancelación y la recuperación de la UI siguen siendo obligatorios con cualquier hosting.
 
 ## 8. Mejoras recomendables
 
@@ -238,10 +238,10 @@ El OOM principal ya está resuelto. Leer `float32` directamente podría reducir 
 ## 10. Mejoras condicionales
 
 - **T02 — Migración:** se activa únicamente si DG01 concluye que Render Free no es adecuado y el usuario aprueba un destino concreto.
-- **T04 — Subalcance de preflight:** `ensureBackendReady()`, los GET de disponibilidad y sus reintentos se activan si el hosting final puede dormir, pierde la primera petición o necesita un despertar explícito. Si sirve el primer POST de forma fiable, se descarta solo este subalcance; el timeout/cancelación del POST y la recuperación de la UI permanecen obligatorios.
-- **T05 — Readiness:** se activa si se mantiene cualquier warm-up en background y “HTTP vivo” no equivale a “inferencia preparada” para el flujo frontend/operacional.
-- **T06 — Primera MFCC:** se activa si, ya en el hosting final y tras cerrar resampling, sus 12–14,5 s fríos o la latencia total incumplen el objetivo aceptado. El orden obligatorio es diagnóstico → separación de costes → decisión.
-- **T10 — Resampler alternativo:** se activa solo si el resampler actual y sus opciones de warm-up no satisfacen el objetivo operacional en el hosting final. No se activa por curiosidad ni por el tiempo medido exclusivamente en Render Free si se va a migrar.
+- **T04 — Subalcance de preflight:** activado. `ensureBackendReady()` hará GET idempotentes y acotados al endpoint de readiness tras deploy/restart; nunca reintenta el POST.
+- **T05 — Readiness:** activada porque “HTTP vivo” no equivale a “inferencia preparada” mientras el warm-up se ejecuta en background.
+- **T06 — Primera MFCC:** descartada para el MVP salvo nueva evidencia bloqueante.
+- **T10 — Resampler alternativo:** descartada para el MVP; se mantiene `soxr_hq` con warm-up.
 
 ## 11. Decision gates
 
@@ -253,28 +253,17 @@ T02 verificó el contrato operativo en el destino. T03 debe volver a medir y dec
 
 ### DG02 — Estrategia definitiva de warm-up/resampling
 
-Se resuelve en T03 sobre el hosting definitivo. Opciones:
+**Decisión de alcance:** consolidar el warm-up sintético existente de la ruta `librosa.resample`/`soxr_hq` como mecanismo de startup. Northflank se mantiene caliente en operación normal; tras deploy/restart evita que el primer usuario pague el coste frío dominante del resampling. El warm-up no ejecuta MFCC: puede permanecer un coste frío residual de la primera MFCC, aceptado para el MVP y sin investigación salvo nueva evidencia bloqueante.
 
-1. warm-up desactivado porque el coste frío es aceptable;
-2. warm-up de resampling activado porque el beneficio compensa su duración y consumo;
-3. instancia mantenida caliente u otra propiedad del hosting evita necesitarlo;
-4. el enfoque actual es inaceptable y activa DG06/T10.
-
-La salida debe registrar el presupuesto/criterio usado y el valor efectivo de `RESAMPLE_WARMUP_ENABLED`. No se repite el experimento que ya demostró que el warm-up calienta la ruta.
+T03 debe validar esta configuración con `RESAMPLE_WARMUP_ENABLED=true` mediante restart controlado, registrar su presupuesto y mantener el mismo preprocessing, resampler, MFCC, modelo y features. No se usa audio real como warm-up. T05 debe consolidar después el contrato de readiness: mientras no exista, `/health` puede devolver `200` durante el warm-up. La configuración definitiva de release será warm-up habilitado más readiness implementada; T03 no requiere mantener un release final público intermedio con warm-up habilitado y sin readiness.
 
 ### DG03 — Primera MFCC
 
-Tras cerrar resampling, comparar la latencia fría total con el objetivo de la demo:
-
-- si es aceptable, descartar T06;
-- si no es aceptable y MFCC representa una parte material, activar T06;
-- si se decide precarga/warm-up de MFCC, reevaluar DG04/T05.
-
-No cambiar MFCC, `n_mfcc`, mean/std ni las 40 features.
+**Decisión de alcance:** T06 queda descartada para este MVP. No se investigará, precargará ni modificará la primera MFCC salvo nueva evidencia bloqueante. No cambiar MFCC, `n_mfcc`, mean/std ni las 40 features.
 
 ### DG04 — Readiness
 
-Si existe warm-up en background, decidir si `/health` debe seguir siendo liveness, convertirse en readiness o coexistir con un endpoint mínimo separado. La decisión debe favorecer el contrato más pequeño que permita al preflight condicional de T04 saber cuándo puede enviar un único POST. Si no hay warm-up o la latencia fría aceptada permite servir inmediatamente, T05 y el uso de readiness desde T04 se descartan; el timeout/cancelación general del POST permanece.
+**Decisión de alcance:** mantener `/health` como liveness/modelo y añadir en T05 un endpoint mínimo de readiness que represente el estado del warm-up. T04 lo consultará antes del único POST para esperar un deploy/restart, no para despertar una instancia dormida. Si el warm-up falla, el endpoint debe permitir terminar el preflight con un error controlado sin filtrar detalles internos.
 
 ### DG05 — Lectura `float32`
 
@@ -282,7 +271,7 @@ Activar T09 únicamente ante evidencia de que una copia/uso de memoria residual 
 
 ### DG06 — Posible cambio de resampler
 
-Activar T10 solo después de DG01 y de comprobar que la estrategia actual no cumple el objetivo. Comparar coste frío/caliente, memoria, soporte y equivalencia numérica sobre un corpus representativo. Si no supera el enfoque actual sin regresiones, mantener `soxr_hq`.
+**Decisión de alcance:** T10 queda descartada para el MVP. Se conserva `soxr_hq` y el warm-up de su ruta actual; no se evaluará un resampler alternativo salvo nueva evidencia bloqueante.
 
 ## 12. Dependencias entre tareas
 
@@ -345,8 +334,8 @@ Reglas de dependencia:
 ### Fase B — Cerrar disponibilidad en frío
 
 - **Objetivo:** definir el comportamiento desde proceso frío hasta inferencia utilizable.
-- **Orden:** T03 → T10 si se activa → T06 si se activa → T05 si se activa → T04 siempre para robustez general y con preflight solo si se activa.
-- **Decisiones cerradas:** resampling/warm-up, MFCC, readiness, presupuestos finitos del frontend y, cuando corresponda, estrategia para despertar el backend.
+- **Orden:** T03 → T05 → T04 → T08 → T09 solo si T08 activa DG05.
+- **Decisiones de alcance:** warm-up de resampling actual; T05/T04 activos; T06/T10 descartados; presupuestos finitos y capacidad se cerrarán en sus tareas respectivas.
 - **Salida:** toda petición abandona la espera en tiempo finito; si hay cold start problemático, el flujo de preparación también queda acotado y nunca duplica el POST.
 
 ### Fase C — Robustez proporcional y limpieza
@@ -447,27 +436,27 @@ Reglas de dependencia:
 **Clasificación:** obligatoria\
 **Prioridad:** alta
 
-**Problema:** el warm-up elimina el coste frío de resampling, pero tarda unos 130 s en Render y está desactivado por defecto. No existe una decisión operativa final.
+**Problema:** Northflank evita el spin-down periódico, pero un deploy/restart crea un proceso frío. La primera inferencia fría observada tardó aproximadamente 101 s; el warm-up sintético debe consolidarse para que el primer usuario no pague el coste frío dominante del resampling. Puede persistir un coste frío residual de MFCC, aceptado para el MVP.
 
-**Objetivo:** medir el proceso frío en el hosting definitivo y escoger explícitamente la estrategia mínima de resampling/cold start.
+**Objetivo:** validar el warm-up sintético de resampling al startup, sin cambiar la ruta de producción, y entregar a T05 la evidencia necesaria para que el release final lo use junto con readiness.
 
 **Justificación:** una solución técnicamente eficaz puede ser inadecuada si el usuario cree que el servicio está listo durante más de dos minutos.
 
 **Dependencias:** T07 cerrada; por tanto, T02 completada y verificada previamente si se activa la migración.\
-**Decision gate previo:** DG01 resuelto. Esta tarea resuelve DG02 y alimenta DG03/DG06.\
+**Decision gate previo:** DG01 resuelto; DG02 ya fija consolidar el warm-up.\
 **Condición de activación:** siempre, en el entorno final.
 
-**Alcance:** proceso realmente frío; tiempo hasta liveness, carga de modelo, warm-up si se evalúa, primera inferencia y segunda inferencia; memoria; decisión `RESAMPLE_WARMUP_ENABLED`; criterio de latencia aceptable acordado; registrar si el hosting mantiene instancia caliente.
+**Alcance:** validar `RESAMPLE_WARMUP_ENABLED=true` mediante restart controlado en Northflank; conservar la señal sintética mínima 48 kHz → 16 kHz que llama a la misma ruta `librosa.resample`/`soxr_hq`; medir startup, warm-up y primera/segunda inferencia tras restart; conservar la instrumentación temporal necesaria. T05 representa después el estado del warm-up y T04 espera ese estado antes del POST. T03 no declara como release final un despliegue público con warm-up habilitado y sin readiness.
 
 **Fuera de alcance:** volver a demostrar que el warm-up calienta soxr, cambiar resampler directamente, cambiar preprocessing o modelo.
 
 **Áreas probablemente afectadas:** configuración de despliegue, `backend/app/config.py`, `backend/app/main.py` solo si la decisión requiere consolidar/retirar el flag, tests de lifecycle y docs.
 
-**Cambios conceptuales esperados:** seleccionar no warm-up, warm-up actual, instancia caliente o activar T10. Si activa T10, T03 queda pendiente de cierre hasta revalidar esa alternativa.
+**Cambios conceptuales esperados:** consolidar el warm-up actual y registrar su duración; no se activa T10 y no se modifica preprocessing.
 
 **Pruebas futuras:** al menos dos ciclos fríos comparables, warm request de control, audio que requiera 48→16 kHz, captura de estado y tiempos.
 
-**Criterios de aceptación:** estrategia definitiva y valor de configuración registrados; mediciones del hosting final; criterio de éxito explícito; núcleo general de T04 planificado como obligatorio y subalcance de preflight de T04/T05/T06/T10 marcados activos o descartados según sus gates; ninguna afirmación de probabilidad.
+**Criterios de aceptación:** warm-up validado con `RESAMPLE_WARMUP_ENABLED=true` en restart controlado de Northflank; duración y comportamiento tras restart registrados; mismo preprocessing y resampler; coste frío residual de MFCC aceptado sin activar T06; T05/T04 preparados para consumir readiness; ninguna afirmación de probabilidad.
 
 **Riesgos:** confundir spin-up de proveedor con lazy loading, medir un proceso ya caliente o optimizar para una única observación.
 
@@ -485,15 +474,15 @@ Reglas de dependencia:
 **Clasificación:** obligatoria; el preflight es un subalcance condicional\
 **Prioridad:** crítica
 
-**Problema:** el `POST /api/v1/analyze` no tiene timeout/cancelación y cualquier petición que no termine puede dejar el frontend indefinidamente en “Analizando”, con independencia del proveedor. Además, en Render dormido se ha observado que el primer POST despierta el servicio sin llegar a inferencia; este segundo problema depende del hosting.
+**Problema:** el `POST /api/v1/analyze` no tiene timeout/cancelación y cualquier petición que no termine puede dejar el frontend indefinidamente en “Analizando”. Tras un deploy/restart de Northflank, el warm-up debe terminar antes de enviar el archivo.
 
-**Objetivo:** garantizar que toda petición abandona la espera en tiempo finito, recupera un estado de UI utilizable y nunca duplica el análisis. Solo si el hosting final lo requiere, despertar/comprobar el backend mediante GET idempotente antes de enviar el archivo una única vez.
+**Objetivo:** garantizar que toda petición abandona la espera en tiempo finito, recupera un estado de UI utilizable y nunca duplica el análisis. El preflight consulta readiness mediante GET antes de enviar el archivo una única vez.
 
-**Justificación:** timeout, cancelación, error finito y recuperación son robustez general y siguen siendo útiles fuera de Render. El preflight evita específicamente que un proveedor con scale-to-zero o cold start problemático use el POST con archivo como petición de despertar.
+**Justificación:** timeout, cancelación, error finito y recuperación son robustez general. El preflight evita que el primer usuario posterior a deploy/restart pague mediante su POST el coste frío dominante del resampling; no elimina el posible coste frío residual de MFCC aceptado para el MVP.
 
 **Dependencias:** T03 para fijar presupuestos temporales compatibles con el entorno final; T05 únicamente si se activa el preflight y necesita readiness.\
 **Decision gate previo:** ninguno para el núcleo general; DG01/DG02 y el contrato health/readiness definitivo solo para el preflight.\
-**Condición de activación:** el núcleo de timeout/cancelación, error finito y recuperación se implementa siempre. `ensureBackendReady()`, el preflight y los reintentos GET se activan solo ante spin-down, scale-to-zero, primer POST no fiable o despertar explícito en el hosting final.
+**Condición de activación:** el núcleo de timeout/cancelación, error finito y recuperación se implementa siempre. `ensureBackendReady()`, el preflight y los reintentos GET están activados para esperar al warm-up después de deploy/restart.
 
 **Alcance:** como núcleo general, timeout/cancelación controlada del POST basado en el límite real, error accionable, salida de `analyzing`, reset y reintento manual. Si el gate de hosting activa el subalcance: `ensureBackendReady()` con timeout por intento, reintentos solo de GET idempotentes, máximo total, backoff sencillo acotado, estado “Iniciando el servicio…” seguido de “Analizando…” y posible prewarm al cargar sin bloquear la UI.
 
@@ -519,19 +508,19 @@ Reglas de dependencia:
 
 ### T05 — Separar liveness y readiness de forma mínima
 
-**Estado:** bloqueada\
+**Estado:** pendiente\
 **Clasificación:** condicional\
 **Prioridad:** alta
 
 **Problema:** `model_ready=True` se establece antes de agendar el warm-up; `/health` devuelve `200` aunque la primera inferencia todavía afrontaría el coste que se pretende evitar.
 
-**Objetivo:** ofrecer un contrato mínimo y comprobable que distinga proceso HTTP vivo de servicio preparado, solo si el flujo final lo necesita.
+**Objetivo:** consolidar el contrato mínimo y comprobable que distingue proceso HTTP vivo de servicio preparado, necesario para que el release final use correctamente el warm-up validado en T03.
 
 **Justificación:** el preflight condicional de T04 no puede decidir cuándo enviar el POST si health declara listo prematuramente. El timeout general de T04 no depende de esta tarea.
 
-**Dependencias:** T03 y T06 si se activa.\
+**Dependencias:** T03.\
 **Decision gate previo:** DG04; al menos un warm-up final en background.\
-**Condición de activación:** liveness y capacidad de inferencia rápida no equivalentes.
+**Condición de activación:** activada: el warm-up de resampling se mantiene en background y liveness no equivale a inferencia preparada.
 
 **Alcance:** estado explícito `pending/completed/failed` o equivalente; contrato de endpoint mínimo; fallo del warm-up visible sin filtrar detalles; coordinación lifecycle; tests de transición; decidir si `/health` queda como liveness y se añade readiness o si se amplía su semántica compatible.
 
@@ -541,7 +530,7 @@ Reglas de dependencia:
 
 **Cambios conceptuales esperados:** readiness depende del modelo y de todos los warm-ups seleccionados; liveness no ejecuta inferencia.
 
-**Pruebas futuras:** warm-up desactivado, en curso, completado, fallido, cancelación de shutdown y modelo no disponible.
+**Pruebas futuras:** warm-up desactivado, en curso, completado, fallido, modelo no disponible y shutdown limpio durante un warm-up en curso: sin espera indefinida, excepción no controlada ni estado de lifecycle incoherente. No se exige detener de forma forzada el trabajo nativo ya iniciado dentro de `asyncio.to_thread`.
 
 **Criterios de aceptación:** estado no ambiguo; el preflight de T04 sabe cuándo enviar el POST; fallo termina en error controlado; no se ejecuta audio real como probe; solución pequeña.
 
@@ -557,13 +546,13 @@ Reglas de dependencia:
 
 ### T06 — Diagnosticar y decidir la primera MFCC
 
-**Estado:** condicional\
+**Estado:** descartada\
 **Clasificación:** condicional\
 **Prioridad:** media
 
 **Problema:** la primera extracción MFCC tarda 12–14,5 s en el proceso frío observado; no se conoce la distribución interna del coste.
 
-**Objetivo:** determinar la causa sin alterar el algoritmo y decidir si aceptar, precargar o calentar la misma ruta.
+**Decisión:** se omite para el MVP. La primera MFCC no se investigará ni modificará salvo nueva evidencia bloqueante.
 
 **Justificación:** 12–14,5 s puede ser tolerable en una demo tras eliminar los 130 s de resampling; no debe optimizarse antes de medir el hosting final.
 
@@ -709,13 +698,13 @@ Reglas de dependencia:
 
 ### T10 — Evaluar un resampler alternativo
 
-**Estado:** condicional\
+**Estado:** descartada\
 **Clasificación:** condicional\
 **Prioridad:** media
 
 **Problema:** `soxr_hq` presenta un coste inicial extraordinario en Render Free; el warm-up puede no ser operacionalmente aceptable.
 
-**Objetivo:** comparar una alternativa mínima solo cuando el entorno final demuestre que la ruta actual no cumple el objetivo.
+**Decisión:** se omite para el MVP. Se mantiene `soxr_hq` junto con el warm-up de su ruta actual; no se evaluará una alternativa salvo nueva evidencia bloqueante.
 
 **Justificación:** cambiar resampling puede afectar directamente las features y scores, por lo que no es una optimización por defecto.
 
@@ -757,11 +746,11 @@ Reglas de dependencia:
 
 **Justificación:** la instrumentación cumplió su función, añade dependencia/ramas y puede generar ruido; retirarla antes de medir perdería evidencia necesaria.
 
-**Dependencias:** T03/T06/T08/T09/T10 completadas, descartadas u omitidas justificadamente.\
+**Dependencias:** T03, T04, T05 y T08 completadas; T06/T10 descartadas y T09 completada, descartada u omitida justificadamente.\
 **Decision gate previo:** ninguna investigación pendiente necesita profiling.\
 **Condición de activación:** siempre antes de T12.
 
-**Alcance:** inventariar consumidores; retirar profiling por fragmento y runtime temporal; decidir si conservar solo tiempos de respuesta ya pertenecientes al contrato, logs de startup/modelo y estado/duración final de warm-up; eliminar `psutil` si ninguna métrica final lo usa; simplificar flags/config/tests; actualizar docs.
+**Alcance:** inventariar consumidores; retirar `MEMORY_PROFILING_ENABLED`, `MemoryProfiler`, `psutil`, `memory_profile`, `runtime_profile`, `preprocess_profile`, `mfcc_profile`, RSS por fragmento, request IDs y sus ramas/tests/configuración diagnóstica si ya no son necesarios. Conservar mediante `logging` solo carga/fallo de modelo, warm-up `started/completed/failed` con duración, errores reales de análisis y, si se justifica, un log compacto de análisis completado.
 
 **Fuera de alcance:** introducir OpenTelemetry, Prometheus, Sentry, dashboards o rehacer logging.
 
@@ -773,7 +762,7 @@ Reglas de dependencia:
 
 **Criterios de aceptación:** cada instrumento tiene decisión; no quedan flags muertos; `psutil` eliminado si no se usa; logs suficientes para saber startup/warm-up/error; suite pasa.
 
-**Riesgos:** retirar antes de T08/T06 o eliminar observabilidad necesaria para T12.
+**Riesgos:** retirar antes de T03/T04/T05/T08 o eliminar observabilidad necesaria para T12.
 
 **Rollback:** restaurar temporalmente profiling mediante commit anterior ante una regresión concreta.
 
@@ -829,8 +818,8 @@ No ejecutar estas tareas antes de DG01:
 | ------- | -------------------------------------- |
 | Subalcance de preflight de T04 | Un proveedor que acepte el primer POST de forma fiable o no duerma la instancia puede no necesitar `ensureBackendReady()` ni reintentos GET. El núcleo obligatorio de timeout/cancelación y recuperación de la UI no desaparece. |
 | T05 readiness de warm-up | Si no hay warm-up en background o el servicio se mantiene caliente, liveness y readiness pueden coincidir para este MVP. |
-| T06 warm-up/precarga de MFCC | Más CPU puede reducir 12–14,5 s a un coste aceptable. Primero volver a medir. |
-| T10 resampler alternativo | El coste extremo observado puede ser específico del runtime/CPU de Render Free. |
+| T06 warm-up/precarga de MFCC | Descartada para el MVP salvo nueva evidencia bloqueante. |
+| T10 resampler alternativo | Descartada para el MVP; se conserva `soxr_hq` con warm-up. |
 | Intervalos y presupuesto del preflight GET | Pueden desaparecer si no hay preflight y, si existe, deben derivarse del cold start del destino final, no copiar los ~130 s de Render. El timeout general del POST sigue siendo necesario y se ajusta a la duración válida del análisis. |
 | T09 `float32` por presión de RAM | Más RAM puede eliminar el único motivo operacional para asumir riesgo numérico. |
 
@@ -856,7 +845,7 @@ T07 y T12 no desaparecen con un cambio de hosting; se vuelven más importantes. 
 | RSS/`psutil` | T03, T08, T09, T10 | retirar en T11 si no queda requisito operativo |
 | `runtime_profile` | T07 y diagnóstico reproducible | retirar tras verificar instalación/deploy |
 | `preprocess_profile` | T03 y T10 | retirar al cerrar resampling |
-| `mfcc_profile` | T06, solo si se activa | retirar al completar/descartar T06 |
+| `mfcc_profile` | ya no tiene investigación pendiente | retirar en T11 |
 | logs detallados warm-up | T03/T05 | reducir en T11; puede quedar `started/completed/failed` y duración total si warm-up sigue activo |
 | `InferenceTimings` | T12 y respuesta actual | mantener salvo decisión específica de contrato; no requiere `psutil` |
 
@@ -915,18 +904,13 @@ T12 debe preparar antes de ejecutar una matriz con: ID de caso, precondición, a
 
 Este es el backlog operativo. Las ramas “si se activa” no se implementan automáticamente.
 
-1. **T01 — completada: Northflank seleccionado.**
-2. **T07 — completada: runtime y contrato operativo fijados.**
-3. **T02 — completada: backend validado en Northflank.**
-4. **T03 — Cerrar la estrategia operacional de cold start y resampling** en Northflank.
-5. **T10 — Evaluar un resampler alternativo**, solo si DG06 se activa; después volver a cerrar T03.
-6. **T06 — Diagnosticar y decidir la primera MFCC**, solo si DG03 se activa.
-7. **T05 — Separar liveness y readiness**, solo si permanece warm-up en background y DG04 lo exige.
-8. **T04 — Acotar esperas del frontend y, si aplica, preparar el backend:** implementar siempre timeout/cancelación, error finito y recuperación; añadir preflight y reintentos solo de GET si el entorno final necesita despertar/comprobar el backend, consumiendo la readiness final cuando exista.
-9. **T08 — Medir concurrencia mínima**, recomendable; o registrar su omisión y la limitación de uso individual.
-10. **T09 — Evaluar lectura directa `float32`**, solo si DG05 se activa por evidencia.
-11. **T11 — Retirar instrumentación temporal y cerrar observabilidad mínima.**
-12. **T12 — Ejecutar y documentar la validación E2E final.**
+1. **T03 — Validar el warm-up de resampling** en Northflank mediante restart controlado; no promoverlo como release final aislado.
+2. **T05 — Separar liveness y readiness** y consolidar el contrato necesario para el release final con warm-up.
+3. **T04 — Acotar la espera del frontend:** readiness por GET con reintentos acotados, después exactamente un POST con timeout/cancelación y recuperación.
+4. **T08 — Medir concurrencia mínima**, o justificar explícitamente la limitación de demo individual.
+5. **T09 — Evaluar `float32`** solo si T08 aporta evidencia que active DG05.
+6. **T11 — Retirar instrumentación temporal y cerrar observabilidad mínima.**
+7. **T12 — Ejecutar y documentar la validación E2E final.**
 
 ## 20. Próxima tarea recomendada
 
@@ -934,7 +918,7 @@ La próxima tarea debe ser:
 
 > **T03 — Cerrar la estrategia operacional de cold start y resampling en Northflank**
 
-Debe partir de la evidencia fría y caliente ya recogida en Northflank, sin extrapolar las mediciones históricas de Render. T03 decidirá explícitamente la estrategia de `RESAMPLE_WARMUP_ENABLED` y, solo si procede, activará gates posteriores; no debe cambiar el modelo ni el preprocessing.
+Debe validar la decisión de warm-up con `RESAMPLE_WARMUP_ENABLED=true` tras restart controlado, sin extrapolar Render ni presentar esa configuración aislada como release final. No debe cambiar modelo, preprocessing, MFCC ni `soxr_hq`; el coste frío residual de MFCC se acepta y T05 consolidará readiness antes del release final.
 
 ## 21. Qué NO merece la pena implementar ahora
 
@@ -986,13 +970,13 @@ Actualizar esta tabla solo con evidencia real. Una decisión documental puede re
 | ROADMAP | completada | 2026-08-25 | `docs/roadmap_mejoras_despliegue.md` | Inspección inicial; 12 tareas y seis decision gates definidos. |
 | T01 | completada | 2026-08-27 | DG01: Northflank Developer Sandbox seleccionado | Render queda temporalmente como rollback. |
 | T02 | completada | 2026-08-27 | Validación Northflank: health/model/SHA, WAV, MP3, CORS, largo y flujo Vercel | Sin OOM ni reinicio; no equivale a T12. |
-| T03 | pendiente | 2026-08-27 | Evidencia fría/caliente Northflank en sección 4.5 | Siguiente tarea; decide warm-up/resampling. |
-| T04 | bloqueada | 2026-08-25 | — | Núcleo general obligatorio tras T03; preflight condicional al hosting. |
-| T05 | bloqueada | 2026-08-25 | — | Condicional a warm-up en background. |
-| T06 | condicional | 2026-08-25 | — | Espera DG03. |
+| T03 | pendiente | 2026-08-31 | Decisión de consolidar warm-up en DG02 | Siguiente tarea: activar/validar warm-up sintético en Northflank. |
+| T04 | bloqueada | 2026-08-31 | Preflight de readiness activado por warm-up | Timeout/cancelación siempre; solo GET con retry. |
+| T05 | pendiente | 2026-08-31 | Warm-up en background confirmado | Añadir readiness mínima sin cambiar `/health`. |
+| T06 | descartada | 2026-08-31 | Decisión de alcance MVP | No investigar primera MFCC salvo evidencia bloqueante. |
 | T07 | completada | 2026-08-27 | `backend/requirements.txt`, `deploy/backend/`, `docs/despliegue_backend.md` y validación Northflank | Contrato reproducible cerrado; `psutil` queda para T11. |
 | T08 | bloqueada | 2026-08-25 | — | Recomendable tras estabilizar entorno. |
-| T09 | condicional | 2026-08-25 | — | Espera DG05. |
-| T10 | condicional | 2026-08-25 | — | Espera DG06. |
+| T09 | condicional | 2026-08-31 | — | Solo si T08 activa DG05. |
+| T10 | descartada | 2026-08-31 | Decisión de alcance MVP | Mantener `soxr_hq`; no evaluar alternativa salvo evidencia bloqueante. |
 | T11 | bloqueada | 2026-08-25 | — | Última tarea antes de E2E. |
 | T12 | bloqueada | 2026-08-25 | — | Gate final de cierre. |
