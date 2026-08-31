@@ -5,7 +5,7 @@ import pytest
 
 from app.inference.config import InferenceConfig
 from app.inference.errors import PredictionError
-from app.inference.features import extract_mfcc_features, feature_columns
+from app.inference.features import extract_mfcc_features, feature_columns, warm_up_mfcc
 
 
 def test_extract_mfcc_features_shape_dtype_and_finiteness(config: InferenceConfig) -> None:
@@ -50,3 +50,61 @@ def test_extract_mfcc_rejects_unexpected_sample_rate(config: InferenceConfig) ->
 
     with pytest.raises(PredictionError, match="expects 16000 Hz"):
         extract_mfcc_features(signal, 8_000, config)
+
+
+def test_mfcc_warmup_reuses_production_extractor_with_mono_float32_signal(
+    monkeypatch,
+    config: InferenceConfig,
+) -> None:
+    call: dict[str, object] = {}
+
+    def extract(signal, sample_rate, received_config) -> np.ndarray:
+        call["signal"] = signal
+        call["sample_rate"] = sample_rate
+        call["config"] = received_config
+        return np.zeros(config.n_mfcc * 2, dtype=np.float32)
+
+    monkeypatch.setattr("app.inference.features.extract_mfcc_features", extract)
+
+    result = warm_up_mfcc(config)
+
+    signal = call["signal"]
+    assert result.succeeded is True
+    assert result.name == "mfcc"
+    assert isinstance(signal, np.ndarray)
+    assert signal.ndim == 1
+    assert signal.dtype == np.float32
+    assert signal.shape == (config.target_samples,)
+    assert call["sample_rate"] == config.target_sample_rate == 16_000
+    assert call["config"] is config
+
+
+def test_mfcc_warmup_reports_failure_without_raising(monkeypatch, config, caplog) -> None:
+    def fail_extract(*args, **kwargs) -> np.ndarray:
+        raise RuntimeError("MFCC warm-up failed")
+
+    monkeypatch.setattr("app.inference.features.extract_mfcc_features", fail_extract)
+
+    result = warm_up_mfcc(config)
+
+    assert result.succeeded is False
+    assert result.error_type == "RuntimeError"
+    assert "mfcc_warmup status=failed error_type=RuntimeError" in caplog.text
+
+
+def test_mfcc_warmup_ignores_diagnostic_logging_failures(monkeypatch, config) -> None:
+    def fail_logging(*args, **kwargs) -> None:
+        raise RuntimeError("logging failed")
+
+    monkeypatch.setattr(
+        "app.inference.features.logger.info",
+        fail_logging,
+    )
+    monkeypatch.setattr(
+        "app.inference.features.extract_mfcc_features",
+        lambda *args, **kwargs: np.zeros(config.n_mfcc * 2, dtype=np.float32),
+    )
+
+    result = warm_up_mfcc(config)
+
+    assert result.succeeded is True

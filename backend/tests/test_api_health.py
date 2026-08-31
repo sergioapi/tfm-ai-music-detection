@@ -1,17 +1,19 @@
 from __future__ import annotations
 
-import logging
 import threading
 
 from fastapi.testclient import TestClient
 
 from app.config import ApiSettings
-from app.inference.audio import warm_up_resampling
+from app.inference.config import InferenceConfig
 from app.inference.errors import ModelArtifactError
+from app.inference.schemas import StartupWarmupResult, WarmupResult
 from app.main import create_app
 
 
 class FakeService:
+    config = InferenceConfig()
+
     def predict_file(self, path):  # pragma: no cover - must not be called by /health.
         raise AssertionError("/health must not run inference")
 
@@ -59,13 +61,14 @@ def test_health_does_not_call_predict_file() -> None:
     assert response.json()["model_ready"] is True
 
 
-def test_resample_warmup_is_not_scheduled_when_disabled(monkeypatch) -> None:
+def test_startup_warmups_are_not_scheduled_when_disabled(monkeypatch) -> None:
     calls = {"count": 0}
 
-    def warmup(*args) -> None:
+    def warmup(*args) -> StartupWarmupResult:
         calls["count"] += 1
+        raise AssertionError("Warm-ups must be disabled")
 
-    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    monkeypatch.setattr("app.main.run_startup_warmups", warmup)
     application = create_app(
         service_factory=FakeService,
         settings=ApiSettings(resample_warmup_enabled=False),
@@ -77,15 +80,21 @@ def test_resample_warmup_is_not_scheduled_when_disabled(monkeypatch) -> None:
     assert calls["count"] == 0
 
 
-def test_resample_warmup_runs_once_in_background_when_enabled(monkeypatch) -> None:
+def test_startup_warmups_run_once_in_background_when_enabled(monkeypatch) -> None:
     calls = {"count": 0}
     completed = threading.Event()
 
-    def warmup(*args) -> None:
+    result = StartupWarmupResult(
+        resampling=WarmupResult("resampling", True, 0.1),
+        mfcc=WarmupResult("mfcc", True, 0.2),
+    )
+
+    def warmup(*args) -> StartupWarmupResult:
         calls["count"] += 1
         completed.set()
+        return result
 
-    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    monkeypatch.setattr("app.main.run_startup_warmups", warmup)
     application = create_app(
         service_factory=FakeService,
         settings=ApiSettings(resample_warmup_enabled=True),
@@ -96,28 +105,28 @@ def test_resample_warmup_runs_once_in_background_when_enabled(monkeypatch) -> No
         assert completed.wait(timeout=1)
 
     assert calls["count"] == 1
+    assert application.state.startup_warmup_result is result
 
 
-def test_resample_warmup_failure_does_not_degrade_health(monkeypatch, caplog) -> None:
+def test_startup_warmup_failure_does_not_degrade_health(monkeypatch) -> None:
     completed = threading.Event()
+    result = StartupWarmupResult(
+        resampling=WarmupResult("resampling", False, 0.1, "RuntimeError"),
+        mfcc=WarmupResult("mfcc", False, 0.2, "RuntimeError"),
+    )
 
-    def fail_resample(*args, **kwargs):
-        raise RuntimeError("warm-up failed")
-
-    def warmup(profiler) -> None:
-        warm_up_resampling(profiler)
+    def warmup(*args) -> StartupWarmupResult:
         completed.set()
+        return result
 
-    monkeypatch.setattr("app.inference.audio.librosa.resample", fail_resample)
-    monkeypatch.setattr("app.main.warm_up_resampling", warmup)
+    monkeypatch.setattr("app.main.run_startup_warmups", warmup)
     application = create_app(
         service_factory=FakeService,
         settings=ApiSettings(resample_warmup_enabled=True),
     )
 
-    with caplog.at_level(logging.WARNING):
-        with TestClient(application) as client:
-            assert client.get("/health").status_code == 200
-            assert completed.wait(timeout=1)
+    with TestClient(application) as client:
+        assert client.get("/health").status_code == 200
+        assert completed.wait(timeout=1)
 
-    assert "resample_warmup status=failed error_type=RuntimeError" in caplog.text
+    assert application.state.startup_warmup_result is result

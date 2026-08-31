@@ -16,7 +16,7 @@ import soundfile as sf
 from app.inference.config import InferenceConfig
 from app.inference.errors import AudioDecodingError, AudioValidationError
 from app.inference.memory import MemoryProfiler
-from app.inference.schemas import AudioFragment
+from app.inference.schemas import AudioFragment, WarmupResult
 
 
 logger = logging.getLogger("uvicorn.error")
@@ -262,21 +262,22 @@ def preprocess_fragment(
     return result
 
 
-def warm_up_resampling(memory_profiler: MemoryProfiler | None = None) -> None:
+def warm_up_resampling(
+    memory_profiler: MemoryProfiler | None = None,
+) -> WarmupResult:
     """Exercise the production resampling route once without reading audio."""
-    profiling_request_id = (
-        memory_profiler.new_request_id() if memory_profiler is not None else None
-    )
-    if memory_profiler is not None:
-        memory_profiler.measure(profiling_request_id, "before_resample_warmup")
-
-    logger.info("resample_warmup status=started")
     total_start = time.perf_counter()
+    profiling_request_id = None
     try:
+        if memory_profiler is not None:
+            profiling_request_id = memory_profiler.new_request_id()
+            memory_profiler.measure(profiling_request_id, "before_resample_warmup")
+        _log_resample_warmup(logging.INFO, "resample_warmup status=started")
         signal = np.zeros(_RESAMPLE_WARMUP_SAMPLES, dtype=np.float32)
         resolve_start = time.perf_counter()
         resample_fn = librosa.resample
-        logger.info(
+        _log_resample_warmup(
+            logging.INFO,
             "resample_warmup phase=resolve seconds=%.4f",
             max(0.0, time.perf_counter() - resolve_start),
         )
@@ -286,20 +287,48 @@ def warm_up_resampling(memory_profiler: MemoryProfiler | None = None) -> None:
             orig_sr=_RESAMPLE_WARMUP_SOURCE_SAMPLE_RATE,
             target_sr=_RESAMPLE_WARMUP_TARGET_SAMPLE_RATE,
         )
-        logger.info(
+        _log_resample_warmup(
+            logging.INFO,
             "resample_warmup phase=execute seconds=%.4f",
             max(0.0, time.perf_counter() - execute_start),
         )
-    except Exception as exc:  # noqa: BLE001 - an experimental warm-up must not break startup.
-        logger.warning("resample_warmup status=failed error_type=%s", type(exc).__name__)
+    except Exception as exc:  # noqa: BLE001 - a warm-up must not break startup.
+        _log_resample_warmup(
+            logging.WARNING,
+            "resample_warmup status=failed error_type=%s",
+            type(exc).__name__,
+        )
+        return WarmupResult(
+            name="resampling",
+            succeeded=False,
+            duration_seconds=max(0.0, time.perf_counter() - total_start),
+            error_type=type(exc).__name__,
+        )
     else:
-        logger.info(
+        duration_seconds = max(0.0, time.perf_counter() - total_start)
+        _log_resample_warmup(
+            logging.INFO,
             "resample_warmup status=completed total_seconds=%.4f",
-            max(0.0, time.perf_counter() - total_start),
+            duration_seconds,
+        )
+        return WarmupResult(
+            name="resampling",
+            succeeded=True,
+            duration_seconds=duration_seconds,
         )
     finally:
         if memory_profiler is not None:
-            memory_profiler.measure(profiling_request_id, "after_resample_warmup")
+            try:
+                memory_profiler.measure(profiling_request_id, "after_resample_warmup")
+            except Exception:  # noqa: BLE001 - diagnostics must not break startup.
+                pass
+
+
+def _log_resample_warmup(level: int, message: str, *args: object) -> None:
+    try:
+        logger.log(level, message, *args)
+    except Exception:  # noqa: BLE001 - diagnostic logging must not break startup.
+        return
 
 
 def _select_or_pad_window(signal: np.ndarray, window_samples: int) -> np.ndarray:

@@ -10,11 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import router
 from app.config import ApiSettings
-from app.inference.audio import warm_up_resampling
+from app.inference.config import InferenceConfig
 from app.inference.errors import ModelArtifactError
 from app.inference.interfaces import InferenceService
 from app.inference.memory import MemoryProfiler
 from app.inference.service import AudioInferenceService
+from app.inference.warmups import run_startup_warmups
 
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,7 @@ def create_app(
         warmup_task: asyncio.Task[None] | None = None
         application.state.inference_service = None
         application.state.model_ready = False
+        application.state.startup_warmup_result = None
         try:
             service = factory()
         except ModelArtifactError as exc:
@@ -58,7 +60,11 @@ def create_app(
                     enabled=api_settings.memory_profiling_enabled
                 )
                 warmup_task = asyncio.create_task(
-                    asyncio.to_thread(warm_up_resampling, warmup_profiler)
+                    _run_startup_warmups(
+                        application,
+                        service.config,
+                        warmup_profiler,
+                    )
                 )
 
         try:
@@ -86,3 +92,15 @@ def create_app(
 
 
 app = create_app()
+
+
+async def _run_startup_warmups(
+    application: FastAPI,
+    config: InferenceConfig,
+    memory_profiler: MemoryProfiler,
+) -> None:
+    application.state.startup_warmup_result = await asyncio.to_thread(
+        run_startup_warmups,
+        config,
+        memory_profiler,
+    )
