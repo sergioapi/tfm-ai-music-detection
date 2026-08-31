@@ -3,6 +3,7 @@ import {
   analyzeAudio,
   getApiErrorMessage,
   isApiError,
+  waitUntilReady,
   type AnalyzeResponse,
   type ApiError,
 } from './api'
@@ -14,6 +15,7 @@ import { SiteHeader } from './components/SiteHeader'
 type AnalysisState =
   | { status: 'idle' }
   | { status: 'selected'; file: File }
+  | { status: 'preparing'; file: File }
   | { status: 'analyzing'; file: File }
   | { status: 'success'; file: File; result: AnalyzeResponse }
   | { status: 'error'; file: File | null; message: string }
@@ -23,10 +25,13 @@ function App() {
     status: 'idle',
   })
   const resultRef = useRef<HTMLDivElement | null>(null)
+  const requestControllerRef = useRef<AbortController | null>(null)
 
   const selectedFile =
     analysisState.status === 'idle' ? null : analysisState.file
-  const isAnalyzing = analysisState.status === 'analyzing'
+  const isProcessing =
+    analysisState.status === 'preparing' || analysisState.status === 'analyzing'
+  const isPreparing = analysisState.status === 'preparing'
   const feedback = getFeedback(analysisState)
 
   useEffect(() => {
@@ -38,27 +43,48 @@ function App() {
     }
   }, [analysisState.status])
 
+  useEffect(() => () => requestControllerRef.current?.abort(), [])
+
   async function handleAnalyze() {
-    if (!selectedFile || isAnalyzing) {
+    if (!selectedFile || isProcessing) {
       return
     }
 
-    setAnalysisState({ status: 'analyzing', file: selectedFile })
+    requestControllerRef.current?.abort()
+    const controller = new AbortController()
+    requestControllerRef.current = controller
+    setAnalysisState({ status: 'preparing', file: selectedFile })
 
     try {
-      const result = await analyzeAudio(selectedFile)
+      await waitUntilReady({ signal: controller.signal })
+      if (controller.signal.aborted) {
+        return
+      }
+      setAnalysisState({ status: 'analyzing', file: selectedFile })
+      const result = await analyzeAudio(selectedFile, { signal: controller.signal })
+      if (controller.signal.aborted) {
+        return
+      }
       setAnalysisState({ status: 'success', file: selectedFile, result })
     } catch (error) {
+      if (controller.signal.aborted) {
+        return
+      }
       const apiError = normalizeError(error)
       setAnalysisState({
         status: 'error',
         file: selectedFile,
         message: getApiErrorMessage(apiError),
       })
+    } finally {
+      if (requestControllerRef.current === controller) {
+        requestControllerRef.current = null
+      }
     }
   }
 
   function handleReset() {
+    requestControllerRef.current?.abort()
     setAnalysisState({ status: 'idle' })
   }
 
@@ -86,7 +112,8 @@ function App() {
             ) : (
               <AudioAnalysisForm
                 selectedFile={selectedFile}
-                isAnalyzing={isAnalyzing}
+                isAnalyzing={isProcessing}
+                isPreparing={isPreparing}
                 feedback={feedback}
                 onFileAccepted={(file) => setAnalysisState({ status: 'selected', file })}
                 onFileRejected={() =>
@@ -119,6 +146,11 @@ function getFeedback(
     case 'idle':
     case 'selected':
       return null
+    case 'preparing':
+      return {
+        kind: 'status',
+        message: 'Preparando el servicio de análisis. Espera unos instantes.',
+      }
     case 'analyzing':
       return {
         kind: 'status',

@@ -29,5 +29,10 @@ export function getApiErrorMessage(error: ApiError): string {
       return 'El servicio ha rechazado la solicitud.'
     case 'unexpected-response':
       return 'El servicio ha devuelto una respuesta inesperada.'
+    case 'timeout':
+    case 'service-unavailable':
+      return 'El servicio de análisis no está disponible en este momento. Inténtalo de nuevo.'
+    case 'aborted':
+      return 'La solicitud de análisis se ha cancelado.'
   }
 }
