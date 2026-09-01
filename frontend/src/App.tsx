@@ -149,7 +149,7 @@ function getFeedback(
     case 'preparing':
       return {
         kind: 'status',
-        message: 'Preparando el servicio de análisis. Espera unos instantes.',
+        message: 'Preparando el análisis...',
       }
     case 'analyzing':
       return {

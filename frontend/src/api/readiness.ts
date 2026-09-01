@@ -3,9 +3,9 @@ import { READINESS_ENDPOINT_PATH } from './endpoints'
 import { createApiError, isApiError } from './errors'
 import { fetchWithTimeout } from './request'
 
-export const READINESS_TIMEOUT_MS = 180_000
+export const READINESS_TIMEOUT_MS = 15_000
 export const READINESS_POLL_INTERVAL_MS = 5_000
-const READINESS_REQUEST_TIMEOUT_MS = 15_000
+export const READINESS_REQUEST_TIMEOUT_MS = 5_000
 
 export type ReadinessStatus = 'pending' | 'ready' | 'failed' | 'unavailable'
 

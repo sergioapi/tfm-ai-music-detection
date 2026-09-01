@@ -1,9 +1,25 @@
 import { describe, expect, it, vi } from 'vitest'
-import { READINESS_POLL_INTERVAL_MS, waitUntilReady } from './readiness'
+import {
+  READINESS_POLL_INTERVAL_MS,
+  READINESS_REQUEST_TIMEOUT_MS,
+  READINESS_TIMEOUT_MS,
+  waitUntilReady,
+} from './readiness'
 
 const API_URL = 'https://api.example.test'
 
 describe('waitUntilReady', () => {
+  it('returns immediately when readiness is ready', async () => {
+    vi.stubEnv('VITE_API_BASE_URL', API_URL)
+    const fetchImpl = vi.fn<typeof fetch>().mockResolvedValue(
+      readinessResponse(200, 'ready'),
+    )
+
+    await waitUntilReady({ fetchImpl })
+
+    expect(fetchImpl).toHaveBeenCalledTimes(1)
+  })
+
   it('polls pending readiness until ready', async () => {
     vi.stubEnv('VITE_API_BASE_URL', API_URL)
     const fetchImpl = vi.fn<typeof fetch>()
@@ -46,25 +62,46 @@ describe('waitUntilReady', () => {
     expect(fetchImpl).toHaveBeenCalledTimes(2)
   })
 
-  it('stops after the finite readiness budget', async () => {
+  it('stops polling after the readiness budget is exhausted', async () => {
     vi.stubEnv('VITE_API_BASE_URL', API_URL)
-    let now = 0
+    vi.useFakeTimers()
     const fetchImpl = vi.fn<typeof fetch>().mockImplementation(async () =>
       readinessResponse(503, 'pending'),
     )
+    const waiting = waitUntilReady({ fetchImpl })
+    const unavailableExpectation = expect(waiting).rejects.toMatchObject({
+      kind: 'service-unavailable',
+    })
 
-    await expect(
-      waitUntilReady({
-        fetchImpl,
-        timeoutMs: 10,
-        pollIntervalMs: 5,
-        now: () => now,
-        sleep: async (milliseconds) => {
-          now += milliseconds
-        },
-      }),
-    ).rejects.toMatchObject({ kind: 'service-unavailable' })
+    await vi.advanceTimersByTimeAsync(READINESS_TIMEOUT_MS)
+
+    await unavailableExpectation
+    expect(fetchImpl).toHaveBeenCalledTimes(3)
+    expect(vi.getTimerCount()).toBe(0)
+    vi.useRealTimers()
+  })
+
+  it('retries a timed-out readiness request before succeeding', async () => {
+    vi.useFakeTimers()
+    vi.stubEnv('VITE_API_BASE_URL', API_URL)
+    const fetchImpl = vi.fn<typeof fetch>()
+      .mockImplementationOnce((_url, init) =>
+        new Promise((_resolve, reject) => {
+          init?.signal?.addEventListener('abort', () => {
+            reject(new DOMException('Aborted', 'AbortError'))
+          })
+        }),
+      )
+      .mockResolvedValueOnce(readinessResponse(200, 'ready'))
+    const waiting = waitUntilReady({ fetchImpl })
+
+    await vi.advanceTimersByTimeAsync(
+      READINESS_REQUEST_TIMEOUT_MS + READINESS_POLL_INTERVAL_MS,
+    )
+    await waiting
+
     expect(fetchImpl).toHaveBeenCalledTimes(2)
+    vi.useRealTimers()
   })
 
   it('does not request readiness when the signal is already aborted', async () => {

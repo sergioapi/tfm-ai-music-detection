@@ -81,7 +81,7 @@ export function AudioAnalysisForm({
         disabled={!canAnalyze}
         aria-describedby={feedbackId}
       >
-        {isPreparing ? 'Preparando servicio...' : isAnalyzing ? 'Analizando...' : 'Analizar audio'}
+        {isPreparing ? 'Preparando el análisis...' : isAnalyzing ? 'Analizando...' : 'Analizar audio'}
       </button>
 
       {feedback?.kind === 'status' ? (

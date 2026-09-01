@@ -111,6 +111,9 @@ describe('App', () => {
 
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument())
     expect(mockedAnalyzeAudio).not.toHaveBeenCalled()
+    const fileInput = screen.getByLabelText('Archivo de audio') as HTMLInputElement
+    expect(fileInput.files?.[0]).toBe(file)
+    expect(screen.getByRole('button')).toBeEnabled()
 
     fireEvent.click(screen.getByRole('button', { name: 'Analizar audio' }))
 
