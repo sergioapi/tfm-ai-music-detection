@@ -13,7 +13,6 @@ from app.config import ApiSettings
 from app.inference.config import InferenceConfig
 from app.inference.errors import ModelArtifactError
 from app.inference.interfaces import InferenceService
-from app.inference.memory import MemoryProfiler
 from app.inference.service import AudioInferenceService
 from app.inference.warmups import run_startup_warmups
 from app.readiness import StartupReadiness, readiness_from_warmup_result
@@ -23,12 +22,8 @@ logger = logging.getLogger(__name__)
 ServiceFactory = Callable[[], InferenceService]
 
 
-def _default_service_factory(memory_profiling_enabled: bool) -> AudioInferenceService:
-    memory_profiler = MemoryProfiler(enabled=memory_profiling_enabled)
-    memory_profiler.log_runtime_versions()
-    return AudioInferenceService(
-        memory_profiler=memory_profiler,
-    )
+def _default_service_factory() -> AudioInferenceService:
+    return AudioInferenceService()
 
 
 def create_app(
@@ -36,9 +31,7 @@ def create_app(
     settings: ApiSettings | None = None,
 ) -> FastAPI:
     api_settings = settings or ApiSettings.from_env()
-    factory = service_factory or (
-        lambda: _default_service_factory(api_settings.memory_profiling_enabled)
-    )
+    factory = service_factory or _default_service_factory
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
@@ -59,14 +52,10 @@ def create_app(
             application.state.model_ready = True
             if api_settings.resample_warmup_enabled:
                 application.state.startup_readiness = StartupReadiness.PENDING
-                warmup_profiler = MemoryProfiler(
-                    enabled=api_settings.memory_profiling_enabled
-                )
                 warmup_task = asyncio.create_task(
                     _run_startup_warmups(
                         application,
                         service.config,
-                        warmup_profiler,
                     )
                 )
             else:
@@ -104,13 +93,11 @@ app = create_app()
 async def _run_startup_warmups(
     application: FastAPI,
     config: InferenceConfig,
-    memory_profiler: MemoryProfiler,
 ) -> None:
     try:
         result = await asyncio.to_thread(
             run_startup_warmups,
             config,
-            memory_profiler,
         )
     except Exception:
         logger.exception("Startup warm-ups failed unexpectedly")

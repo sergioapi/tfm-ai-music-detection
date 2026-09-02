@@ -7,7 +7,6 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from collections.abc import Iterator
-from typing import Callable
 
 import librosa
 import numpy as np
@@ -15,7 +14,6 @@ import soundfile as sf
 
 from app.inference.config import InferenceConfig
 from app.inference.errors import AudioDecodingError, AudioValidationError
-from app.inference.memory import MemoryProfiler
 from app.inference.schemas import AudioFragment, WarmupResult
 
 
@@ -83,11 +81,7 @@ def open_audio_fragments(
         raise AudioDecodingError(f"Could not decode audio file {audio_path}: {exc}") from exc
 
 
-def decode_audio_file(
-    path: Path,
-    memory_profiler: MemoryProfiler | None = None,
-    profiling_request_id: str | None = None,
-) -> tuple[np.ndarray, int]:
+def decode_audio_file(path: Path) -> tuple[np.ndarray, int]:
     audio_path = Path(path).expanduser().resolve()
     if not audio_path.exists():
         raise AudioDecodingError(f"Audio file does not exist: {audio_path}")
@@ -99,11 +93,7 @@ def decode_audio_file(
     except Exception as exc:  # noqa: BLE001 - expose a domain-specific error.
         raise AudioDecodingError(f"Could not decode audio file {audio_path}: {exc}") from exc
 
-    if memory_profiler is not None:
-        memory_profiler.measure(profiling_request_id, "after_decode")
     decoded = validate_decoded_audio(audio, int(sample_rate))
-    if memory_profiler is not None:
-        memory_profiler.measure(profiling_request_id, "after_validate_audio")
     return decoded
 
 
@@ -213,20 +203,13 @@ def preprocess_fragment(
     audio: np.ndarray,
     sample_rate: int,
     config: InferenceConfig,
-    *,
-    timing_callback: Callable[[str, float], None] | None = None,
 ) -> np.ndarray:
-    total_start = _timing_start(timing_callback)
     if sample_rate <= 0:
         raise AudioValidationError(f"Invalid sample rate: {sample_rate}")
 
-    phase_start = _timing_start(timing_callback)
     signal = np.asarray(audio, dtype=np.float32)
-    _record_timing(timing_callback, "float32", phase_start)
     if signal.ndim == 2:
-        phase_start = _timing_start(timing_callback)
         signal = signal.mean(axis=1, dtype=np.float32)
-        _record_timing(timing_callback, "mono", phase_start)
     elif signal.ndim != 1:
         raise AudioValidationError(f"Expected mono or stereo fragment, found shape {signal.shape}")
 
@@ -235,62 +218,32 @@ def preprocess_fragment(
     _validate_finite(signal, "audio fragment")
 
     source_window_samples = int(round(sample_rate * config.fragment_duration_seconds))
-    phase_start = _timing_start(timing_callback)
     signal = _select_or_pad_window(signal, source_window_samples)
-    _record_timing(timing_callback, "select_or_pad", phase_start)
 
     if sample_rate != config.target_sample_rate:
-        phase_start = _timing_start(timing_callback)
         resample_fn = librosa.resample
-        _record_timing(timing_callback, "resample_resolve", phase_start)
-        phase_start = _timing_start(timing_callback)
         signal = resample_fn(
             signal,
             orig_sr=sample_rate,
             target_sr=config.target_sample_rate,
         ).astype(np.float32, copy=False)
-        _record_timing(timing_callback, "resample_execute", phase_start)
 
-    phase_start = _timing_start(timing_callback)
     signal = _fix_length(signal, config.target_samples)
-    _record_timing(timing_callback, "fix_length", phase_start)
-    phase_start = _timing_start(timing_callback)
     _validate_finite(signal, "preprocessed audio")
-    result = signal.astype(np.float32, copy=False)
-    _record_timing(timing_callback, "finalize", phase_start)
-    _record_timing(timing_callback, "total", total_start)
-    return result
+    return signal.astype(np.float32, copy=False)
 
 
-def warm_up_resampling(
-    memory_profiler: MemoryProfiler | None = None,
-) -> WarmupResult:
+def warm_up_resampling() -> WarmupResult:
     """Exercise the production resampling route once without reading audio."""
     total_start = time.perf_counter()
-    profiling_request_id = None
     try:
-        if memory_profiler is not None:
-            profiling_request_id = memory_profiler.new_request_id()
-            memory_profiler.measure(profiling_request_id, "before_resample_warmup")
         _log_resample_warmup(logging.INFO, "resample_warmup status=started")
         signal = np.zeros(_RESAMPLE_WARMUP_SAMPLES, dtype=np.float32)
-        resolve_start = time.perf_counter()
         resample_fn = librosa.resample
-        _log_resample_warmup(
-            logging.INFO,
-            "resample_warmup phase=resolve seconds=%.4f",
-            max(0.0, time.perf_counter() - resolve_start),
-        )
-        execute_start = time.perf_counter()
         resample_fn(
             signal,
             orig_sr=_RESAMPLE_WARMUP_SOURCE_SAMPLE_RATE,
             target_sr=_RESAMPLE_WARMUP_TARGET_SAMPLE_RATE,
-        )
-        _log_resample_warmup(
-            logging.INFO,
-            "resample_warmup phase=execute seconds=%.4f",
-            max(0.0, time.perf_counter() - execute_start),
         )
     except Exception as exc:  # noqa: BLE001 - a warm-up must not break startup.
         _log_resample_warmup(
@@ -316,14 +269,6 @@ def warm_up_resampling(
             succeeded=True,
             duration_seconds=duration_seconds,
         )
-    finally:
-        if memory_profiler is not None:
-            try:
-                memory_profiler.measure(profiling_request_id, "after_resample_warmup")
-            except Exception:  # noqa: BLE001 - diagnostics must not break startup.
-                pass
-
-
 def _log_resample_warmup(level: int, message: str, *args: object) -> None:
     try:
         logger.log(level, message, *args)
@@ -360,21 +305,3 @@ def _validate_finite(values: np.ndarray, name: str) -> None:
     if not np.isfinite(values).all():
         raise AudioValidationError(f"{name} contains NaN or infinite values")
 
-
-def _record_timing(
-    timing_callback: Callable[[str, float], None] | None,
-    phase: str,
-    start: float | None,
-) -> None:
-    if timing_callback is None or start is None:
-        return
-    try:
-        timing_callback(phase, max(0.0, float(time.perf_counter() - start)))
-    except Exception:  # noqa: BLE001 - diagnostics must not break preprocessing.
-        return
-
-
-def _timing_start(timing_callback: Callable[[str, float], None] | None) -> float | None:
-    if timing_callback is None:
-        return None
-    return time.perf_counter()

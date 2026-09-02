@@ -9,7 +9,7 @@ def test_startup_warmups_run_resampling_before_mfcc_once(monkeypatch) -> None:
     calls: list[str] = []
     config = InferenceConfig()
 
-    def warm_resampling(profiler):
+    def warm_resampling():
         calls.append("resampling")
         return WarmupResult("resampling", succeeded=True, duration_seconds=0.1)
 
@@ -32,7 +32,7 @@ def test_startup_warmups_run_resampling_before_mfcc_once(monkeypatch) -> None:
 def test_startup_warmups_stops_after_failed_resampling(monkeypatch) -> None:
     calls: list[str] = []
 
-    def warm_resampling(profiler):
+    def warm_resampling():
         calls.append("resampling")
         return WarmupResult(
             "resampling",

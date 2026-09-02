@@ -3,16 +3,12 @@ from __future__ import annotations
 from app.inference.audio import warm_up_resampling
 from app.inference.config import InferenceConfig
 from app.inference.features import warm_up_mfcc
-from app.inference.memory import MemoryProfiler
 from app.inference.schemas import StartupWarmupResult, WarmupResult
 
 
-def run_startup_warmups(
-    config: InferenceConfig,
-    memory_profiler: MemoryProfiler | None = None,
-) -> StartupWarmupResult:
+def run_startup_warmups(config: InferenceConfig) -> StartupWarmupResult:
     """Run startup warm-ups in production order and retain their outcomes."""
-    resampling = warm_up_resampling(memory_profiler)
+    resampling = warm_up_resampling()
     if not resampling.succeeded:
         return StartupWarmupResult(resampling=resampling, mfcc=WarmupResult(
             name="mfcc",

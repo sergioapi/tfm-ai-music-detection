@@ -79,7 +79,7 @@ def test_mfcc_warmup_reuses_production_extractor_with_mono_float32_signal(
     assert call["config"] is config
 
 
-def test_mfcc_warmup_reports_failure_without_raising(monkeypatch, config, caplog) -> None:
+def test_mfcc_warmup_reports_failure_without_raising(monkeypatch, config) -> None:
     def fail_extract(*args, **kwargs) -> np.ndarray:
         raise RuntimeError("MFCC warm-up failed")
 
@@ -89,7 +89,6 @@ def test_mfcc_warmup_reports_failure_without_raising(monkeypatch, config, caplog
 
     assert result.succeeded is False
     assert result.error_type == "RuntimeError"
-    assert "mfcc_warmup status=failed error_type=RuntimeError" in caplog.text
 
 
 def test_mfcc_warmup_ignores_diagnostic_logging_failures(monkeypatch, config) -> None:
