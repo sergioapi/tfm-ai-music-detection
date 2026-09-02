@@ -96,5 +96,5 @@ https://scikit-learn.org/stable/model_persistence.html#security-maintainability-
 - La primera inferencia se mide aparte y no se incluye en las estadísticas en caliente.
 - Los scores proceden de `decision_function`; no son probabilidades calibradas.
 - Este benchmark no evalúa precisión predictiva ni etiquetas reales a nivel de canción.
-- El benchmark debe repetirse en Docker o Hugging Face Spaces con versiones fijadas.
+- La reproducción de runtime se validó posteriormente en Docker y Northflank con versiones fijadas; las mediciones de este documento siguen siendo locales.
 - Los límites de tamaño de subida quedan pendientes de pruebas de formatos comprimidos y de la API.

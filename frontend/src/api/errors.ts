@@ -4,6 +4,9 @@ export type ApiErrorKind =
   | 'http'
   | 'validation'
   | 'unexpected-response'
+  | 'timeout'
+  | 'aborted'
+  | 'service-unavailable'
 
 export type ApiError = {
   kind: ApiErrorKind

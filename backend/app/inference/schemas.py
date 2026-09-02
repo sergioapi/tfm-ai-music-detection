@@ -18,6 +18,15 @@ class AudioFragment:
 
 
 @dataclass(frozen=True)
+class AudioFragmentMetadata:
+    index: int
+    start_seconds: float
+    end_seconds: float
+    duration_seconds: float
+    is_incomplete: bool
+
+
+@dataclass(frozen=True)
 class FragmentPrediction:
     index: int
     start_seconds: float
@@ -38,6 +47,24 @@ class InferenceTimings:
     prediction_seconds: float
     aggregation_seconds: float
     total_seconds: float
+
+
+@dataclass(frozen=True)
+class WarmupResult:
+    name: str
+    succeeded: bool
+    duration_seconds: float
+    error_type: str | None = None
+
+
+@dataclass(frozen=True)
+class StartupWarmupResult:
+    resampling: WarmupResult
+    mfcc: WarmupResult
+
+    @property
+    def succeeded(self) -> bool:
+        return self.resampling.succeeded and self.mfcc.succeeded
 
 
 @dataclass(frozen=True)

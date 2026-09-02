@@ -27,7 +27,7 @@ La decision debe ser reproducible sin descargar ni ejecutar todavia el modelo. E
 - memoria GPU disponible, incluyendo el escenario objetivo de `6 GB` de VRAM;
 - viabilidad de inferencia en CPU;
 - tiempo de extraccion completa de embeddings;
-- compatibilidad con el despliegue previsto en Hugging Face Spaces;
+- compatibilidad con el despliegue que entonces se preveía en Hugging Face Spaces;
 - tiempo restante hasta la convocatoria de septiembre de 2026.
 
 No se considera verificado que MERT quepa en `6 GB` de VRAM ni que su inferencia en CPU sea aceptable.
@@ -129,7 +129,7 @@ MERT se abandonara y se activara la contingencia AST en fases posteriores si ocu
 2. Produce OOM con batch `1`, encoder congelado y ventanas de `5 s`.
 3. Genera embeddings no finitos o errores sistematicos.
 4. Su extraccion completa excede los limites temporales que se definan para el TFM.
-5. Su latencia o memoria en CPU resulta incompatible con Hugging Face Spaces.
+5. Su latencia o memoria en CPU resulta incompatible con el entorno de despliegue que se seleccione.
 6. Existen impedimentos de licencia o publicacion.
 7. Su rendimiento en validacion es claramente inferior al baseline tras aplicar la configuracion inicial predefinida.
 

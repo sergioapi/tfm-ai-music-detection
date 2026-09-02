@@ -7,12 +7,20 @@ from pathlib import Path
 import numpy as np
 
 from app.inference.aggregation import aggregate_duration_weighted_scores
-from app.inference.audio import decode_audio_file, preprocess_fragment, segment_audio
+from app.inference.audio import (
+    open_audio_fragments,
+    preprocess_fragment,
+)
 from app.inference.config import InferenceConfig, class_name_for_label
 from app.inference.errors import ModelArtifactError, PredictionError
 from app.inference.features import extract_mfcc_features
 from app.inference.model import MfccSvmModel, predict_labels_from_scores
-from app.inference.schemas import FragmentPrediction, InferenceTimings, PredictionResult
+from app.inference.schemas import (
+    AudioFragmentMetadata,
+    FragmentPrediction,
+    InferenceTimings,
+    PredictionResult,
+)
 
 
 class AudioInferenceService:
@@ -35,38 +43,65 @@ class AudioInferenceService:
 
     def predict_file(self, path: str | Path) -> PredictionResult:
         total_start = time.perf_counter()
+        audio_path = Path(path)
+        feature_rows_list = []
+        fragment_metadata: list[AudioFragmentMetadata] = []
+        decode_seconds = 0.0
+        segmentation_seconds = 0.0
+        preprocessing_seconds = 0.0
+        mfcc_seconds = 0.0
 
-        decode_start = time.perf_counter()
-        audio, sample_rate = decode_audio_file(Path(path))
-        decode_seconds = _elapsed(decode_start)
-        audio_duration_seconds = audio.shape[0] / sample_rate
-
-        segmentation_start = time.perf_counter()
-        fragments = segment_audio(
-            audio,
-            sample_rate,
+        with open_audio_fragments(
+            audio_path,
             self.config.fragment_duration_seconds,
-        )
-        segmentation_seconds = _elapsed(segmentation_start)
+        ) as (audio_info, fragments):
+            sample_rate = audio_info.sample_rate
+            audio_duration_seconds = audio_info.duration_seconds
+            fragment_iterator = iter(fragments)
+            while True:
+                decode_start = time.perf_counter()
+                fragment = next(fragment_iterator, None)
+                decode_seconds += _elapsed(decode_start)
+                if fragment is None:
+                    break
 
-        preprocessing_start = time.perf_counter()
-        preprocessed = tuple(
-            preprocess_fragment(fragment.signal, fragment.sample_rate, self.config)
-            for fragment in fragments
-        )
-        preprocessing_seconds = _elapsed(preprocessing_start)
+                segmentation_start = time.perf_counter()
+                fragment_metadata.append(
+                    AudioFragmentMetadata(
+                        index=fragment.index,
+                        start_seconds=fragment.start_seconds,
+                        end_seconds=fragment.end_seconds,
+                        duration_seconds=fragment.duration_seconds,
+                        is_incomplete=fragment.is_incomplete,
+                    )
+                )
+                segmentation_seconds += _elapsed(segmentation_start)
 
-        mfcc_start = time.perf_counter()
-        feature_rows = tuple(
-            extract_mfcc_features(
-                signal,
-                self.config.target_sample_rate,
-                self.config,
-            )
-            for signal in preprocessed
+                preprocessing_start = time.perf_counter()
+                preprocessed = preprocess_fragment(
+                    fragment.signal,
+                    fragment.sample_rate,
+                    self.config,
+                )
+                preprocessing_seconds += _elapsed(preprocessing_start)
+
+                mfcc_start = time.perf_counter()
+                feature_rows_list.append(
+                    extract_mfcc_features(
+                        preprocessed,
+                        self.config.target_sample_rate,
+                        self.config,
+                    )
+                )
+                mfcc_seconds += _elapsed(mfcc_start)
+
+        del preprocessed
+        fragment_count = len(fragment_metadata)
+        audio_duration_seconds = float(
+            sum(fragment.duration_seconds for fragment in fragment_metadata)
         )
+        feature_rows = tuple(feature_rows_list)
         features = np.vstack(feature_rows).astype(np.float32, copy=False)
-        mfcc_seconds = _elapsed(mfcc_start)
 
         prediction_start = time.perf_counter()
         fragment_scores = self.model.predict_scores(features)
@@ -78,7 +113,7 @@ class AudioInferenceService:
 
         aggregation_start = time.perf_counter()
         fragment_durations = np.asarray(
-            [fragment.duration_seconds for fragment in fragments],
+            [fragment.duration_seconds for fragment in fragment_metadata],
             dtype=np.float64,
         )
         global_score = aggregate_duration_weighted_scores(
@@ -104,7 +139,11 @@ class AudioInferenceService:
                 predicted_class=class_name_for_label(int(label)),
                 was_padded=fragment.is_incomplete,
             )
-            for fragment, score, label in zip(fragments, fragment_scores, fragment_labels)
+            for fragment, score, label in zip(
+                fragment_metadata,
+                fragment_scores,
+                fragment_labels,
+            )
         )
 
         total_seconds = _elapsed(total_start)

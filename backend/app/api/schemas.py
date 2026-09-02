@@ -10,6 +10,10 @@ class HealthResponse(BaseModel):
     model_ready: bool
 
 
+class ReadinessResponse(BaseModel):
+    status: Literal["unavailable", "pending", "ready", "failed"]
+
+
 class ModelInfoResponse(BaseModel):
     model_id: str
     sha256: str

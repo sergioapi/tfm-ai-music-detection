@@ -78,7 +78,7 @@ Se adopta una cuota estándar de 30 € mensuales para una conexión doméstica 
 | Visual Studio Code | Gratuito | 0 € |
 | Overleaf | Plan gratuito | 0 € |
 | Hugging Face Hub | Plan gratuito | 0 € |
-| Hugging Face Spaces | Plan gratuito | 0 € |
+| Northflank Developer Sandbox | Prueba validada; 0 € observado durante la prueba, sin garantía futura | 0 € |
 | AIME | Acceso gratuito | 0 € |
 | **Total de software, servicios y datos** |  | **0 €** |
 

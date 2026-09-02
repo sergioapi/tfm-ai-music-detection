@@ -238,7 +238,7 @@
     "Fewer runtime dependencies.",
     "No deep encoder has to be loaded at API startup.",
     "Lower cold-start, memory and deployment risk.",
-    "Simpler initial FastAPI and Hugging Face Spaces integration.",
+    "Simpler initial FastAPI integration for web deployment.",
     "MERT does not provide a global predictive improvement that compensates its operational cost."
   ],
   "sources": {

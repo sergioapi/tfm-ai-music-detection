@@ -21,6 +21,7 @@ DEFAULT_ALLOWED_AUDIO_MIME_TYPES = tuple(
     for mime_type in mime_types
 )
 DEFAULT_CORS_ALLOWED_ORIGINS: tuple[str, ...] = ()
+DEFAULT_RESAMPLE_WARMUP_ENABLED = False
 
 
 @dataclass(frozen=True)
@@ -30,6 +31,7 @@ class ApiSettings:
     allowed_audio_extensions: tuple[str, ...] = DEFAULT_ALLOWED_AUDIO_EXTENSIONS
     allowed_audio_mime_types: tuple[str, ...] = DEFAULT_ALLOWED_AUDIO_MIME_TYPES
     cors_allowed_origins: tuple[str, ...] = DEFAULT_CORS_ALLOWED_ORIGINS
+    resample_warmup_enabled: bool = DEFAULT_RESAMPLE_WARMUP_ENABLED
     temp_dir: Path | None = None
 
     def __post_init__(self) -> None:
@@ -39,6 +41,8 @@ class ApiSettings:
             raise ValueError("max_upload_size_bytes must be greater than zero")
         if not _is_positive_finite(self.max_audio_duration_seconds):
             raise ValueError("max_audio_duration_seconds must be a finite value greater than zero")
+        if not isinstance(self.resample_warmup_enabled, bool):
+            raise ValueError("resample_warmup_enabled must be a boolean")
 
         object.__setattr__(
             self,
@@ -93,6 +97,10 @@ class ApiSettings:
                 "CORS_ALLOWED_ORIGINS",
                 DEFAULT_CORS_ALLOWED_ORIGINS,
             ),
+            resample_warmup_enabled=_read_bool(
+                "RESAMPLE_WARMUP_ENABLED",
+                DEFAULT_RESAMPLE_WARMUP_ENABLED,
+            ),
             temp_dir=_read_optional_path("TEMP_DIR"),
         )
 
@@ -121,6 +129,18 @@ def _read_float(name: str, default: float) -> float:
     if not _is_positive_finite(value):
         raise ValueError(f"{name} must be greater than zero")
     return value
+
+
+def _read_bool(name: str, default: bool) -> bool:
+    raw_value = os.environ.get(name)
+    if raw_value is None or raw_value.strip() == "":
+        return default
+    value = raw_value.strip().lower()
+    if value in {"1", "true", "yes", "on"}:
+        return True
+    if value in {"0", "false", "no", "off"}:
+        return False
+    raise ValueError(f"{name} must be a boolean")
 
 
 def _read_extensions(name: str, default: tuple[str, ...]) -> tuple[str, ...]:

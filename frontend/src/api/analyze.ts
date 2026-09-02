@@ -2,14 +2,20 @@ import { getApiBaseUrl } from './config'
 import { ANALYZE_ENDPOINT_PATH, ANALYZE_FILE_FIELD } from './endpoints'
 import {
   createApiError,
+  isApiError,
   isFastApiCustomErrorDetail,
   type ApiError,
 } from './errors'
 import type { AnalyzeResponse } from './types'
 import { isAnalyzeResponse } from './validators'
+import { fetchWithTimeout } from './request'
+
+export const ANALYSIS_TIMEOUT_MS = 180_000
 
 type AnalyzeAudioOptions = {
   fetchImpl?: typeof fetch
+  signal?: AbortSignal
+  timeoutMs?: number
 }
 
 export async function analyzeAudio(
@@ -19,7 +25,7 @@ export async function analyzeAudio(
   const formData = new FormData()
   formData.append(ANALYZE_FILE_FIELD, file)
 
-  const response = await postAnalyzeRequest(formData, options.fetchImpl ?? fetch)
+  const response = await postAnalyzeRequest(formData, options)
   const payload = await readJsonResponse(response)
 
   if (!response.ok) {
@@ -39,16 +45,24 @@ export async function analyzeAudio(
 
 async function postAnalyzeRequest(
   formData: FormData,
-  fetchImpl: typeof fetch,
+  options: AnalyzeAudioOptions,
 ): Promise<Response> {
   const analyzeUrl = `${getApiBaseUrl()}${ANALYZE_ENDPOINT_PATH}`
 
   try {
-    return await fetchImpl(analyzeUrl, {
-      method: 'POST',
-      body: formData,
-    })
-  } catch {
+    return await fetchWithTimeout(
+      analyzeUrl,
+      { method: 'POST', body: formData },
+      {
+        signal: options.signal,
+        timeoutMs: options.timeoutMs ?? ANALYSIS_TIMEOUT_MS,
+      },
+      options.fetchImpl ?? fetch,
+    )
+  } catch (error) {
+    if (isApiError(error)) {
+      throw error
+    }
     throw createApiError({
       kind: 'network',
       message: 'Could not contact the analysis service.',

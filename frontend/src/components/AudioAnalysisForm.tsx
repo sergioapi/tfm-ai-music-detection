@@ -12,6 +12,7 @@ type Feedback = {
 type AudioAnalysisFormProps = {
   selectedFile: File | null
   isAnalyzing: boolean
+  isPreparing: boolean
   feedback: Feedback | null
   onFileAccepted: (file: File) => void
   onFileRejected: () => void
@@ -22,6 +23,7 @@ type AudioAnalysisFormProps = {
 export function AudioAnalysisForm({
   selectedFile,
   isAnalyzing,
+  isPreparing,
   feedback,
   onFileAccepted,
   onFileRejected,
@@ -79,7 +81,7 @@ export function AudioAnalysisForm({
         disabled={!canAnalyze}
         aria-describedby={feedbackId}
       >
-        {isAnalyzing ? 'Analizando...' : 'Analizar audio'}
+        {isPreparing ? 'Preparando el análisis...' : isAnalyzing ? 'Analizando...' : 'Analizar audio'}
       </button>
 
       {feedback?.kind === 'status' ? (

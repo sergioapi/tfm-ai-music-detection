@@ -17,10 +17,10 @@
 - Comparacion entre MFCC + SVM y un unico modelo profundo preentrenado.
 - Seleccion del modelo segun metricas predictivas y rendimiento operacional.
 - Desarrollo de una prueba de concepto web.
-- React + Vite como frontend previsto.
-- FastAPI y Python como backend previsto.
-- Hugging Face Spaces como despliegue previsto del backend y el modelo.
-- Vercel como despliegue previsto del frontend.
+- React + Vite como frontend desplegado en Vercel.
+- FastAPI y Python como backend desplegado.
+- Northflank Developer Sandbox como hosting seleccionado del backend; el contrato vigente está en `docs/despliegue_backend.md`.
+- Vercel como hosting del frontend.
 - Convocatoria de septiembre de 2026.
 
 ## Decisiones provisionales
