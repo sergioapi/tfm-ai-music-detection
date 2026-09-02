@@ -1,12 +1,20 @@
-# Roadmap de mejoras del despliegue de VeriSon
+# Roadmap histórico de cierre del despliegue de VeriSon
 
-## 1. Propósito del documento
+## 1. Estado de cierre y propósito histórico
 
-Este documento es la fuente persistente de contexto, decisiones y backlog técnico para cerrar el despliegue del MVP de VeriSon. Se ha elaborado a partir de la inspección del repositorio en su estado del 25 de agosto de 2026 y de la evidencia operacional obtenida en el despliegue público. Su finalidad es permitir que futuros chats trabajen tarea por tarea sin depender de la conversación en la que se creó.
+Este documento conserva el contexto, las decisiones y el backlog que guiaron el cierre del despliegue del MVP. Se elaboró a partir de la inspección del repositorio del 25 de agosto de 2026 y de la evidencia operacional posterior. Ya no es un roadmap operativo ni la fuente de configuración vigente.
 
-> Los chats implementadores deben leer este documento antes de editar, implementar únicamente la tarea solicitada por el usuario y no reabrir decisiones cerradas salvo nueva evidencia técnica.
+El contrato operativo vigente está en `docs/despliegue_backend.md`. La validación manual E2E T12 está en curso; no debe marcarse como completada hasta que exista su evidencia final.
 
-Este roadmap no es una autorización para ejecutar todas las tareas. Cada intervención futura debe recibir del usuario un ID concreto. Los estados, gates y condiciones de activación evitan invertir trabajo en mitigaciones específicas de Render que podrían desaparecer al cambiar de hosting.
+> Las secciones posteriores describen el estado y las decisiones de su momento. Las referencias a tareas pendientes, profiling, Render o configuraciones anteriores son históricas y no describen el runtime actual.
+
+### Cierre conocido
+
+- T03, T04 y T05: completadas y validadas; el warm-up de resampling y MFCC se coordina con `/ready`, mientras `/health` mantiene su semántica operativa/modelo.
+- T08: completada; dos análisis largos simultáneos finalizaron con HTTP 200, sin OOM ni reinicio.
+- T11: completada; se retiraron `MemoryProfiler`, `psutil`, RSS, IDs y logs diagnósticos. `InferenceTimings` se conserva como contrato funcional.
+- Validación automática de la release candidate: backend 162 tests sin warnings, frontend 29 tests, lint/build correctos y build Docker correcto.
+- T12: en curso, pendiente de la evidencia manual E2E final.
 
 Definiciones empleadas:
 
@@ -31,7 +39,7 @@ VeriSon es una prueba de concepto web desarrollada para un TFM sobre detección 
 - **Backend:** FastAPI sobre Python 3.11.9, desplegado en Northflank Developer Sandbox (`Europe - West (London)`) en `https://api--verison-api--xb7vy98gqd48.code.run`.
 - **API pública:** `GET /health`, `GET /api/v1/model` y `POST /api/v1/analyze`.
 - **Configuración frontend:** `VITE_API_BASE_URL` determina el backend. La capa actual concatena esa base con `/api/v1/analyze`.
-- **Configuración backend:** variables como `MODEL_PATH`, `CORS_ALLOWED_ORIGINS`, `MAX_UPLOAD_SIZE_BYTES`, `MAX_AUDIO_DURATION_SECONDS`, `MEMORY_PROFILING_ENABLED`, `RESAMPLE_WARMUP_ENABLED` y `TEMP_DIR`.
+- **Configuración backend:** `MODEL_PATH`, `CORS_ALLOWED_ORIGINS`, `MAX_UPLOAD_SIZE_BYTES`, `MAX_AUDIO_DURATION_SECONDS`, `RESAMPLE_WARMUP_ENABLED` y `TEMP_DIR`.
 - **Artefacto:** `data/models/mfcc_svm_baseline.joblib` está versionado y el backend valida su estructura y calcula su SHA-256 al cargarlo.
 - **Despliegue como código:** `deploy/backend/Dockerfile` y `deploy/backend/Dockerfile.dockerignore` empaquetan el backend de forma agnóstica al proveedor; el contrato operativo vigente se resume en `docs/despliegue_backend.md`. No se usan archivos específicos de proveedor.
 
@@ -199,16 +207,16 @@ Render permanece disponible temporalmente como rollback. La prueba fría y la de
 | -- | ------ | ------------- | --------- | ------ | --------------------- |
 | T01 | Evaluar y cerrar el hosting del backend | obligatoria | crítica | completada | DG01 resuelta: Northflank seleccionado |
 | T02 | Migrar y verificar el backend en el hosting elegido | condicional | alta | completada | Northflank validado; Render retenido como rollback |
-| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | pendiente | Consolidar warm-up de resampling en Northflank |
-| T04 | Acotar esperas del frontend y, si aplica, preparar el backend | obligatoria | crítica | bloqueada | T03/T05 para presupuestos y preflight de readiness |
-| T05 | Separar liveness y readiness de forma mínima | condicional | alta | pendiente | Activada: warm-up en background confirmado |
+| T03 | Cerrar la estrategia operacional de cold start y resampling | obligatoria | alta | completada | Warm-up validado en Northflank |
+| T04 | Acotar esperas del frontend y, si aplica, preparar el backend | obligatoria | crítica | completada | Preflight `/ready`, timeout y recuperación validados |
+| T05 | Separar liveness y readiness de forma mínima | condicional | alta | completada | `/ready` representa el estado posterior a warm-ups |
 | T06 | Diagnosticar y decidir la primera MFCC | condicional | media | descartada | Omitida para el MVP; no hay evidencia bloqueante |
 | T07 | Fijar el contrato reproducible de runtime y despliegue | obligatoria | alta | completada | Runtime y contrato Northflank verificados |
-| T08 | Medir concurrencia mínima en el entorno final | recomendable | media | bloqueada | T03, T04 y condicionales críticas activas |
+| T08 | Medir concurrencia mínima en el entorno final | recomendable | media | completada | Dos análisis largos simultáneos sin OOM ni reinicio |
 | T09 | Evaluar lectura directa `float32` | opcional | baja | condicional | DG05; evidencia de memoria/copia |
 | T10 | Evaluar un resampler alternativo | condicional | media | descartada | Se mantiene `soxr_hq`; no hay evidencia bloqueante |
-| T11 | Retirar instrumentación temporal y cerrar observabilidad mínima | obligatoria | alta | bloqueada | investigaciones y mediciones terminadas |
-| T12 | Ejecutar y documentar la validación E2E final | obligatoria | crítica | bloqueada | T01, T03, T04, T07, T11; condicionales activas; T08 según decisión |
+| T11 | Retirar instrumentación temporal y cerrar observabilidad mínima | obligatoria | alta | completada | Profiling temporal y dependencia `psutil` retirados |
+| T12 | Ejecutar y documentar la validación E2E final | obligatoria | crítica | en curso | Pendiente de evidencia manual E2E |
 
 Distribución revisada: **12 tareas: 6 obligatorias, 1 recomendable, 1 opcional y 4 condicionales**. T04 es obligatoria por su núcleo de robustez general; su subalcance de preflight continúa siendo condicional. “Bloqueada” indica dependencia lógica, no impedimento técnico permanente.
 
@@ -970,13 +978,13 @@ Actualizar esta tabla solo con evidencia real. Una decisión documental puede re
 | ROADMAP | completada | 2026-08-25 | `docs/roadmap_mejoras_despliegue.md` | Inspección inicial; 12 tareas y seis decision gates definidos. |
 | T01 | completada | 2026-08-27 | DG01: Northflank Developer Sandbox seleccionado | Render queda temporalmente como rollback. |
 | T02 | completada | 2026-08-27 | Validación Northflank: health/model/SHA, WAV, MP3, CORS, largo y flujo Vercel | Sin OOM ni reinicio; no equivale a T12. |
-| T03 | pendiente | 2026-08-31 | Decisión de consolidar warm-up en DG02 | Siguiente tarea: activar/validar warm-up sintético en Northflank. |
-| T04 | bloqueada | 2026-08-31 | Preflight de readiness activado por warm-up | Timeout/cancelación siempre; solo GET con retry. |
-| T05 | pendiente | 2026-08-31 | Warm-up en background confirmado | Añadir readiness mínima sin cambiar `/health`. |
+| T03 | completada | 2026-09-02 | Warm-up de resampling y MFCC validado en Northflank | `RESAMPLE_WARMUP_ENABLED=true`; `/ready` espera los warm-ups. |
+| T04 | completada | 2026-09-02 | Preflight `/ready`, timeout/cancelación y recuperación frontend validados | No hay reintento automático del POST. |
+| T05 | completada | 2026-09-02 | `/ready` incorporado y validado | `/health` conserva la semántica de estado operativo/modelo. |
 | T06 | descartada | 2026-08-31 | Decisión de alcance MVP | No investigar primera MFCC salvo evidencia bloqueante. |
 | T07 | completada | 2026-08-27 | `backend/requirements.txt`, `deploy/backend/`, `docs/despliegue_backend.md` y validación Northflank | Contrato reproducible cerrado; `psutil` queda para T11. |
-| T08 | bloqueada | 2026-08-25 | — | Recomendable tras estabilizar entorno. |
+| T08 | completada | 2026-09-02 | Dos análisis largos simultáneos | Ambos HTTP 200; sin OOM ni reinicio. |
 | T09 | condicional | 2026-08-31 | — | Solo si T08 activa DG05. |
 | T10 | descartada | 2026-08-31 | Decisión de alcance MVP | Mantener `soxr_hq`; no evaluar alternativa salvo evidencia bloqueante. |
-| T11 | bloqueada | 2026-08-25 | — | Última tarea antes de E2E. |
-| T12 | bloqueada | 2026-08-25 | — | Gate final de cierre. |
+| T11 | completada | 2026-09-02 | Limpieza final de profiling | Retirados `MemoryProfiler`, `psutil`, RSS, IDs y logs diagnósticos; `InferenceTimings` se mantiene. |
+| T12 | en curso | 2026-09-02 | Protocolo manual E2E iniciado | Pendiente de evidencia manual final. |
