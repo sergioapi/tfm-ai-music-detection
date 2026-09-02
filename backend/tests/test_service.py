@@ -236,8 +236,8 @@ def test_streaming_service_matches_full_read_baseline(
         assert observed.predicted_label == reference.predicted_label
         assert observed.predicted_class == reference.predicted_class
 
-    actual_payload = analyze_response(actual).dict()
-    expected_payload = analyze_response(expected).dict()
+    actual_payload = analyze_response(actual).model_dump()
+    expected_payload = analyze_response(expected).model_dump()
     assert actual_payload.keys() == expected_payload.keys()
     assert actual_payload.pop("timings").keys() == expected_payload.pop("timings").keys()
     assert actual_payload["model"] == expected_payload["model"]
