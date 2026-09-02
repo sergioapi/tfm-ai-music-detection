@@ -142,3 +142,10 @@ npm run check
 ```
 
 `npm run check` ejecuta lint, build y tests del frontend.
+
+## CI
+
+GitHub Actions ejecuta la integracion continua automaticamente en pull requests
+dirigidas a `main` y en pushes a `main`. Valida los tests del backend,
+`npm run check` del frontend (lint, build y tests) y la construccion de la imagen
+Docker del backend. El workflow no realiza despliegues.
