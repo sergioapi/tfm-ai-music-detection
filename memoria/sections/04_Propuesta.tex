@@ -86,7 +86,28 @@ Sobre estos embeddings se entrena un clasificador formado por \textit{StandardSc
 
 \section{Medidas de evaluación}
 
-La evaluación predictiva emplea la clase IA como clase positiva. La medida principal utilizada para seleccionar las configuraciones es \textit{balanced accuracy}, ya que promedia el recall de ambas clases y asigna el mismo peso a la clase humana y a la clase IA.
+La evaluación predictiva emplea la clase IA como clase positiva. Para definir las medidas utilizadas se adopta la siguiente notación:
+
+\begin{itemize}
+    \item \textbf{Verdaderos positivos (TP):} ejemplos de la clase IA clasificados correctamente como IA.
+    \item \textbf{Verdaderos negativos (TN):} ejemplos humanos clasificados correctamente como humanos.
+    \item \textbf{Falsos positivos (FP):} ejemplos humanos clasificados incorrectamente como IA.
+    \item \textbf{Falsos negativos (FN):} ejemplos de la clase IA clasificados incorrectamente como humanos.
+\end{itemize}
+
+La medida principal utilizada para seleccionar las configuraciones es \textit{balanced accuracy}, ya que promedia el recall de ambas clases y asigna el mismo peso a la clase humana y a la clase IA:
+
+\[
+    \textit{balanced accuracy} = \frac{1}{2}\left(\frac{TP}{TP + FN} + \frac{TN}{TN + FP}\right).
+\]
+
+Para la clase IA se emplean además las siguientes medidas:
+
+\begin{align*}
+    \textit{precision} &= \frac{TP}{TP + FP},
+    & \textit{recall} &= \frac{TP}{TP + FN}, \\
+    F1 &= 2 \cdot \frac{\textit{precision} \cdot \textit{recall}}{\textit{precision} + \textit{recall}}.
+\end{align*}
 
 También se registran precision IA, recall IA y F1 IA para describir el comportamiento sobre la clase positiva. ROC-AUC se utiliza como medida complementaria para valorar la capacidad del modelo de ordenar correctamente los ejemplos de ambas clases a partir de los \textit{scores} continuos de la SVM, sin depender de un único umbral de decisión \cite{fawcett2006roc}. La matriz de confusión permite desglosar los resultados por clase e identificar el número de falsos positivos y falsos negativos.
 
