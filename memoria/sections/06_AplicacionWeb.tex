@@ -76,9 +76,9 @@ Para cada fragmento se calculan 20 coeficientes MFCC. La media y la desviación 
 
 Para obtener una única estimación a nivel de archivo, las puntuaciones de los fragmentos se combinan mediante una media ponderada por su duración original. Si $s_i$ representa la puntuación del fragmento $i$ y $d_i$ su duración antes de aplicar el \textit{padding}, de forma que el relleno del último fragmento no incremente artificialmente su peso, la puntuación global se calcula como:
 
-\begin{equation}
+\[
     S = \frac{\sum_{i=1}^{n} d_i s_i}{\sum_{i=1}^{n} d_i}.
-\end{equation}
+\]
 
 El signo de $S$ se compara con el mismo umbral global cero utilizado en cada fragmento para obtener la clase final. A partir de este resultado, la respuesta JSON agrupa la siguiente información:
 
@@ -97,6 +97,13 @@ Esta estructura permite al frontend mostrar la información necesaria para la in
 
 La interfaz guía al usuario desde la selección del archivo hasta la visualización del resultado. Antes de iniciar el análisis, valida localmente que la extensión corresponda a WAV o MP3. El flujo distingue los estados \textit{idle}, \textit{selected}, \textit{preparing}, \textit{analyzing}, \textit{success} y \textit{error}, e impide solicitudes duplicadas mientras existe una operación activa. El usuario puede volver a seleccionar otro archivo mediante el reinicio del flujo; si existe una petición activa, esta se cancela al reiniciarlo o cuando el componente se desmonta.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{fig/verison_home.png}
+    \caption{Estado de VeriSon tras seleccionar un archivo WAV válido.}
+    \label{fig:validacion-inicio}
+\end{figure}
+
 \subsection{Comunicación con el backend}
 
 La URL pública del backend se configura mediante una variable de entorno del frontend. Antes de enviar el archivo, el cliente consulta \textit{GET /ready}. Las respuestas transitorias de disponibilidad se reintentan durante un presupuesto total de 15~s, con sondeos cada 5~s y un límite individual de 5~s por consulta. Cuando el backend informa que está preparado, el cliente envía \textit{POST /api/v1/analyze} con el audio en \textit{multipart/form-data}. La solicitud de análisis dispone de un \textit{timeout} de 180~s y no se reintenta automáticamente, para evitar duplicar la operación ante una respuesta incierta.
@@ -105,30 +112,26 @@ La URL pública del backend se configura mediante una variable de entorno del fr
 
 Tras una respuesta correcta, la interfaz muestra el nombre del archivo, la etiqueta \textit{Posible generación con IA} o \textit{Posible origen humano} y un mensaje explicativo asociado al resultado. Ante un error, interpreta la respuesta técnica del backend, la transforma en un mensaje comprensible, refleja el estado \textit{error} y permite volver al flujo normal. También gestiona errores propios del cliente, como problemas de red o \textit{timeout}.
 
-\begingroup
-\setlength{\intextsep}{6pt}
-\setlength{\abovecaptionskip}{4pt}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.82\textwidth]{fig/verison_inicio.png}
-    \caption{Pantalla inicial de VeriSon tras la selección de un archivo de audio.}
-    \label{fig:verison-inicio}
+    \includegraphics[width=0.82\textwidth]{fig/verison_wav_human.png}
+    \caption{Resultado de un análisis con un archivo WAV.}
+    \label{fig:validacion-wav}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.82\textwidth]{fig/version_human.png}
-    \caption{Resultado de VeriSon con la etiqueta \textit{Posible origen humano}.}
-    \label{fig:verison-humano}
+    \includegraphics[width=0.82\textwidth]{fig/verison_ai.png}
+    \caption{Resultado de un análisis con un archivo MP3.}
+    \label{fig:validacion-mp3}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.82\textwidth]{fig/version_ia.png}
-    \caption{Resultado de VeriSon con la etiqueta \textit{Posible generación con IA}.}
-    \label{fig:verison-ia}
+    \includegraphics[width=0.82\textwidth]{fig/verison_limit_duration.png}
+    \caption{Mensaje mostrado tras rechazar un audio que supera la duración máxima permitida.}
+    \label{fig:error-backend-duracion}
 \end{figure}
-\endgroup
 
 \section{Despliegue e integración continua}
 
@@ -142,12 +145,21 @@ También se incorporó un \textit{warm-up} durante el arranque para evitar que e
 
 \subsection{Integración continua}
 
-El workflow de GitHub Actions se ejecuta ante cada \textit{pull request} a \textit{main} y cada \textit{push} a \textit{main}. Incluye los siguientes \textit{checks}:
+El workflow de GitHub Actions se ejecuta ante cada \textit{pull request} a \textit{main} y cada \textit{push} a \textit{main}. La protección de esta rama requiere una \textit{pull request} y que los tres \textit{checks} definidos a continuación finalicen correctamente antes del \textit{merge}:
 
 \begin{itemize}
-    \item \textbf{Backend}: utiliza Python 3.11.9, instala las dependencias y ejecuta la suite de tests del backend.
-    \item \textbf{Frontend}: utiliza Node 20.19.0, instala las dependencias y ejecuta las comprobaciones del frontend, incluidos el análisis estático, el \textit{build} y los tests.
+    \item \textbf{Backend}: utiliza Python 3.11.9, instala las dependencias y ejecuta la suite implementada con \textit{pytest}, que cubre el procesamiento e inferencia, las validaciones de la API y la inicialización y disponibilidad del servicio.
+
+    \item \textbf{Frontend}: utiliza Node 20.19.0, instala las dependencias y ejecuta \textit{npm run check}, un comando del proyecto que agrupa el \textit{lint}, la comprobación del \textit{build} y las pruebas automatizadas con \textit{Vitest}. Estas verifican el comportamiento de la interfaz, la validación de formatos, la comunicación con la API y la gestión de estados y errores.
+
     \item \textbf{Docker}: comprueba que la imagen del backend puede construirse correctamente mediante el Dockerfile de despliegue.
 \end{itemize}
 
-La protección de \textit{main} requiere una \textit{pull request}, y los \textit{checks} obligatorios deben finalizar correctamente antes del \textit{merge}. GitHub Actions se utiliza exclusivamente como mecanismo de integración continua, el workflow no publica la imagen Docker ni realiza los despliegues en Northflank o Vercel. Su función es verificar el código, las pruebas y el empaquetado antes de integrar cambios en \textit{main}, por lo que no constituye un pipeline completo de CI/CD.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{fig/allchecks.png}
+    \caption{Checks obligatorios de integración continua superados en una \textit{pull request}.}
+    \label{fig:ci-checks}
+\end{figure}
+
+GitHub Actions se utiliza exclusivamente como mecanismo de integración continua: verifica el código, las pruebas y el empaquetado antes de integrar cambios en \textit{main}, pero no publica la imagen Docker ni realiza los despliegues en Northflank o Vercel. Por tanto, no constituye un pipeline completo de CI/CD.
