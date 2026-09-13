@@ -1,6 +1,9 @@
 \chapter*{Abstract}
-This section should contain an English version of the Spanish abstract.
+
+This Master's Thesis addresses the binary classification of human-origin music versus music generated using artificial intelligence, within the field of synthetic music detection. Its objective is to compare a classical approach based on MFCC and an RBF-kernel SVM with a deep approach based on frozen MERT-v1-95M representations and a linear SVM. The study uses AIME and a balanced subset of 1,000 examples, with 500 human and 500 AI-generated samples, evaluating both approaches under the same experimental protocol.
+
+On the test set, MFCC + SVM achieved a \textit{balanced accuracy} of 0.8333 and a ROC-AUC of 0.9086, compared with 0.8200 and 0.8985 for MERT + SVM, respectively. The results were close, although MFCC showed a slight overall advantage in the final metrics. Therefore, MFCC + SVM RBF was selected for the web proof of concept due to its balance between predictive performance and lower operational complexity. Finally, the selected model was integrated and deployed in VeriSon as a functional web application for audio file analysis.
 
 \vspace{.5cm}
 
-\textbf{Keywords:} Keyword 1, keyword 2, ..., keyword N
+\textbf{Keywords:} AI-generated music, synthetic music detection, audio classification, MFCC, SVM, MERT, AIME.
