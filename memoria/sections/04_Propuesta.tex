@@ -31,7 +31,7 @@ La auditoría técnica de AIME abarca 6\,500 filas. En la estructura observada a
 
 En AIME, el campo \textit{description} contiene tres etiquetas separadas por comas que describen cada ejemplo \cite{discoethAIME}. En los metadatos auditados se identificaron 500 valores distintos; por ejemplo, \textit{ambient, blues, piano}. Cada uno aparece en trece filas: una asociada a un audio humano de MTG-Jamendo y doce a versiones generadas, una por cada modelo incluido en el conjunto de datos. Los trece registros asociados a un mismo valor de description se consideran un grupo semántico.
 
-Para construir el subconjunto experimental se conserva el audio humano y se selecciona una de las versiones generadas de cada grupo. Así se obtiene un total de 1\,000 ejemplos, distribuidos de forma equilibrada entre 500 humanos y 500 generados mediante IA. Los 500 ejemplos generados seleccionados se reparten de forma prácticamente uniforme entre los doce modelos, con el objetivo de mantener la diversidad dentro de la clase IA.
+Para construir el subconjunto experimental se conserva el audio humano y se selecciona una de las versiones generadas de cada grupo. Así se obtiene un total de 1\,000 ejemplos, distribuidos de forma equilibrada entre 500 humanos y 500 generados mediante IA. Los 500 ejemplos generados seleccionados se reparten de forma prácticamente uniforme entre los doce modelos, con el objetivo de mantener la diversidad dentro de la clase IA. Las cuotas por generador y partición se fijan previamente y se asignan a los grupos de \textit{description} mediante un procedimiento reproducible con semilla 42.
 
 La regla de etiquetado binario se define a partir del campo \textit{model}. Las muestras cuyo valor es MTG-Jamendo se etiquetan como clase humana, mientras que las asociadas al resto de modelos se consideran generadas mediante IA. Esta regla es coherente con la estructura observada y permite formular el experimento como una clasificación binaria.
 
@@ -65,9 +65,9 @@ En el subconjunto experimental están representados los doce generadores disponi
 
 El baseline clásico se implementa como un pipeline de procesamiento a nivel de fragmento. Los audios se cargan con el tipo de dato float32 y, cuando contienen varios canales, se convierten a mono mediante el promedio de sus canales.
 
-Para cada audio se examinan los posibles tramos consecutivos de diez segundos. La energía de cada uno se calcula mediante la suma de los cuadrados de sus amplitudes, y se conserva la ventana de máxima energía, entendida como la de mayor actividad acústica. Los audios de menos de diez segundos se completan con ceros hasta alcanzar la duración objetivo. El clip seleccionado se remuestrea a 16 kHz, por lo que los diez segundos de audio quedan representados por 160\,000 muestras.
+Para cada audio se examinan los posibles tramos consecutivos de diez segundos. La búsqueda considera todas las posiciones de inicio posibles, con un desplazamiento de una muestra. La energía de cada uno se calcula mediante la suma de los cuadrados de sus amplitudes, y se conserva la ventana de máxima energía, entendida como la de mayor actividad acústica. Los audios de menos de diez segundos se completan con ceros hasta alcanzar la duración objetivo. El clip seleccionado se remuestrea a 16 kHz, por lo que los diez segundos de audio quedan representados por 160\,000 muestras.
 
-La representación acústica se basa en 20 MFCC calculados a partir de ese clip. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación.
+La representación acústica se basa en 20 MFCC calculados a partir de ese clip. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación. La extracción se realizó con librosa 0.11.0; los parámetros no especificados adoptaron sus valores por defecto, incluidos \textit{n\_fft}=2048, \textit{hop\_length}=512 y \textit{n\_mels}=128.
 
 La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una SVM con kernel RBF \cite{cortes1995support}. \textit{StandardScaler} centra cada característica y la escala según la desviación calculada en \textit{train}. La SVM utiliza el kernel RBF para modelar una frontera de decisión no lineal sobre el espacio de características.
 
@@ -76,7 +76,7 @@ La selección de hiperparámetros contempla 16 configuraciones, resultantes de c
 \section{Modelo profundo preentrenado MERT}
 \label{sec:mert-propuesta}
 
-El enfoque profundo se basa en m-a-p/MERT-v1-95M, empleado como encoder musical para obtener representaciones de dimensión fija. El encoder se mantiene congelado durante la extracción y los embeddings resultantes se utilizan para entrenar un clasificador SVM.
+El enfoque profundo se basa en m-a-p/MERT-v1-95M, empleado como encoder musical para obtener representaciones de dimensión fija. El encoder se mantiene congelado durante la extracción y los embeddings resultantes se utilizan para entrenar un clasificador SVM. La extracción utilizó PyTorch 2.13.0+cpu y transformers 5.13.1, con un \textit{Wav2Vec2FeatureExtractor} cargado mediante \textit{AutoFeatureExtractor}.
 
 La elección de MERT se justifica por su orientación al dominio musical, la posibilidad de reutilizar embeddings de dimensión fija y su encaje con una estrategia de precomputación de características. Esta decisión también responde a las restricciones del entorno de trabajo, con 16 GB de RAM y una GPU disponible de 6 GB de VRAM. La viabilidad en CPU se comprobó mediante un smoke test previo, antes de extraer embeddings para el subconjunto completo.
 
