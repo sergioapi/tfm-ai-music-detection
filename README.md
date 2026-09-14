@@ -1,58 +1,68 @@
-# TFM - Detección de música generada mediante IA
+# VeriSon — detección de música generada mediante IA
 
-Este repositorio contiene el desarrollo de un Trabajo Fin de Máster centrado en la detección de canciones generadas mediante inteligencia artificial.
+Repositorio del Trabajo Fin de Máster que compara MFCC + SVM y MERT congelado + SVM para clasificación humano/IA. También incluye VeriSon, una prueba de concepto web con FastAPI y React/Vite.
 
-El proyecto se divide en dos partes. La primera compara dos enfoques de clasificación: un modelo clásico basado en MFCC + StandardScaler + SVM RBF y un modelo profundo basado en MERT-v1-95M congelado + SVM lineal. Tras la comparación, se seleccionó MFCC + SVM como modelo para la aplicación web.
-
-La segunda parte corresponde al desarrollo de VeriSon, una aplicación web que permite subir archivos de audio y obtener una estimación de clasificación entre música de posible origen humano y música generada mediante IA. La aplicación utiliza FastAPI para el backend de inferencia y React + Vite + TypeScript para el frontend.
-
-## Estructura del repositorio
+## Estructura
 
 ```text
-backend/    API FastAPI, inferencia del MVP y tests del backend
-frontend/   Interfaz web VeriSon
-configs/    Configuracion experimental
-data/       Datos, particiones experimentales y artefactos generados
-docs/       Evidencia tecnica, decisiones y resultados experimentales
-memoria/    Memoria academica del TFM
-notebooks/  Exploracion y pruebas iniciales
-scripts/    Pipeline experimental y generacion de artefactos
-tests/      Tests de experimentacion y pipeline
+backend/       API FastAPI, inferencia y tests del backend
+configs/       configuración reproducible del experimento MERT
+data/          manifiesto, modelo MFCC y artefactos experimentales
+deploy/        Dockerfile del backend
+docs/          informes y trazabilidad técnica de los experimentos
+frontend/      aplicación React + Vite + TypeScript
+memoria/       documentación académica del TFM
+scripts/       pipeline experimental
+tests/         tests de experimentación y pipeline
 ```
 
-`backend/tests/` cubre el backend y la inferencia del MVP. `tests/` en la raiz
-cubre principalmente scripts y flujo experimental.
+## Requisitos e instalación
 
-## Preparacion del entorno Python
+- Python 3.11.9.
+- Node.js 20.19.0 y npm 10.8.2.
+- Docker, opcionalmente, para construir el contenedor del backend.
 
-Desde la raiz del repositorio, crear y activar el entorno virtual local en
-PowerShell:
+Crear el entorno Python desde la raíz:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-Para reproducir los experimentos deben utilizarse las particiones definidas en `data/aime_splits.csv`, que corresponden al protocolo experimental empleado en el proyecto.
+`requirements.txt` corresponde al entorno experimental y de desarrollo. `backend/requirements.txt` define el runtime mínimo que usa el contenedor.
 
-## Reproduccion experimental
+Instalar el frontend:
 
-Flujo principal del baseline MFCC + SVM:
+```powershell
+cd frontend
+npm ci
+cd ..
+```
+
+## Reproducción experimental
+
+### AIME y manifiesto
+
+El dataset es [`disco-eth/AIME`](https://huggingface.co/datasets/disco-eth/AIME). Reutiliza siempre el manifiesto fijo `data/aime_splits.csv`; define los clips y las particiones `train`, `val` y `test` del protocolo. Los scripts descargan AIME en streaming cuando no se proporciona `--audio-dir`. Los audios descargados y los artefactos intermedios generados localmente bajo `data/` están ignorados por Git. Los artefactos necesarios para reproducir o ejecutar el proyecto, como `data/aime_splits.csv` y el modelo MFCC utilizado por la aplicación, permanecen versionados.
+
+### MFCC + SVM
 
 ```powershell
 python scripts/extract_aime_mfcc.py
 python scripts/train_mfcc_svm.py
 ```
 
-Si los audios de AIME ya estan descargados localmente, la extraccion MFCC puede
-usar una carpeta ignorada por Git:
+Para usar una copia local de los audios:
 
 ```powershell
 python scripts/extract_aime_mfcc.py --audio-dir data/audio/aime_raw
 ```
 
-Flujo principal de MERT congelado + SVM:
+La extracción escribe características y resumen en `data/processed/`. El entrenamiento escribe el modelo, métricas, predicciones y matriz de confusión en `data/models/`, y genera `docs/mfcc_svm_baseline_summary.md`. El modelo usado por la aplicación es `data/models/mfcc_svm_baseline.joblib`.
+
+### MERT congelado + SVM
 
 ```powershell
 python scripts/smoke_test_mert.py --device cpu
@@ -61,91 +71,90 @@ python scripts/train_mert_svm_classifier.py --config configs/mert_svm_classifier
 python scripts/evaluate_mert_svm_test.py --config configs/mert_svm_classifier.yaml
 ```
 
-Comparacion de modelos y seleccion del modelo de despliegue:
+La configuración fija modelo y revisión en `configs/mert_frozen_embeddings.yaml`. Los embeddings y el resumen estructurado se escriben en `data/processed/`; el smoke test, selección y evaluación generan sus informes en `docs/`.
+
+### Comparación
 
 ```powershell
 python scripts/build_model_comparison.py
 ```
 
-La evidencia detallada esta en `docs/`, especialmente:
+El comando usa los artefactos existentes, sin reentrenar ni recalcular embeddings, y genera `docs/model_comparison.json`, `docs/model_comparison_summary.md` y `docs/decisions/seleccion-modelo-despliegue.md`.
 
-- `docs/aime_audit_summary.md`
-- `docs/mfcc_svm_baseline_summary.md`
-- `docs/model_comparison_summary.md`
-- `docs/decisions/seleccion-modelo-despliegue.md`
+## Aplicación web
 
-## Backend
+### Backend
 
-El backend local se arranca desde la raiz con:
+El backend requiere `data/models/mfcc_svm_baseline.joblib`. Desde la raíz:
 
 ```powershell
 .\backend\run-dev.ps1
 ```
 
-El script usa el Python de `.venv`, configura el entorno necesario para
-desarrollo local y ejecuta Uvicorn en `127.0.0.1:8000`.
+El script usa `.venv`, configura `MODEL_PATH` y CORS para Vite, y arranca en `http://127.0.0.1:8000`.
 
-Para quedar funcional, el backend necesita el artefacto local:
+Variables disponibles:
+
+| Variable | Valor por defecto |
+| --- | --- |
+| `MODEL_PATH` | ruta del modelo; el Dockerfile usa `/opt/verison/models/mfcc_svm_baseline.joblib` |
+| `CORS_ALLOWED_ORIGINS` | vacío |
+| `RESAMPLE_WARMUP_ENABLED` | `false` |
+| `MAX_UPLOAD_SIZE_BYTES` | `67108864` |
+| `MAX_AUDIO_DURATION_SECONDS` | `300` |
+| `TEMP_DIR` | temporal del sistema |
+
+Endpoints principales: `GET /health`, `GET /ready`, `GET /api/v1/model` y `POST /api/v1/analyze`. Se admiten WAV y MP3.
+
+### Frontend y ejecución conjunta local
+
+Crear `frontend/.env.local`:
 
 ```text
-data/models/mfcc_svm_baseline.joblib
+VITE_API_BASE_URL=http://127.0.0.1:8000
 ```
 
-El artefacto canónico está versionado en el repositorio. Puede regenerarse con
-el flujo experimental MFCC solo cuando una tarea lo autorice.
-
-## Despliegue actual
-
-El backend público se ejecuta en Northflank y el frontend en Vercel:
-
-- Backend: `https://api--verison-api--xb7vy98gqd48.code.run`
-- Frontend: `https://verison-app.vercel.app`
-
-El contrato reproducible de construcción, runtime, variables, health check,
-artefacto y rollback está en `docs/despliegue_backend.md`. El empaquetado usa
-`deploy/backend/Dockerfile` con contexto en la raíz del repositorio; no hay
-configuración específica de proveedor versionada.
-
-## Frontend
-
-Preparar y arrancar la interfaz desde `frontend/`:
+Con el backend iniciado en otra terminal:
 
 ```powershell
 cd frontend
-npm install
 npm run dev
 ```
 
-El frontend requiere configuracion local de entorno para localizar la API.
-Tomar `frontend/.env.example` como referencia y crear el archivo local
-correspondiente sin versionarlo.
+El cliente se sirve normalmente en `http://localhost:5173`.
 
-## Tests
+## Tests y CI
 
-Ejecutar toda la suite Python desde la raiz:
+Desde la raíz:
 
 ```powershell
 pytest
-```
-
-Ejecutar solo los tests del backend:
-
-```powershell
 pytest backend/tests
 ```
 
-Validar el frontend:
+Para el frontend:
 
 ```powershell
 cd frontend
 npm run check
 ```
 
-`npm run check` ejecuta lint, build y tests del frontend.
+GitHub Actions se ejecuta en pushes y pull requests a `main`; valida los tests del backend, `npm run check` y la construcción Docker. No despliega servicios.
 
-## CI
+## Docker y despliegue
 
-GitHub Actions ejecuta la integracion continua automaticamente en pull requests
-dirigidas a `main` y en pushes a `main`. Valida los tests del backend,
-`npm run check` del frontend (lint, build y tests) y la construccion de la imagen
-Docker del backend. El workflow no realiza despliegues.
+Construir la imagen desde la raíz:
+
+```powershell
+docker build -f deploy/backend/Dockerfile .
+```
+
+El Dockerfile `deploy/backend/Dockerfile` instala `backend/requirements.txt`, incorpora el backend y el modelo MFCC, y usa el puerto indicado por `PORT` (8000 por defecto).
+
+En Northflank, crear un servicio Docker con contexto en la raíz y ese Dockerfile; definir `CORS_ALLOWED_ORIGINS` con el origen de Vercel y, si se desea el warm-up de despliegue, `RESAMPLE_WARMUP_ENABLED=true`.
+
+En Vercel, desplegar `frontend/` y definir `VITE_API_BASE_URL` con la URL HTTPS del backend. Esta configuración de proveedores es externa al repositorio.
+
+## Memoria académica
+
+La documentación completa está en [`memoria/`](memoria/), incluido [`TFM___Memoria.pdf`](memoria/TFM___Memoria.pdf).
