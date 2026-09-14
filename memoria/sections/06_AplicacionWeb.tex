@@ -143,6 +143,8 @@ El servicio desplegado en Northflank utiliza una única instancia y dispone de 0
 
 También se incorporó un \textit{warm-up} durante el arranque para evitar que el coste de inicialización recaiga sobre el primer análisis. Tras cargar el artefacto del modelo, y con la configuración de despliegue activada, el servicio ejecuta en segundo plano un remuestreo sintético de 1~s desde 48~kHz hasta 16~kHz y, si este concluye correctamente, una extracción MFCC sobre una señal sintética de la longitud objetivo. Ambas operaciones utilizan las mismas funciones que el análisis. Mientras este proceso está pendiente, \textit{GET /ready} no declara preparado el servicio y el frontend espera antes de enviar un archivo real. Cuando las dos operaciones finalizan correctamente, el estado de preparación pasa a disponible; si alguna falla, permanece no disponible para análisis.
 
+En el momento del depósito de este TFM, la prueba de concepto web se encuentra accesible públicamente en \url{https://verison-app.vercel.app}. Al depender de servicios externos de despliegue, no se garantiza la disponibilidad indefinida de esta instancia.
+
 \subsection{Integración continua}
 
 El workflow de GitHub Actions se ejecuta ante cada \textit{pull request} a \textit{main} y cada \textit{push} a \textit{main}. La protección de esta rama requiere una \textit{pull request} y que los tres \textit{checks} definidos a continuación finalicen correctamente antes del \textit{merge}:

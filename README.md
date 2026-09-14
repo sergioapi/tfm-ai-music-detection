@@ -2,6 +2,12 @@
 
 Repositorio del Trabajo Fin de Máster que compara MFCC + SVM y MERT congelado + SVM para clasificación humano/IA. También incluye VeriSon, una prueba de concepto web con FastAPI y React/Vite.
 
+**Demo pública:** https://verison-app.vercel.app
+
+La disponibilidad de esta instancia no se garantiza de forma indefinida. El proyecto puede ejecutarse localmente siguiendo las instrucciones de este README.
+
+La documentación completa está en [`memoria/`](memoria/), incluido [`TFM___Memoria.pdf`](memoria/TFM___Memoria.pdf).
+
 ## Estructura
 
 ```text
@@ -154,7 +160,3 @@ El Dockerfile `deploy/backend/Dockerfile` instala `backend/requirements.txt`, in
 En Northflank, crear un servicio Docker con contexto en la raíz y ese Dockerfile; definir `CORS_ALLOWED_ORIGINS` con el origen de Vercel y, si se desea el warm-up de despliegue, `RESAMPLE_WARMUP_ENABLED=true`.
 
 En Vercel, desplegar `frontend/` y definir `VITE_API_BASE_URL` con la URL HTTPS del backend. Esta configuración de proveedores es externa al repositorio.
-
-## Memoria académica
-
-La documentación completa está en [`memoria/`](memoria/), incluido [`TFM___Memoria.pdf`](memoria/TFM___Memoria.pdf).
