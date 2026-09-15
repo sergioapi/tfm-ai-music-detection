@@ -42,7 +42,28 @@ La preparación experimental parte de la selección y auditoría de AIME como co
 
 \subsection{Desarrollo y evaluación experimental}
 
-Los modelos se evaluaron bajo el procedimiento definido durante la preparación de los datos. Los experimentos se ejecutaron en el entorno virtual del proyecto, configurado con Python 3.11.9. Durante el proceso se registraron medidas predictivas y operacionales, y la reproducibilidad se apoyó en artefactos estructurados y pruebas automatizadas sobre los componentes críticos.
+Los modelos se evaluaron bajo el procedimiento definido durante la preparación de los datos. La Tabla~\ref{tab:entorno-experimental} resume la configuración del entorno en el que se ejecutaron los experimentos. Durante el proceso se registraron medidas predictivas y operacionales, y la reproducibilidad se apoyó en artefactos estructurados y pruebas automatizadas sobre los componentes críticos.
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}X}
+        \hline
+        \textbf{Elemento} & \textbf{Configuración registrada} \\
+        \hline
+        Sistema operativo & Microsoft Windows 11 Home \\
+        CPU & Intel Core i7-10870H @ 2.20 GHz \\
+        RAM & 16 GB \\
+        GPU disponible & NVIDIA GeForce RTX 3060 Laptop GPU (6 GB de VRAM) \\
+        Python & 3.11.9 \\
+        librosa & 0.11.0 \\
+        PyTorch & 2.13.0+cpu (extracción MERT en CPU) \\
+        Transformers & 5.13.1 \\
+        scikit-learn & 1.8.0 (modelo baseline MFCC + SVM); 1.9.0 (selección MERT + SVM) \\
+        \hline
+    \end{tabularx}
+    \caption{Configuración del entorno experimental.}
+    \label{tab:entorno-experimental}
+\end{table}
 
 La metodología experimental distingue entre cuatro formas de abordar la clasificación: características manuales con aprendizaje automático clásico, embeddings de un modelo profundo congelado con un clasificador supervisado, fine-tuning parcial y fine-tuning completo. En el desarrollo realizado se ejecutaron las dos primeras. Las alternativas de fine-tuning parcial y completo se descartaron debido a las restricciones de recursos computacionales disponibles, al alcance definido y al tiempo del TFM. El baseline utilizó MFCC con una SVM, mientras que el enfoque profundo empleó MERT como encoder congelado para obtener embeddings y entrenó después una SVM sobre esas representaciones.
 

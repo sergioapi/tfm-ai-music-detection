@@ -49,7 +49,7 @@ La extracción completa procesó los 1\,000 ejemplos del manifiesto sin fallos, 
 
 \subsection*{Selección del clasificador}
 
-El clasificador sobre embeddings se construyó como un pipeline \textit{StandardScaler} + SVM. Se evaluaron candidatos con kernel lineal y RBF. Todos los candidatos se ajustaron con \textit{train} y se seleccionaron con \textit{val}. La regla de selección maximizó \textit{balanced accuracy}; en caso de empate, consideró ROC-AUC, F1 de la clase IA, menor latencia media de predicción y preferencia por kernel lineal. La configuración seleccionada fue una SVM lineal con $C=0{,}1$. Las medidas obtenidas por esta configuración en \textit{val} se recogen en la Tabla~\ref{tab:mert-svm-validacion}.
+El clasificador sobre embeddings se construyó como un pipeline \textit{StandardScaler} + SVM. Se evaluaron 13 configuraciones: cuatro con kernel lineal, combinando $C \in \{0{,}01;\ 0{,}1;\ 1;\ 10\}$, y nueve con kernel RBF, combinando $C \in \{0{,}1;\ 1;\ 10\}$ y $\gamma \in \{\textit{scale};\ 0{,}001;\ 0{,}01\}$. Todos los candidatos se ajustaron con \textit{train} y se seleccionaron con \textit{val}. La regla de selección maximizó \textit{balanced accuracy}; en caso de empate, consideró ROC-AUC, F1 de la clase IA, menor latencia media de predicción y preferencia por kernel lineal. La configuración seleccionada fue una SVM lineal con $C=0{,}1$. Las medidas obtenidas por esta configuración en \textit{val} se recogen en la Tabla~\ref{tab:mert-svm-validacion}.
 
 \begin{table}[H]
     \centering

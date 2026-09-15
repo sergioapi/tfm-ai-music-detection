@@ -150,9 +150,9 @@ En el momento del depósito de este TFM, la prueba de concepto web se encuentra 
 El workflow de GitHub Actions se ejecuta ante cada \textit{pull request} a \textit{main} y cada \textit{push} a \textit{main}. La protección de esta rama requiere una \textit{pull request} y que los tres \textit{checks} definidos a continuación finalicen correctamente antes del \textit{merge}:
 
 \begin{itemize}
-    \item \textbf{Backend}: utiliza Python 3.11.9, instala las dependencias y ejecuta la suite implementada con \textit{pytest}, que cubre el procesamiento e inferencia, las validaciones de la API y la inicialización y disponibilidad del servicio.
+    \item \textbf{Backend}: utiliza Python 3.11.9, instala las dependencias y ejecuta la suite implementada con \textit{pytest}.
 
-    \item \textbf{Frontend}: utiliza Node 20.19.0, instala las dependencias y ejecuta \textit{npm run check}, un comando del proyecto que agrupa el \textit{lint}, la comprobación del \textit{build} y las pruebas automatizadas con \textit{Vitest}. Estas verifican el comportamiento de la interfaz, la validación de formatos, la comunicación con la API y la gestión de estados y errores.
+    \item \textbf{Frontend}: utiliza Node 20.19.0, instala las dependencias y ejecuta \textit{npm run check}, un comando del proyecto que agrupa el \textit{lint}, la comprobación del \textit{build} y las pruebas automatizadas con \textit{Vitest}.
 
     \item \textbf{Docker}: comprueba que la imagen del backend puede construirse correctamente mediante el Dockerfile de despliegue.
 \end{itemize}
@@ -165,3 +165,28 @@ El workflow de GitHub Actions se ejecuta ante cada \textit{pull request} a \text
 \end{figure}
 
 GitHub Actions se utiliza exclusivamente como mecanismo de integración continua: verifica el código, las pruebas y el empaquetado antes de integrar cambios en \textit{main}, pero no publica la imagen Docker ni realiza los despliegues en Northflank o Vercel. Por tanto, no constituye un pipeline completo de CI/CD.
+
+\section{Pruebas y validación de la aplicación}
+
+La validación combinó pruebas automatizadas de backend y frontend, la construcción de la imagen Docker y pruebas manuales sobre la aplicación desplegada. En conjunto, se superaron 191 tests automatizados. La Tabla~\ref{tab:pruebas-validacion-aplicacion} resume los ámbitos cubiertos y los resultados obtenidos.
+
+\begin{table}[H]
+    \centering
+    \caption{Resumen de las pruebas y validación de VeriSon.}
+    \label{tab:pruebas-validacion-aplicacion}
+    \begin{tabularx}{\textwidth}{
+        >{\raggedright\arraybackslash}p{0.16\textwidth}
+        >{\raggedright\arraybackslash}p{0.16\textwidth}
+        >{\raggedright\arraybackslash}X
+        >{\raggedright\arraybackslash}p{0.18\textwidth}
+    }
+        \toprule
+        \textbf{Ámbito} & \textbf{Tipo de prueba} & \textbf{Qué verifica} & \textbf{Resultado} \\
+        \midrule
+        Backend & Automatizada & Procesamiento de audio, inferencia, endpoints y validaciones de la API. & 162 tests superados. \\
+        Frontend & Automatizada & Selección de archivos, estados de la interfaz, comunicación con la API y presentación de resultados. & 29 tests superados. \\
+        Docker & Automatizada & Construcción de la imagen de despliegue del backend. & Build superado. \\
+        Aplicación desplegada & Manual & Flujos válidos e inválidos, límites, indisponibilidad del backend y diseño responsive. & Casos comprobados satisfactoriamente. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

@@ -56,9 +56,33 @@ Las particiones se definen antes de extraer tramos temporales o características
 
 El reparto se realiza utilizando los grupos definidos en la sección anterior. Todos los ejemplos de un mismo grupo permanecen juntos, y el audio humano y la generación seleccionada se asignan al mismo subconjunto. Esta regla reduce el riesgo de fuga semántica entre \textit{train}, \textit{val} y \textit{test}.
 
-La división se genera con la semilla $42$ y mantiene una distribución equilibrada por generador. Las pruebas automáticas verifican el balance de clases, la reproducibilidad del manifiesto, la ausencia de solapamiento entre grupos y la presencia de los doce generadores en cada subconjunto.
+La división se genera con la semilla $42$ y mantiene una distribución prácticamente uniforme por generador, cuyo desglose por partición se recoge en la Tabla~\ref{tab:aime-generadores-particiones}. Las pruebas automáticas verifican el balance de clases, la reproducibilidad del manifiesto, la ausencia de solapamiento entre grupos y la presencia de los doce generadores en cada subconjunto.
 
-En el subconjunto experimental están representados los doce generadores disponibles. La distribución es prácticamente uniforme: ocho generadores aportan 42 ejemplos, mientras que AudioLDM 2 Large, MusicGen Medium, Riffusion y Suno v3.5 aportan 41 ejemplos.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrrr}
+        \hline
+        \textbf{Generador} & \textbf{train} & \textbf{val} & \textbf{test} & \textbf{Total} \\
+        \hline
+        AudioLDM 2 Large & 29 & 6 & 6 & 41 \\
+        AudioLDM 2 Music & 30 & 6 & 6 & 42 \\
+        MusicGen Large & 29 & 7 & 6 & 42 \\
+        MusicGen Medium & 29 & 6 & 6 & 41 \\
+        MusicGen Small & 29 & 6 & 7 & 42 \\
+        Mustango & 30 & 6 & 6 & 42 \\
+        Riffusion & 29 & 6 & 6 & 41 \\
+        Stable Audio v1 & 29 & 6 & 7 & 42 \\
+        Stable Audio v2 & 29 & 7 & 6 & 42 \\
+        Suno v3 & 29 & 7 & 6 & 42 \\
+        Suno v3.5 & 29 & 6 & 6 & 41 \\
+        Udio & 29 & 6 & 7 & 42 \\
+        \hline
+        \textbf{Total} & \textbf{350} & \textbf{75} & \textbf{75} & \textbf{500} \\
+        \hline
+    \end{tabular}
+    \caption{Distribución de las muestras IA seleccionadas por generador y partición.}
+    \label{tab:aime-generadores-particiones}
+\end{table}
 
 \section{Baseline clásico MFCC + SVM}
 \label{sec:baseline-mfcc-svm}
@@ -67,7 +91,7 @@ El baseline clásico se implementa como un pipeline de procesamiento a nivel de 
 
 Para cada audio se examinan los posibles tramos consecutivos de diez segundos. La búsqueda considera todas las posiciones de inicio posibles, con un desplazamiento de una muestra. La energía de cada uno se calcula mediante la suma de los cuadrados de sus amplitudes, y se conserva la ventana de máxima energía, entendida como la de mayor actividad acústica. Los audios de menos de diez segundos se completan con ceros hasta alcanzar la duración objetivo. El clip seleccionado se remuestrea a 16 kHz, por lo que los diez segundos de audio quedan representados por 160\,000 muestras.
 
-La representación acústica se basa en 20 MFCC calculados a partir de ese clip. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación. La extracción se realizó con librosa 0.11.0; los parámetros no especificados adoptaron sus valores por defecto, incluidos \textit{n\_fft}=2048, \textit{hop\_length}=512 y \textit{n\_mels}=128.
+La representación acústica se basa en 20 MFCC calculados a partir de ese clip. Cada coeficiente varía a lo largo del tiempo, por lo que se resume mediante su media y su desviación típica. Los 20 valores medios y los 20 valores de desviación producen un vector final de 40 características, que se almacena para poder reutilizarlo durante el entrenamiento y la evaluación. La extracción se realizó con librosa; los parámetros no especificados adoptaron sus valores por defecto, incluidos \textit{n\_fft}=2048, \textit{hop\_length}=512 y \textit{n\_mels}=128.
 
 La clasificación se realiza con un pipeline formado por \textit{StandardScaler} y una SVM con kernel RBF \cite{cortes1995support}. \textit{StandardScaler} centra cada característica y la escala según la desviación calculada en \textit{train}. La SVM utiliza el kernel RBF para modelar una frontera de decisión no lineal sobre el espacio de características.
 
@@ -76,9 +100,9 @@ La selección de hiperparámetros contempla 16 configuraciones, resultantes de c
 \section{Modelo profundo preentrenado MERT}
 \label{sec:mert-propuesta}
 
-El enfoque profundo se basa en m-a-p/MERT-v1-95M, empleado como encoder musical para obtener representaciones de dimensión fija. El encoder se mantiene congelado durante la extracción y los embeddings resultantes se utilizan para entrenar un clasificador SVM. La extracción utilizó PyTorch 2.13.0+cpu y transformers 5.13.1, con un \textit{Wav2Vec2FeatureExtractor} cargado mediante \textit{AutoFeatureExtractor}.
+El enfoque profundo se basa en m-a-p/MERT-v1-95M, empleado como encoder musical para obtener representaciones de dimensión fija. El encoder se mantiene congelado durante la extracción y los embeddings resultantes se utilizan para entrenar un clasificador SVM. La extracción se ejecutó en CPU, con un \textit{Wav2Vec2FeatureExtractor} cargado mediante \textit{AutoFeatureExtractor}.
 
-La elección de MERT se justifica por su orientación al dominio musical, la posibilidad de reutilizar embeddings de dimensión fija y su encaje con una estrategia de precomputación de características. Esta decisión también responde a las restricciones del entorno de trabajo, con 16 GB de RAM y una GPU disponible de 6 GB de VRAM. La viabilidad en CPU se comprobó mediante un smoke test previo, antes de extraer embeddings para el subconjunto completo.
+La elección de MERT se justifica por su orientación al dominio musical, la posibilidad de reutilizar embeddings de dimensión fija y su encaje con una estrategia de precomputación de características. Esta decisión también responde a las restricciones de recursos del entorno de trabajo. La viabilidad en CPU se comprobó mediante un smoke test previo, antes de extraer embeddings para el subconjunto completo.
 
 Cada ejemplo se procesa como un clip de diez segundos obtenido mediante el criterio temporal definido para el baseline y se remuestrea a 24 kHz. El pipeline lo divide en dos ventanas contiguas de cinco segundos, que se procesan por separado mediante MERT. Para cada ventana se obtiene el último hidden state, es decir, la secuencia de representaciones producida por la última capa del encoder. Sobre esta secuencia se aplica un pooling temporal mediante la media, obteniendo un único vector por ventana. Finalmente, los vectores de ambas ventanas se promedian para producir un embedding de 768 componentes por clip. El conjunto completo se almacena como una matriz float32 de forma $(1000, 768)$.
 
