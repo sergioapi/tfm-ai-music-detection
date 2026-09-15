@@ -1,4 +1,6 @@
 .venv/
+venv/
+env/
 __pycache__/
 .pytest_cache/
 *.pyc
@@ -8,6 +10,9 @@ __pycache__/
 node_modules/
 dist/
 .env
+.env.*
+!.env.example
+!.env.*.example
 
 # Local datasets, audio, caches, and derived experiment artifacts
 data/audio/

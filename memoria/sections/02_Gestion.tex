@@ -34,7 +34,7 @@ La memoria se redacta en LaTeX mediante Overleaf, manteniendo una estructura de 
 
 \subsection{Gestión del proyecto y control de versiones}
 
-El desarrollo se gestiona con Git y GitHub, utilizando ramas e issues para separar tareas y registrar cada bloque de trabajo. Las decisiones relevantes, los experimentos ejecutados y los artefactos producidos se documentan en el repositorio para facilitar su revisión posterior.
+El desarrollo se gestiona con Git y GitHub, utilizando ramas e issues para separar tareas y registrar cada bloque de trabajo. Las decisiones relevantes, los experimentos ejecutados y los artefactos producidos se documentan en el \href{https://github.com/sergioapi/tfm-ai-music-detection}{repositorio público del proyecto} para facilitar su revisión posterior. La versión correspondiente a la entrega final del TFM queda identificada mediante el tag \href{https://github.com/sergioapi/tfm-ai-music-detection/tree/tfm-entrega-septiembre-2026}{\texttt{tfm-entrega-septiembre-2026}}.
 
 \subsection{Preparación de los datos y reproducibilidad}
 
@@ -42,9 +42,30 @@ La preparación experimental parte de la selección y auditoría de AIME como co
 
 \subsection{Desarrollo y evaluación experimental}
 
-Los modelos se evaluaron bajo el procedimiento definido durante la preparación de los datos. Los experimentos se ejecutaron en el entorno virtual del proyecto, configurado con Python 3.11.9. Durante el proceso se registraron medidas predictivas y operacionales, y la reproducibilidad se apoyó en artefactos estructurados y pruebas automatizadas sobre los componentes críticos.
+Los modelos se evaluaron bajo el procedimiento definido durante la preparación de los datos. La Tabla~\ref{tab:entorno-experimental} resume la configuración del entorno en el que se ejecutaron los experimentos. Durante el proceso se registraron medidas predictivas y operacionales, y la reproducibilidad se apoyó en artefactos estructurados y pruebas automatizadas sobre los componentes críticos.
 
-La metodología experimental distingue entre cuatro formas de abordar la clasificación: características manuales con aprendizaje automático clásico, embeddings de un modelo profundo congelado con un clasificador supervisado, fine-tuning parcial y fine-tuning completo. En el desarrollo realizado se ejecutaron las dos primeras. El baseline utilizó MFCC con una SVM, mientras que el enfoque profundo empleó MERT como encoder congelado para obtener embeddings y entrenó después una SVM sobre esas representaciones.
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.28\textwidth}>{\raggedright\arraybackslash}X}
+        \hline
+        \textbf{Elemento} & \textbf{Configuración registrada} \\
+        \hline
+        Sistema operativo & Microsoft Windows 11 Home \\
+        CPU & Intel Core i7-10870H @ 2.20 GHz \\
+        RAM & 16 GB \\
+        GPU disponible & NVIDIA GeForce RTX 3060 Laptop GPU (6 GB de VRAM) \\
+        Python & 3.11.9 \\
+        librosa & 0.11.0 \\
+        PyTorch & 2.13.0+cpu (extracción MERT en CPU) \\
+        Transformers & 5.13.1 \\
+        scikit-learn & 1.8.0 (modelo baseline MFCC + SVM); 1.9.0 (selección MERT + SVM) \\
+        \hline
+    \end{tabularx}
+    \caption{Configuración del entorno experimental.}
+    \label{tab:entorno-experimental}
+\end{table}
+
+La metodología experimental distingue entre cuatro formas de abordar la clasificación: características manuales con aprendizaje automático clásico, embeddings de un modelo profundo congelado con un clasificador supervisado, fine-tuning parcial y fine-tuning completo. En el desarrollo realizado se ejecutaron las dos primeras. Las alternativas de fine-tuning parcial y completo se descartaron debido a las restricciones de recursos computacionales disponibles, al alcance definido y al tiempo del TFM. El baseline utilizó MFCC con una SVM, mientras que el enfoque profundo empleó MERT como encoder congelado para obtener embeddings y entrenó después una SVM sobre esas representaciones.
 
 \section{Planificación}
 
@@ -99,6 +120,8 @@ Las principales dependencias entre las fases son las siguientes:
     \item La selección del modelo para la aplicación depende de los resultados predictivos y operacionales de ambos enfoques.
     \item La implementación web requiere el artefacto y el preprocesamiento del modelo seleccionado, mientras que las pruebas y el despliegue preceden al cierre del proyecto.
 \end{itemize}
+
+La ejecución del proyecto mantuvo, en términos generales, el orden previsto para las fases experimentales, sin que se produjeran desviaciones relevantes en este bloque. Las principales adaptaciones se concentraron en el cierre de la aplicación web: fue necesario valorar distintas alternativas de despliegue para el backend hasta adoptar la solución final en Northflank, así como introducir ajustes técnicos para adaptarlo a los recursos disponibles. Además, se incorporó integración continua mediante GitHub Actions, que no se había contemplado como un entregable específico en la planificación inicial. Estas modificaciones afectaron principalmente al cierre técnico del proyecto, sin alterar sus objetivos ni dejar fases esenciales sin completar.
 
 \section{Presupuesto}
 
@@ -163,8 +186,9 @@ Los servicios empleados o previstos para la gestión, documentación, publicaci�
         GitHub y GitHub Projects & Plan gratuito & 0,00~\euro{} \\
         Clockify & Plan gratuito & 0,00~\euro{} \\
         Overleaf & Plan gratuito & 0,00~\euro{} \\
-        Hugging Face Hub y Hugging Face Spaces & Plan gratuito & 0,00~\euro{} \\
+        Hugging Face Hub (AIME y MERT) & Plan gratuito & 0,00~\euro{} \\
         Vercel & Plan gratuito & 0,00~\euro{} \\
+        Northflank & Plan gratuito & 0,00~\euro{} \\
         Dataset AIME & Acceso gratuito; licencias según procedencia & 0,00~\euro{} \\
         \hline
         \textbf{Total de software, servicios y datos} &  & \textbf{0,00~\euro{}} \\

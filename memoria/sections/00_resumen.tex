@@ -1,6 +1,9 @@
 \chapter*{Resumen}
-Incluya aquí un resumen de los aspectos generales de su trabajo, en español.
+
+Este Trabajo Fin de Máster aborda la clasificación binaria de música de origen humano frente a música generada mediante inteligencia artificial, en el ámbito de la detección de música sintética. Su objetivo es comparar un enfoque clásico basado en MFCC y SVM con núcleo RBF y un enfoque profundo basado en MERT-v1-95M congelado y SVM lineal. El estudio utiliza AIME y un subconjunto equilibrado de 1\,000 ejemplos, 500 humanos y 500 generados mediante IA, evaluando ambos enfoques bajo el mismo protocolo experimental.
+
+En el conjunto de \textit{test}, MFCC + SVM obtuvo una \textit{balanced accuracy} de 0,8333 y un ROC-AUC de 0,9086, frente a 0,8200 y 0,8985 de MERT + SVM, respectivamente. Los resultados fueron próximos, aunque MFCC presentó una ligera ventaja global en las métricas finales. Por ello, MFCC + SVM RBF se seleccionó para la prueba de concepto web por el compromiso entre rendimiento predictivo y menor complejidad operacional. Finalmente, el modelo seleccionado se integró y desplegó en VeriSon como una aplicación web funcional para el análisis de archivos de audio.
 
 \vspace{.5cm}
 
-\textbf{Palabras clave:} Palabra clave 1, palabra clave 2, ..., palabra clave N
+\textbf{Palabras clave:} música generada por inteligencia artificial, detección de música sintética, clasificación de audio, MFCC, SVM, MERT, AIME.
